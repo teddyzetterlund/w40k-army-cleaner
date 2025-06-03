@@ -1,35 +1,64 @@
 const fs = require('fs');
-const { cleanRosterText } = require('./app.js');
+const { cleanRosterText } = require('./roster-cleaner.js');
 
-function runTest(sampleRosterPath, expectedOutputPath, factionName, showPoints = true, smartFormat = true) {
-    console.log(`\nTesting ${factionName} roster (${showPoints ? 'with' : 'without'} points, ${smartFormat ? 'with' : 'without'} smart format):`);
-    console.log('----------------------------------------');
+const cases = [
+    {
+        input: 'sample-roster-gw-da.txt',
+        output: 'sample-cleaned-gw-da.txt',
+        showPoints: true,
+        smartFormat: true
+    },
+    {
+        input: 'sample-roster-gw-da.txt',
+        output: 'sample-cleaned-gw-da-no-points.txt',
+        showPoints: false,
+        smartFormat: true
+    },
+    {
+        input: 'sample-roster-gw-da.txt',
+        output: 'sample-cleaned-gw-da-no-smart.txt',
+        showPoints: true,
+        smartFormat: false
+    },
+    {
+        input: 'sample-roster-gw-da.txt',
+        output: 'sample-cleaned-gw-da-no-points-no-smart.txt',
+        showPoints: false,
+        smartFormat: false
+    },
+    {
+        input: 'sample-roster-gw-tau.txt',
+        output: 'sample-cleaned-gw-tau.txt',
+        showPoints: true,
+        smartFormat: true
+    },
+    {
+        input: 'sample-roster-gw-tau.txt',
+        output: 'sample-cleaned-gw-tau-no-points.txt',
+        showPoints: false,
+        smartFormat: true
+    },
+    {
+        input: 'sample-roster-gw-tau.txt',
+        output: 'sample-cleaned-gw-tau-no-smart.txt',
+        showPoints: true,
+        smartFormat: false
+    },
+    {
+        input: 'sample-roster-gw-tau.txt',
+        output: 'sample-cleaned-gw-tau-no-points-no-smart.txt',
+        showPoints: false,
+        smartFormat: false
+    }
+];
 
-    // Load the sample roster
-    const sampleRoster = fs.readFileSync(sampleRosterPath, 'utf8');
+cases.forEach(({ input, output, showPoints, smartFormat }) => {
+    const inputPath = `fixtures/${input}`;
+    const outputPath = `fixtures/${output}`;
+    const roster = fs.readFileSync(inputPath, 'utf8');
+    const cleaned = cleanRosterText(roster, showPoints, smartFormat).trim() + '\n';
+    fs.writeFileSync(outputPath, cleaned, 'utf8');
+    console.log(`Wrote: ${outputPath}`);
+});
 
-    // Run the cleaner
-    const actualOutput = cleanRosterText(sampleRoster, showPoints, smartFormat).trim();
-
-    // Compare with expected output
-    const expectedOutput = fs.readFileSync(expectedOutputPath, 'utf8').trim();
-
-    console.log('Actual output:');
-    console.log(actualOutput);
-    console.log('\nExpected output:');
-    console.log(expectedOutput);
-    console.log('\nOutputs match:', actualOutput === expectedOutput);
-    console.log('----------------------------------------');
-}
-
-// Run tests for both factions with points and smart format
-runTest('fixtures/sample-roster-gw-da.txt', 'fixtures/sample-cleaned-gw-da.txt', 'Dark Angels', true, true);
-runTest('fixtures/sample-roster-gw-tau.txt', 'fixtures/sample-cleaned-gw-tau.txt', 'Tau Empire', true, true);
-
-// Run tests for both factions without points
-runTest('fixtures/sample-roster-gw-da.txt', 'fixtures/sample-cleaned-gw-da-no-points.txt', 'Dark Angels', false, true);
-runTest('fixtures/sample-roster-gw-tau.txt', 'fixtures/sample-cleaned-gw-tau-no-points.txt', 'Tau Empire', false, true);
-
-// Run tests for both factions without smart format
-runTest('fixtures/sample-roster-gw-da.txt', 'fixtures/sample-cleaned-gw-da-no-smart.txt', 'Dark Angels', true, false);
-runTest('fixtures/sample-roster-gw-tau.txt', 'fixtures/sample-cleaned-gw-tau-no-smart.txt', 'Tau Empire', true, false); 
+console.log('All expected output files have been regenerated.'); 

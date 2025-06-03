@@ -2,16 +2,25 @@
   "name": "w40k-army-cleaner",
   "version": "1.0.0",
   "description": "Warhammer 40K Army Roster Cleaner",
+  "type": "module",
   "scripts": {
     "generate-icons": "node generate-icons.js",
     "start": "npx http-server -p 3000",
-    "test": "node test-cleaner.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "dev": "npx http-server -p 3000 -c-1"
   },
   "dependencies": {
     "sharp": "^0.33.2"
   },
   "devDependencies": {
-    "http-server": "^14.1.1"
+    "@testing-library/dom": "^9.3.4",
+    "@testing-library/jest-dom": "^6.4.2",
+    "http-server": "^14.1.1",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+  },
+  "jest": {
+    "transform": {},
+    "testEnvironment": "jsdom"
   }
-} 
+}
