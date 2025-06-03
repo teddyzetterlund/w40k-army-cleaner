@@ -1,0 +1,150 @@
+Technology of Peace (1990 Points)
+
+T’au Empire
+Retaliation Cadre
+Strike Force (2000 Points)
+
+CHARACTERS
+
+Commander Farsight (105 Points)
+    • 1x Dawn Blade
+      1x High-intensity plasma rifle
+
+Commander in Coldstar Battlesuit (95 Points)
+    • 1x Battlesuit fists
+      1x High-output burst cannon
+
+Commander in Enforcer Battlesuit (100 Points)
+    • Warlord
+    • 1x Battlesuit fists
+      1x Burst cannon
+    • Enhancements: Starflare Ignition System
+
+BATTLELINE
+
+Strike Team (75 Points)
+    • 1x Support turret
+    • 1x Fire Warrior Shas’ui
+        • 1x Close combat weapon
+          1x Pulse pistol
+          1x Pulse rifle
+    • 9x Fire Warrior
+        • 9x Close combat weapon
+          9x Pulse pistol
+          9x Pulse rifle
+
+Strike Team (75 Points)
+    • 1x Support turret
+    • 1x Fire Warrior Shas’ui
+        • 1x Close combat weapon
+          1x Pulse pistol
+          1x Pulse rifle
+    • 9x Fire Warrior
+        • 9x Close combat weapon
+          9x Pulse pistol
+          9x Pulse rifle
+
+Strike Team (75 Points)
+    • 1x Support turret
+    • 1x Fire Warrior Shas’ui
+        • 1x Close combat weapon
+          1x Pulse pistol
+          1x Pulse rifle
+    • 9x Fire Warrior
+        • 9x Close combat weapon
+          9x Pulse pistol
+          9x Pulse rifle
+
+OTHER DATASHEETS
+
+Broadside Battlesuits (180 Points)
+    • 1x Broadside Shas’vre
+        • 1x Crushing bulk
+          1x Heavy rail rifle
+    • 1x Broadside Shas’ui
+        • 1x Crushing bulk
+          1x Heavy rail rifle
+
+Crisis Fireknife Battlesuits (130 Points)
+    • 1x Crisis Fireknife Shas’vre
+        • 1x Battlesuit fists
+          1x Missile pod
+          1x Plasma rifle
+    • 2x Crisis Fireknife Shas’ui
+        • 2x Battlesuit fists
+          2x Missile pod
+          2x Plasma rifle
+
+Crisis Fireknife Battlesuits (130 Points)
+    • 1x Crisis Fireknife Shas’vre
+        • 1x Battlesuit fists
+          1x Missile pod
+          1x Plasma rifle
+    • 2x Crisis Fireknife Shas’ui
+        • 2x Battlesuit fists
+          2x Missile pod
+          2x Plasma rifle
+
+Crisis Starscythe Battlesuits (110 Points)
+    • 1x Crisis Starscythe Shas’vre
+        • 1x Battlesuit fists
+          1x Burst cannon
+          1x T’au flamer
+    • 2x Crisis Starscythe Shas’ui
+        • 2x Battlesuit fists
+          2x Burst cannon
+          2x T’au flamer
+
+Ghostkeel Battlesuit (160 Points)
+    • 1x Fusion collider
+      1x Ghostkeel fists
+      1x Twin T’au flamer
+
+Krootox Riders (35 Points)
+    • 1x Close combat weapon
+      1x Krootox fists
+      1x Repeater cannon
+
+Riptide Battlesuit (180 Points)
+    • 1x Heavy burst cannon
+      1x Riptide fists
+      1x Twin plasma rifle
+
+Riptide Battlesuit (180 Points)
+    • 1x Heavy burst cannon
+      1x Riptide fists
+      1x Twin plasma rifle
+
+Riptide Battlesuit (180 Points)
+    • 1x Heavy burst cannon
+      1x Riptide fists
+      1x Twin plasma rifle
+
+Stealth Battlesuits (60 Points)
+    • 1x Stealth Shas’vre
+        • 1x Battlesuit fists
+          1x Burst cannon
+          1x Homing Beacon
+    • 2x Stealth Shas’ui
+        • 2x Battlesuit fists
+          2x Burst cannon
+
+Stealth Battlesuits (60 Points)
+    • 1x Stealth Shas’vre
+        • 1x Battlesuit fists
+          1x Burst cannon
+          1x Homing Beacon
+    • 2x Stealth Shas’ui
+        • 2x Battlesuit fists
+          2x Burst cannon
+
+Stealth Battlesuits (60 Points)
+    • 1x Stealth Shas’vre
+        • 1x Battlesuit fists
+          1x Burst cannon
+          1x Homing Beacon
+    • 2x Stealth Shas’ui
+        • 2x Battlesuit fists
+          2x Burst cannon
+
+Exported with App Version: v1.18.0 (41), Data Version: v434

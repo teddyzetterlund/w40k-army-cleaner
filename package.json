@@ -1,0 +1,17 @@
+{
+  "name": "w40k-army-cleaner",
+  "version": "1.0.0",
+  "description": "Warhammer 40K Army Roster Cleaner",
+  "scripts": {
+    "generate-icons": "node generate-icons.js",
+    "start": "npx http-server -p 3000",
+    "test": "node test-cleaner.js",
+    "dev": "npx http-server -p 3000 -c-1"
+  },
+  "dependencies": {
+    "sharp": "^0.33.2"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+} 
