@@ -1,9 +1,16 @@
-import { setupDragAndDrop, setupCopyButton, createUpdateRosterOutput } from './domHandlers.js';
-
-// Clean and format a Warhammer 40K army roster string
-
 // Utility functions
-const normalizeApostrophes = (text) => text.replace(/[''`]/g, "'");
+const normalizeApostrophes = (text) => text.replace(/['''`′‵ʼ]/g, "'");
+
+const normalizeFactionName = (text) => {
+    if (!text) return '';
+    return text
+        .toLowerCase()
+        .normalize('NFD')  // Decompose characters into their base form
+        .replace(/[\u0300-\u036f]/g, '')  // Remove diacritics
+        .replace(/['''`′‵ʼ]/g, '')  // Remove apostrophes
+        .replace(/[^a-z0-9]/g, '')  // Remove all non-alphanumeric characters
+        .trim();
+};
 
 const isSectionHeader = (line) => 
     ['CHARACTERS', 'BATTLELINE', 'OTHER DATASHEETS'].includes(line);
@@ -182,7 +189,7 @@ function cleanRosterText(input, showPoints = true, smartFormat = true) {
     }
 
     const isTauEmpire = armyInfo.some(line => 
-        normalizeApostrophes(line).includes("T'au Empire")
+        normalizeFactionName(line).includes('tauempire')
     );
 
     // Process units
@@ -192,34 +199,83 @@ function cleanRosterText(input, showPoints = true, smartFormat = true) {
     return normalizeApostrophes(cleanedLines.join('\n'));
 }
 
-// Initialize DOM elements and event listeners
-if (typeof document !== 'undefined') {
-    document.addEventListener('DOMContentLoaded', () => {
-        const rosterInput = document.getElementById('roster-input');
-        const outputContainer = document.getElementById('output-container');
-        const rosterOutput = document.getElementById('roster-output');
-        const copyButton = document.getElementById('copy-button');
-        const showPointsCheckbox = document.getElementById('show-points');
-        const smartFormatCheckbox = document.getElementById('smart-format');
+// DOM Handlers
+function setupDragAndDrop(rosterInput, updateRosterOutput) {
+    rosterInput.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        rosterInput.classList.add('border-blue-500');
+    });
 
-        const updateRosterOutput = createUpdateRosterOutput(
-            rosterInput,
-            outputContainer,
-            rosterOutput,
-            showPointsCheckbox,
-            smartFormatCheckbox
-        );
+    rosterInput.addEventListener('dragleave', () => {
+        rosterInput.classList.remove('border-blue-500');
+    });
 
-        setupDragAndDrop(rosterInput, updateRosterOutput);
-        setupCopyButton(copyButton, rosterOutput);
-
-        rosterInput.addEventListener('input', updateRosterOutput);
-        showPointsCheckbox.addEventListener('change', updateRosterOutput);
-        smartFormatCheckbox.addEventListener('change', updateRosterOutput);
+    rosterInput.addEventListener('drop', (e) => {
+        e.preventDefault();
+        rosterInput.classList.remove('border-blue-500');
+        
+        const file = e.dataTransfer.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                rosterInput.value = e.target.result;
+                updateRosterOutput();
+            };
+            reader.readAsText(file);
+        }
     });
 }
 
-// Export for Node.js testing
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { cleanRosterText };
-} 
+function setupCopyButton(copyButton, rosterOutput) {
+    copyButton.addEventListener('click', () => {
+        navigator.clipboard.writeText(rosterOutput.textContent).then(() => {
+            const originalText = copyButton.textContent;
+            copyButton.textContent = 'Copied!';
+            setTimeout(() => {
+                copyButton.textContent = originalText;
+            }, 2000);
+        });
+    });
+}
+
+function createUpdateRosterOutput(rosterInput, outputContainer, rosterOutput, showPointsCheckbox, smartFormatCheckbox) {
+    return function updateRosterOutput() {
+        const input = rosterInput.value;
+        const showPoints = showPointsCheckbox.checked;
+        const smartFormat = smartFormatCheckbox.checked;
+        const cleaned = cleanRosterText(input, showPoints, smartFormat);
+        
+        if (!cleaned) {
+            outputContainer.classList.add('hidden');
+            return;
+        }
+        
+        rosterOutput.textContent = cleaned;
+        outputContainer.classList.remove('hidden');
+    };
+}
+
+// Initialize DOM elements and event listeners
+document.addEventListener('DOMContentLoaded', () => {
+    const rosterInput = document.getElementById('roster-input');
+    const outputContainer = document.getElementById('output-container');
+    const rosterOutput = document.getElementById('roster-output');
+    const copyButton = document.getElementById('copy-button');
+    const showPointsCheckbox = document.getElementById('show-points');
+    const smartFormatCheckbox = document.getElementById('smart-format');
+
+    const updateRosterOutput = createUpdateRosterOutput(
+        rosterInput,
+        outputContainer,
+        rosterOutput,
+        showPointsCheckbox,
+        smartFormatCheckbox
+    );
+
+    setupDragAndDrop(rosterInput, updateRosterOutput);
+    setupCopyButton(copyButton, rosterOutput);
+
+    rosterInput.addEventListener('input', updateRosterOutput);
+    showPointsCheckbox.addEventListener('change', updateRosterOutput);
+    smartFormatCheckbox.addEventListener('change', updateRosterOutput);
+}); 
