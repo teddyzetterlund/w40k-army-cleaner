@@ -6,7 +6,8 @@ import { SECTION_HEADERS, GAME_FORMATS, TAU_UNIT_BASES } from './config/roster-c
  * @param {string} line - The line to check
  * @returns {boolean} - True if the line is a section header
  */
-const isKnownSectionHeader = (line) => SECTION_HEADERS.includes(line);
+const isKnownSectionHeader = (line) => 
+    ['CHARACTERS', 'BATTLELINE', 'DEDICATED TRANSPORTS', 'OTHER DATASHEETS', 'ALLIED UNITS'].includes(line);
 
 /**
  * Checks if a line contains points information
@@ -20,7 +21,10 @@ const isPointsLine = (line) => line.match(/\((\d+)\s*points?\)/i);
  * @param {string} line - The line to check
  * @returns {boolean} - True if the line contains game format information
  */
-const isGameFormatLine = (line) => GAME_FORMATS.some(format => line.includes(format));
+const isGameFormatLine = (line) => 
+    line.includes('Strike Force') || 
+    line.includes('Incursion') || 
+    line.includes('Onslaught');
 
 /**
  * Checks if a line contains army information
@@ -36,7 +40,11 @@ const isArmyInfoLine = (line) =>
     !line.match(/\d/) &&
     !line.includes('Exported with');
 
-// Header processing functions
+/**
+ * Processes the army header section of the roster
+ * @param {string[]} lines - Array of roster lines
+ * @returns {{ armyInfo: string[], firstPointsLine: string|null, headerEndIndex: number }}
+ */
 function processArmyHeader(lines) {
     const armyInfo = [];
     let firstPointsLine = null;
@@ -67,7 +75,13 @@ function processArmyHeader(lines) {
     return { armyInfo, firstPointsLine, headerEndIndex };
 }
 
-// Unit processing functions
+/**
+ * Formats a unit name according to faction-specific rules
+ * @param {string} unitName - The unit name to format
+ * @param {boolean} isTauEmpire - Whether the unit belongs to T'au Empire
+ * @param {boolean} smartFormat - Whether to apply smart formatting
+ * @returns {string} - Formatted unit name
+ */
 function formatUnitName(unitName, isTauEmpire, smartFormat) {
     if (!smartFormat) return unitName;
 
@@ -87,6 +101,11 @@ function formatUnitName(unitName, isTauEmpire, smartFormat) {
     return formattedName;
 }
 
+/**
+ * Formats a T'au Empire unit name according to faction conventions
+ * @param {string} unitName - The unit name to format
+ * @returns {string} - Formatted unit name
+ */
 function formatTauUnitName(unitName) {
     let formatted = unitName
         .replace(/Battlesuit/g, '')
@@ -114,6 +133,15 @@ function formatTauUnitName(unitName) {
     return formatted.replace(/\s+s$/, 's');
 }
 
+/**
+ * Processes the units section of the roster
+ * @param {string[]} lines - Array of roster lines
+ * @param {number} startIndex - Starting index for processing
+ * @param {boolean} showPoints - Whether to include points in output
+ * @param {boolean} smartFormat - Whether to apply smart formatting
+ * @param {boolean} isTauEmpire - Whether the roster is for T'au Empire
+ * @returns {string[]} - Array of processed unit lines
+ */
 function processUnits(lines, startIndex, showPoints, smartFormat, isTauEmpire) {
     const cleanedLines = [];
     let currentUnit = '';
@@ -174,6 +202,13 @@ function processUnits(lines, startIndex, showPoints, smartFormat, isTauEmpire) {
     return cleanedLines;
 }
 
+/**
+ * Cleans and formats a roster text according to specified options
+ * @param {string} input - The roster text to clean
+ * @param {boolean} [showPoints=true] - Whether to include points in the output
+ * @param {boolean} [smartFormat=true] - Whether to apply smart formatting to unit names
+ * @returns {string} - The cleaned roster text
+ */
 function cleanRosterText(input, showPoints = true, smartFormat = true) {
     input = input.trim();
     if (!input) return '';
