@@ -13,9 +13,9 @@ const normalizeFactionName = (text) => {
 };
 
 const isSectionHeader = (line) => 
-    ['CHARACTERS', 'BATTLELINE', 'OTHER DATASHEETS'].includes(line);
+    ['CHARACTERS', 'BATTLELINE', 'OTHER DATASHEETS', 'ALLIED UNITS'].includes(line);
 
-const isPointsLine = (line) => line.match(/\((\d+)\s*Points?\)/);
+const isPointsLine = (line) => line.match(/\((\d+)\s*points?\)/i);
 
 const isGameFormatLine = (line) => 
     line.includes('Strike Force') || 
@@ -131,7 +131,7 @@ function processUnits(lines, startIndex, showPoints, smartFormat, isTauEmpire) {
             }
         }
 
-        const pointsMatch = line.match(/\((\d+)\s*Points?\)/);
+        const pointsMatch = line.match(/\((\d+)\s*points?\)/i);
         if (pointsMatch) {
             if (currentUnit && !currentUnitAdded) {
                 if (lastUnit && lastUnit !== currentUnit) {
@@ -180,7 +180,7 @@ function cleanRosterText(input, showPoints = true, smartFormat = true) {
     const { armyInfo, firstPointsLine, headerEndIndex } = processArmyHeader(lines);
     
     if (firstPointsLine) {
-        cleanedLines.push(showPoints ? firstPointsLine : firstPointsLine.replace(/\(\d+\s*Points?\)/, ''));
+        cleanedLines.push(showPoints ? firstPointsLine : firstPointsLine.replace(/\(\d+\s*Points?\)/i, ''));
     }
 
     if (armyInfo.length > 0) {
