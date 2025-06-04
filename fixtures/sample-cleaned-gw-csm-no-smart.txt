@@ -1,19 +1,26 @@
-Escalation 1000 (995 points)
-Chaos Space Marines - Soulforged Warpack
+The Goal is to Survive the Shooting Phase  (1990 points)
+Chaos Space Marines - Fellhammer Siege-host
 
-Warpsmith (95)
-  • Enhancement: Tempting Addendum
+Chaos Lord in Terminator Armour (105)
+  • Enhancement: Bastion Plate
+
+Sorcerer in Terminator Armour (100)
+  • Enhancement: Warp Tracer
 
 Cultist Mob (50)
-Cultist Mob (50)
+
+Legionaries (90)
+Legionaries (90)
+
+Chaos Rhino (75)
+
+Chaos Predator Annihilator (135)
+Chaos Predator Annihilator (135)
+
+Chaos Terminator Squad (360)
 
 Chaos Vindicator (185)
+Chaos Vindicator (185)
 
-Forgefiend (190)
-Forgefiend (190)
-
-Helbrute (130)
-
-Beasts of Nurgle (65)
-
-Nurglings (40) 
+Possessed (240)
+Possessed (240)

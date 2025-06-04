@@ -1,19 +1,26 @@
-Escalation 1000 
-Chaos Space Marines - Soulforged Warpack
+The Goal is to Survive the Shooting Phase  
+Chaos Space Marines - Fellhammer Siege-host
 
-Warpsmith
-  • Enhancement: Tempting Addendum
+Chaos Lord in Terminator Armour
+  • Enhancement: Bastion Plate
+
+Sorcerer in Terminator Armour
+  • Enhancement: Warp Tracer
 
 Cultist Mob
-Cultist Mob
+
+Legionaries
+Legionaries
+
+Chaos Rhino
+
+Chaos Predator Annihilator
+Chaos Predator Annihilator
+
+Chaos Terminators
 
 Chaos Vindicator
+Chaos Vindicator
 
-Forgefiend
-Forgefiend
-
-Helbrute
-
-Beasts of Nurgle
-
-Nurglings
+Possessed
+Possessed
