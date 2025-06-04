@@ -13,7 +13,7 @@ const normalizeFactionName = (text) => {
 };
 
 const isSectionHeader = (line) => 
-    ['CHARACTERS', 'BATTLELINE', 'OTHER DATASHEETS', 'ALLIED UNITS'].includes(line);
+    ['CHARACTERS', 'BATTLELINE', 'DEDICATED TRANSPORTS', 'OTHER DATASHEETS', 'ALLIED UNITS'].includes(line);
 
 const isPointsLine = (line) => line.match(/\((\d+)\s*points?\)/i);
 
