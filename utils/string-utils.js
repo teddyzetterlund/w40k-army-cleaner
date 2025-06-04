@@ -3,7 +3,7 @@
  * @param {string} text - The text to normalize
  * @returns {string} - Text with normalized apostrophes
  */
-export const normalizeApostrophes = (text) => text.replace(/['''`′‵ʼ]/g, "'");
+export const normalizeApostrophes = (text) => text.replace(/["'`′‵ʼ‘’]/g, "'");
 
 /**
  * Normalizes faction names by removing special characters and converting to lowercase
@@ -16,7 +16,7 @@ export const normalizeFactionName = (text) => {
         .toLowerCase()
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')
-        .replace(/['''`′‵ʼ]/g, '')
+        .replace(/["'`′‵ʼ‘’]/g, '')
         .replace(/[^a-z0-9]/g, '')
         .trim();
 }; 
