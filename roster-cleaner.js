@@ -92,9 +92,10 @@ function processArmyHeader(lines) {
  * @param {string} unitName - The unit name to format
  * @param {boolean} isTauEmpire - Whether the unit belongs to T'au Empire
  * @param {boolean} smartFormat - Whether to apply smart formatting
+ * @param {boolean} isChaosSpaceMarines - Whether the unit belongs to Chaos Space Marines
  * @returns {string} - Formatted unit name
  */
-function formatUnitName(unitName, isTauEmpire, smartFormat) {
+function formatUnitName(unitName, isTauEmpire, smartFormat, isChaosSpaceMarines) {
     validateFormatUnitNameInput(unitName, isTauEmpire, smartFormat);
     if (!smartFormat) return unitName;
 
@@ -104,6 +105,16 @@ function formatUnitName(unitName, isTauEmpire, smartFormat) {
     if (formattedName.endsWith(' Squad')) {
         const baseName = formattedName.slice(0, -6);
         formattedName = baseName.endsWith('s') ? baseName : baseName + 's';
+    }
+
+    // Chaos Space Marines specific formatting
+    if (isChaosSpaceMarines) {
+        if (formattedName.startsWith('Chaos ')) {
+            formattedName = formattedName.slice(6);
+        }
+        if (formattedName === 'Cultist Mob') {
+            formattedName = 'Cultists';
+        }
     }
 
     // T'au Empire specific formatting
@@ -150,10 +161,11 @@ function formatTauUnitName(unitName) {
  * @param {boolean} showPoints - Whether to include points in output
  * @param {boolean} smartFormat - Whether to apply smart formatting
  * @param {boolean} isTauEmpire - Whether the roster is for T'au Empire
+ * @param {boolean} isChaosSpaceMarines - Whether the roster is for Chaos Space Marines
  * @returns {string[]} - Array of processed unit lines
  */
-function processUnits(lines, startIndex, showPoints, smartFormat, isTauEmpire) {
-    validateProcessUnitsInput(lines, startIndex, showPoints, smartFormat, isTauEmpire);
+function processUnits(lines, startIndex, showPoints, smartFormat, isTauEmpire, isChaosSpaceMarines) {
+    validateProcessUnitsInput(lines, startIndex, showPoints, smartFormat, isTauEmpire, isChaosSpaceMarines);
     const cleanedLines = [];
     let currentUnit = '';
     let currentPoints = '';
@@ -186,7 +198,7 @@ function processUnits(lines, startIndex, showPoints, smartFormat, isTauEmpire) {
             }
 
             let unitName = line.split('(')[0].trim();
-            currentUnit = formatUnitName(unitName, isTauEmpire, smartFormat);
+            currentUnit = formatUnitName(unitName, isTauEmpire, smartFormat, isChaosSpaceMarines);
             currentPoints = pointsMatch[1];
             currentUnitAdded = false;
         } else if (line.match(ENHANCEMENT_PATTERN)) {
@@ -233,14 +245,16 @@ function validateCleanRosterInput(input, showPoints, smartFormat) {
  * @param {any} showPoints - The showPoints parameter to validate
  * @param {any} smartFormat - The smartFormat parameter to validate
  * @param {any} isTauEmpire - The isTauEmpire parameter to validate
+ * @param {any} isChaosSpaceMarines - The isChaosSpaceMarines parameter to validate
  * @throws {Error} If any parameter is invalid
  */
-function validateProcessUnitsInput(lines, startIndex, showPoints, smartFormat, isTauEmpire) {
+function validateProcessUnitsInput(lines, startIndex, showPoints, smartFormat, isTauEmpire, isChaosSpaceMarines) {
     validateStringArray(lines, 'lines');
     validateArrayIndex(startIndex, 'startIndex', lines.length);
     validateBoolean(showPoints, 'showPoints');
     validateBoolean(smartFormat, 'smartFormat');
     validateBoolean(isTauEmpire, 'isTauEmpire');
+    validateBoolean(isChaosSpaceMarines, 'isChaosSpaceMarines');
 }
 
 /**
@@ -306,9 +320,12 @@ function cleanRosterText(input, showPoints = true, smartFormat = true) {
     const isTauEmpire = armyInfo.some(line => 
         normalizeFactionName(line).includes('tauempire')
     );
+    const isChaosSpaceMarines = armyInfo.some(line => 
+        normalizeFactionName(line).includes('chaosspacemarines')
+    );
 
     // Process units
-    const unitLines = processUnits(lines, headerEndIndex, showPoints, smartFormat, isTauEmpire);
+    const unitLines = processUnits(lines, headerEndIndex, showPoints, smartFormat, isTauEmpire, isChaosSpaceMarines);
     cleanedLines.push(...unitLines);
 
     return normalizeApostrophes(cleanedLines.join('\n'));

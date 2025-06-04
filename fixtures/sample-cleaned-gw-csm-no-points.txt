@@ -1,26 +1,26 @@
 The Goal is to Survive the Shooting Phase  
 Chaos Space Marines - Fellhammer Siege-host
 
-Chaos Lord in Terminator Armour
+Lord in Terminator Armour
   • Enhancement: Bastion Plate
 
 Sorcerer in Terminator Armour
   • Enhancement: Warp Tracer
 
-Cultist Mob
+Cultists
 
 Legionaries
 Legionaries
 
-Chaos Rhino
+Rhino
 
-Chaos Predator Annihilator
-Chaos Predator Annihilator
+Predator Annihilator
+Predator Annihilator
 
-Chaos Terminators
+Terminators
 
-Chaos Vindicator
-Chaos Vindicator
+Vindicator
+Vindicator
 
 Possessed
 Possessed
