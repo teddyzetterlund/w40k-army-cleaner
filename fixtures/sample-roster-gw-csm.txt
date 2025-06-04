@@ -1,0 +1,68 @@
+Escalation 1000 (995 points)
+
+Chaos Space Marines
+Incursion (1000 points)
+Soulforged Warpack
+
+
+CHARACTERS
+
+Warpsmith (95 points)
+  • Warlord
+  • 1x Flamer tendril
+    1x Forge weapon
+    1x Melta tendril
+    1x Plasma pistol
+  • Enhancement: Tempting Addendum
+
+
+BATTLELINE
+
+Cultist Mob (50 points)
+  • 1x Cultist Champion
+    • 1x Autopistol
+      1x Brutal assault weapon
+  • 9x Chaos Cultist
+    • 9x Autopistol
+      9x Brutal assault weapon
+
+Cultist Mob (50 points)
+  • 1x Cultist Champion
+    • 1x Autopistol
+      1x Brutal assault weapon
+  • 9x Chaos Cultist
+    • 9x Autopistol
+      9x Brutal assault weapon
+
+
+OTHER DATASHEETS
+
+Chaos Vindicator (185 points)
+  • 1x Armoured tracks
+    1x Demolisher cannon
+
+Forgefiend (190 points)
+  • 1x Armoured limbs
+    3x Ectoplasma cannon
+
+Forgefiend (190 points)
+  • 1x Armoured limbs
+    3x Ectoplasma cannon
+
+Helbrute (130 points)
+  • 1x Close combat weapon
+    1x Heavy flamer
+    1x Helbrute fist
+    1x Helbrute hammer
+
+
+ALLIED UNITS
+
+Beasts of Nurgle (65 points)
+  • 1x Putrid appendages
+
+Nurglings (40 points)
+  • 3x Nurgling Swarm
+    • 3x Diseased claws and teeth
+
+Exported with App Version: v1.25.0 (65), Data Version: v538

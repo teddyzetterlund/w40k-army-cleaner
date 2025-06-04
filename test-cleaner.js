@@ -49,6 +49,30 @@ const cases = [
         output: 'sample-cleaned-gw-tau-no-points-no-smart.txt',
         showPoints: false,
         smartFormat: false
+    },
+    {
+        input: 'sample-roster-gw-csm.txt',
+        output: 'sample-cleaned-gw-csm.txt',
+        showPoints: true,
+        smartFormat: true
+    },
+    {
+        input: 'sample-roster-gw-csm.txt',
+        output: 'sample-cleaned-gw-csm-no-points.txt',
+        showPoints: false,
+        smartFormat: true
+    },
+    {
+        input: 'sample-roster-gw-csm.txt',
+        output: 'sample-cleaned-gw-csm-no-smart.txt',
+        showPoints: true,
+        smartFormat: false
+    },
+    {
+        input: 'sample-roster-gw-csm.txt',
+        output: 'sample-cleaned-gw-csm-no-points-no-smart.txt',
+        showPoints: false,
+        smartFormat: false
     }
 ];
 
