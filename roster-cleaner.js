@@ -16,11 +16,14 @@ import {
 } from './utils/regex-patterns.js';
 
 /**
- * Checks if a line is a known section header
+ * Checks if a line is a section header (fully capitalized text)
  * @param {string} line - The line to check
  * @returns {boolean} - True if the line is a section header
  */
-const isKnownSectionHeader = (line) => ROSTER_CONFIG.SECTION_HEADERS.includes(line);
+const isKnownSectionHeader = (line) => {
+    const trimmedLine = line.trim();
+    return trimmedLine && trimmedLine === trimmedLine.toUpperCase() && !trimmedLine.match(/[0-9]/);
+};
 
 /**
  * Checks if a line contains points information

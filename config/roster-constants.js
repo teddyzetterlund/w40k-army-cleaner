@@ -3,17 +3,6 @@
  */
 export const ROSTER_CONFIG = {
     /**
-     * Known section headers in a roster file
-     */
-    SECTION_HEADERS: [
-        'CHARACTERS',
-        'BATTLELINE',
-        'DEDICATED TRANSPORTS',
-        'OTHER DATASHEETS',
-        'ALLIED UNITS'
-    ],
-
-    /**
      * Known game formats
      */
     GAME_FORMATS: [
