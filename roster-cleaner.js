@@ -1,27 +1,32 @@
-// Utility functions
-const normalizeApostrophes = (text) => text.replace(/['''`′‵ʼ]/g, "'");
+import { normalizeApostrophes, normalizeFactionName } from './utils/string-utils.js';
+import { SECTION_HEADERS, GAME_FORMATS, TAU_UNIT_BASES } from './config/roster-constants.js';
 
-const normalizeFactionName = (text) => {
-    if (!text) return '';
-    return text
-        .toLowerCase()
-        .normalize('NFD')  // Decompose characters into their base form
-        .replace(/[\u0300-\u036f]/g, '')  // Remove diacritics
-        .replace(/['''`′‵ʼ]/g, '')  // Remove apostrophes
-        .replace(/[^a-z0-9]/g, '')  // Remove all non-alphanumeric characters
-        .trim();
-};
+/**
+ * Checks if a line is a known section header
+ * @param {string} line - The line to check
+ * @returns {boolean} - True if the line is a section header
+ */
+const isKnownSectionHeader = (line) => SECTION_HEADERS.includes(line);
 
-const isSectionHeader = (line) => 
-    ['CHARACTERS', 'BATTLELINE', 'DEDICATED TRANSPORTS', 'OTHER DATASHEETS', 'ALLIED UNITS'].includes(line);
-
+/**
+ * Checks if a line contains points information
+ * @param {string} line - The line to check
+ * @returns {boolean} - True if the line contains points information
+ */
 const isPointsLine = (line) => line.match(/\((\d+)\s*points?\)/i);
 
-const isGameFormatLine = (line) => 
-    line.includes('Strike Force') || 
-    line.includes('Incursion') || 
-    line.includes('Onslaught');
+/**
+ * Checks if a line contains game format information
+ * @param {string} line - The line to check
+ * @returns {boolean} - True if the line contains game format information
+ */
+const isGameFormatLine = (line) => GAME_FORMATS.some(format => line.includes(format));
 
+/**
+ * Checks if a line contains army information
+ * @param {string} line - The line to check
+ * @returns {boolean} - True if the line contains army information
+ */
 const isArmyInfoLine = (line) => 
     line && 
     !isPointsLine(line) && 
@@ -42,7 +47,7 @@ function processArmyHeader(lines) {
         const line = lines[i].trim();
         if (!line) continue;
 
-        if (isSectionHeader(line)) continue;
+        if (isKnownSectionHeader(line)) continue;
 
         if (!firstPointsLineFound && isPointsLine(line)) {
             firstPointsLine = line;
@@ -121,7 +126,7 @@ function processUnits(lines, startIndex, showPoints, smartFormat, isTauEmpire) {
         let line = normalizeApostrophes(lines[i].trim());
         if (!line) continue;
 
-        if (isSectionHeader(line)) continue;
+        if (isKnownSectionHeader(line)) continue;
 
         if (!headerProcessed) {
             if (isPointsLine(line) && !line.includes('Strike Force')) {
@@ -204,7 +209,7 @@ export {
     cleanRosterText,
     normalizeApostrophes,
     normalizeFactionName,
-    isSectionHeader,
+    isKnownSectionHeader,
     isPointsLine,
     isGameFormatLine,
     isArmyInfoLine,
