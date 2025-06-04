@@ -9,6 +9,35 @@ const readFixture = (filename) => {
 };
 
 describe('Roster Cleaner', () => {
+// Test Chaos Space Marines roster
+    describe('Chaos Space Marines Roster', () => {
+        const input = readFixture('sample-roster-gw-csm.txt');
+
+        test('cleans roster with points and smart format', () => {
+            const expected = readFixture('sample-cleaned-gw-csm.txt');
+            const result = cleanRosterText(input, true, true);
+            expect(result).toBe(expected);
+        });
+
+        test('cleans roster without points', () => {
+            const expected = readFixture('sample-cleaned-gw-csm-no-points.txt');
+            const result = cleanRosterText(input, false, true);
+            expect(result).toBe(expected);
+        });
+
+        test('cleans roster without smart format', () => {
+            const expected = readFixture('sample-cleaned-gw-csm-no-smart.txt');
+            const result = cleanRosterText(input, true, false);
+            expect(result).toBe(expected);
+        });
+
+        test('cleans roster without points and smart format', () => {
+            const expected = readFixture('sample-cleaned-gw-csm-no-points-no-smart.txt');
+            const result = cleanRosterText(input, false, false);
+            expect(result).toBe(expected);
+        });
+    });
+
     // Test Dark Angels roster
     describe('Dark Angels Roster', () => {
         const input = readFixture('sample-roster-gw-da.txt');
