@@ -145,14 +145,14 @@ function processUnits(lines, startIndex, showPoints, smartFormat, isTauEmpire) {
             currentUnit = formatUnitName(unitName, isTauEmpire, smartFormat);
             currentPoints = pointsMatch[1];
             currentUnitAdded = false;
-        } else if (line.includes('Enhancements:')) {
-            const enhancement = line.split('Enhancements:')[1].trim();
+        } else if (line.match(/Enhancements?:/i)) {
+            const enhancement = line.split(/Enhancements?:/i)[1].trim();
             if (currentUnit && !currentUnitAdded) {
                 if (lastUnit && lastUnit !== currentUnit) {
                     cleanedLines.push('');
                 }
                 cleanedLines.push(showPoints ? `${currentUnit} (${currentPoints})` : currentUnit);
-                cleanedLines.push(`  • Enhancements: ${enhancement}`);
+                cleanedLines.push(`  • Enhancement: ${enhancement}`);
                 lastUnit = currentUnit;
                 currentUnitAdded = true;
             }
