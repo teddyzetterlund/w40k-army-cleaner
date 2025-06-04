@@ -1,20 +1,33 @@
 import { normalizeApostrophes, normalizeFactionName } from './utils/string-utils.js';
-import { SECTION_HEADERS, GAME_FORMATS, TAU_UNIT_BASES } from './config/roster-constants.js';
+import { ROSTER_CONFIG } from './config/roster-constants.js';
+import {
+    validateString,
+    validateBoolean,
+    validateStringArray,
+    validateArrayIndex
+} from './utils/validation-utils.js';
+import {
+    POINTS_PATTERN,
+    ENHANCEMENT_PATTERN,
+    POINTS_REMOVAL_PATTERN,
+    BATTLESUIT_PATTERN,
+    COMMANDER_PATTERN,
+    MULTIPLE_S_PATTERN
+} from './utils/regex-patterns.js';
 
 /**
  * Checks if a line is a known section header
  * @param {string} line - The line to check
  * @returns {boolean} - True if the line is a section header
  */
-const isKnownSectionHeader = (line) => 
-    ['CHARACTERS', 'BATTLELINE', 'DEDICATED TRANSPORTS', 'OTHER DATASHEETS', 'ALLIED UNITS'].includes(line);
+const isKnownSectionHeader = (line) => ROSTER_CONFIG.SECTION_HEADERS.includes(line);
 
 /**
  * Checks if a line contains points information
  * @param {string} line - The line to check
  * @returns {boolean} - True if the line contains points information
  */
-const isPointsLine = (line) => line.match(/\((\d+)\s*points?\)/i);
+const isPointsLine = (line) => line.match(POINTS_PATTERN);
 
 /**
  * Checks if a line contains game format information
@@ -22,9 +35,7 @@ const isPointsLine = (line) => line.match(/\((\d+)\s*points?\)/i);
  * @returns {boolean} - True if the line contains game format information
  */
 const isGameFormatLine = (line) => 
-    line.includes('Strike Force') || 
-    line.includes('Incursion') || 
-    line.includes('Onslaught');
+    ROSTER_CONFIG.GAME_FORMATS.some(format => line.includes(format));
 
 /**
  * Checks if a line contains army information
@@ -46,6 +57,7 @@ const isArmyInfoLine = (line) =>
  * @returns {{ armyInfo: string[], firstPointsLine: string|null, headerEndIndex: number }}
  */
 function processArmyHeader(lines) {
+    validateProcessArmyHeaderInput(lines);
     const armyInfo = [];
     let firstPointsLine = null;
     let headerEndIndex = 0;
@@ -83,6 +95,7 @@ function processArmyHeader(lines) {
  * @returns {string} - Formatted unit name
  */
 function formatUnitName(unitName, isTauEmpire, smartFormat) {
+    validateFormatUnitNameInput(unitName, isTauEmpire, smartFormat);
     if (!smartFormat) return unitName;
 
     let formattedName = unitName;
@@ -107,30 +120,27 @@ function formatUnitName(unitName, isTauEmpire, smartFormat) {
  * @returns {string} - Formatted unit name
  */
 function formatTauUnitName(unitName) {
+    validateFormatTauUnitNameInput(unitName);
     let formatted = unitName
         .replace(/Battlesuit/g, '')
         .replace(/\s+/g, ' ')
         .trim();
 
-    let battlesuitsMatch = formatted.match(/(.+) Battlesuits?$/);
+    let battlesuitsMatch = formatted.match(BATTLESUIT_PATTERN);
     if (battlesuitsMatch) {
         let base = battlesuitsMatch[1].trim();
         formatted = base.endsWith('s') ? base : base + 's';
     }
 
     formatted = formatted
-        .replace(/^Commander in /, '')
-        .replace(/^Commander /, '')
+        .replace(COMMANDER_PATTERN, '')
         .trim();
 
-    const tauBases = ['Broadside', 'Crisis Fireknife', 'Crisis Starscythe', 'Stealth'];
-    for (const base of tauBases) {
-        if (formatted === base) {
-            formatted = base + 's';
-        }
+    if (ROSTER_CONFIG.TAU_UNIT_BASES.includes(formatted)) {
+        formatted = formatted + 's';
     }
 
-    return formatted.replace(/\s+s$/, 's');
+    return formatted.replace(MULTIPLE_S_PATTERN, 's');
 }
 
 /**
@@ -143,6 +153,7 @@ function formatTauUnitName(unitName) {
  * @returns {string[]} - Array of processed unit lines
  */
 function processUnits(lines, startIndex, showPoints, smartFormat, isTauEmpire) {
+    validateProcessUnitsInput(lines, startIndex, showPoints, smartFormat, isTauEmpire);
     const cleanedLines = [];
     let currentUnit = '';
     let currentPoints = '';
@@ -164,7 +175,7 @@ function processUnits(lines, startIndex, showPoints, smartFormat, isTauEmpire) {
             }
         }
 
-        const pointsMatch = line.match(/\((\d+)\s*points?\)/i);
+        const pointsMatch = line.match(POINTS_PATTERN);
         if (pointsMatch) {
             if (currentUnit && !currentUnitAdded) {
                 if (lastUnit && lastUnit !== currentUnit) {
@@ -178,8 +189,8 @@ function processUnits(lines, startIndex, showPoints, smartFormat, isTauEmpire) {
             currentUnit = formatUnitName(unitName, isTauEmpire, smartFormat);
             currentPoints = pointsMatch[1];
             currentUnitAdded = false;
-        } else if (line.match(/Enhancements?:/i)) {
-            const enhancement = line.split(/Enhancements?:/i)[1].trim();
+        } else if (line.match(ENHANCEMENT_PATTERN)) {
+            const enhancement = line.split(ENHANCEMENT_PATTERN)[1].trim();
             if (currentUnit && !currentUnitAdded) {
                 if (lastUnit && lastUnit !== currentUnit) {
                     cleanedLines.push('');
@@ -203,13 +214,77 @@ function processUnits(lines, startIndex, showPoints, smartFormat, isTauEmpire) {
 }
 
 /**
+ * Validates input parameters for the cleanRosterText function
+ * @param {any} input - The input to validate
+ * @param {any} showPoints - The showPoints parameter to validate
+ * @param {any} smartFormat - The smartFormat parameter to validate
+ * @throws {Error} If any parameter is invalid
+ */
+function validateCleanRosterInput(input, showPoints, smartFormat) {
+    validateString(input, 'input');
+    validateBoolean(showPoints, 'showPoints');
+    validateBoolean(smartFormat, 'smartFormat');
+}
+
+/**
+ * Validates input parameters for the processUnits function
+ * @param {any} lines - The lines array to validate
+ * @param {any} startIndex - The startIndex to validate
+ * @param {any} showPoints - The showPoints parameter to validate
+ * @param {any} smartFormat - The smartFormat parameter to validate
+ * @param {any} isTauEmpire - The isTauEmpire parameter to validate
+ * @throws {Error} If any parameter is invalid
+ */
+function validateProcessUnitsInput(lines, startIndex, showPoints, smartFormat, isTauEmpire) {
+    validateStringArray(lines, 'lines');
+    validateArrayIndex(startIndex, 'startIndex', lines.length);
+    validateBoolean(showPoints, 'showPoints');
+    validateBoolean(smartFormat, 'smartFormat');
+    validateBoolean(isTauEmpire, 'isTauEmpire');
+}
+
+/**
+ * Validates input parameters for the formatUnitName function
+ * @param {any} unitName - The unit name to validate
+ * @param {any} isTauEmpire - The isTauEmpire parameter to validate
+ * @param {any} smartFormat - The smartFormat parameter to validate
+ * @throws {Error} If any parameter is invalid
+ */
+function validateFormatUnitNameInput(unitName, isTauEmpire, smartFormat) {
+    validateString(unitName, 'unitName');
+    validateBoolean(isTauEmpire, 'isTauEmpire');
+    validateBoolean(smartFormat, 'smartFormat');
+}
+
+/**
+ * Validates input parameters for the formatTauUnitName function
+ * @param {any} unitName - The unit name to validate
+ * @throws {Error} If the parameter is invalid
+ */
+function validateFormatTauUnitNameInput(unitName) {
+    validateString(unitName, 'unitName');
+}
+
+/**
+ * Validates input parameters for the processArmyHeader function
+ * @param {any} lines - The lines array to validate
+ * @throws {Error} If the parameter is invalid
+ */
+function validateProcessArmyHeaderInput(lines) {
+    validateStringArray(lines, 'lines');
+}
+
+/**
  * Cleans and formats a roster text according to specified options
  * @param {string} input - The roster text to clean
  * @param {boolean} [showPoints=true] - Whether to include points in the output
  * @param {boolean} [smartFormat=true] - Whether to apply smart formatting to unit names
  * @returns {string} - The cleaned roster text
+ * @throws {Error} If any parameter is invalid
  */
 function cleanRosterText(input, showPoints = true, smartFormat = true) {
+    validateCleanRosterInput(input, showPoints, smartFormat);
+
     input = input.trim();
     if (!input) return '';
 
@@ -220,7 +295,7 @@ function cleanRosterText(input, showPoints = true, smartFormat = true) {
     const { armyInfo, firstPointsLine, headerEndIndex } = processArmyHeader(lines);
     
     if (firstPointsLine) {
-        cleanedLines.push(showPoints ? firstPointsLine : firstPointsLine.replace(/\(\d+\s*Points?\)/i, ''));
+        cleanedLines.push(showPoints ? firstPointsLine : firstPointsLine.replace(POINTS_REMOVAL_PATTERN, ''));
     }
 
     if (armyInfo.length > 0) {
