@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { cleanRosterText } from './roster-cleaner.js';
+import { cleanRosterText } from '../../roster-cleaner.js';
 import '@testing-library/jest-dom';
 import { fireEvent, screen } from '@testing-library/dom';
 
