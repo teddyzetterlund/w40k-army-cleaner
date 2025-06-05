@@ -39,12 +39,13 @@ function setupCopyButton(copyButton, rosterOutput) {
     });
 }
 
-function createUpdateRosterOutput(rosterInput, outputContainer, rosterOutput, showPointsCheckbox, smartFormatCheckbox) {
+function createUpdateRosterOutput(rosterInput, outputContainer, rosterOutput, showPointsCheckbox, smartFormatCheckbox, showModelsCheckbox) {
     return function updateRosterOutput() {
         const input = rosterInput.value;
         const showPoints = showPointsCheckbox.checked;
         const smartFormat = smartFormatCheckbox.checked;
-        const cleaned = cleanRosterText(input, showPoints, smartFormat);
+        const showModels = showModelsCheckbox.checked;
+        const cleaned = cleanRosterText(input, showPoints, smartFormat, showModels);
         
         if (!cleaned) {
             outputContainer.classList.add('hidden');
@@ -64,13 +65,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const copyButton = document.getElementById('copy-button');
     const showPointsCheckbox = document.getElementById('show-points');
     const smartFormatCheckbox = document.getElementById('smart-format');
+    const showModelsCheckbox = document.getElementById('show-models');
 
     const updateRosterOutput = createUpdateRosterOutput(
         rosterInput,
         outputContainer,
         rosterOutput,
         showPointsCheckbox,
-        smartFormatCheckbox
+        smartFormatCheckbox,
+        showModelsCheckbox
     );
 
     setupDragAndDrop(rosterInput, updateRosterOutput);
@@ -79,4 +82,5 @@ document.addEventListener('DOMContentLoaded', () => {
     rosterInput.addEventListener('input', updateRosterOutput);
     showPointsCheckbox.addEventListener('change', updateRosterOutput);
     smartFormatCheckbox.addEventListener('change', updateRosterOutput);
+    showModelsCheckbox.addEventListener('change', updateRosterOutput);
 }); 

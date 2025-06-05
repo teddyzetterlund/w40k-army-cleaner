@@ -158,6 +158,54 @@ function formatTauUnitName(unitName) {
 }
 
 /**
+ * Counts the number of models in a unit by analyzing its indentation structure
+ * @param {string[]} lines - Array of roster lines
+ * @param {number} startIndex - Starting index for the unit
+ * @returns {number} - Total number of models in the unit
+ */
+function countModelsInUnit(lines, startIndex) {
+    let modelCount = 0;
+    const baseIndent = lines[startIndex].search(/\S|$/);
+    let i = startIndex + 1;
+
+    // Skip if this is a vehicle or character (single model)
+    const unitName = lines[startIndex].split('(')[0].trim();
+    if (unitName.match(/\b(Lord|Sorcerer|Rhino|Predator|Vindicator|Azrael|Captain|Chaplain|Lieutenant|Land Raider)\b/)) {
+        return 1;
+    }
+
+    while (i < lines.length) {
+        const line = lines[i];
+        if (!line.trim() || isKnownSectionHeader(line)) break;
+        if (isPointsLine(line) || line.match(ENHANCEMENT_PATTERN)) {
+            i++;
+            continue;
+        }
+
+        const indent = line.search(/\S|$/);
+        if (indent <= baseIndent) break;
+
+        // Count all first-level bullets with '• Nx ...' as models, except known non-models
+        if (indent === baseIndent + 2) {
+            const modelMatch = line.match(/^\s*•\s*(\d+)x\s+([^•]+)/);
+            if (modelMatch) {
+                const modelName = modelMatch[2].trim();
+                if (modelName === 'Watcher in the Dark') {
+                    i++;
+                    continue;
+                }
+                const count = parseInt(modelMatch[1], 10);
+                modelCount += count;
+            }
+        }
+        i++;
+    }
+
+    // If no models were counted, assume this is a single-model unit
+    return modelCount || 1;
+}
+
+/**
  * Processes the units section of the roster
  * @param {string[]} lines - Array of roster lines
  * @param {number} startIndex - Starting index for processing
@@ -165,9 +213,10 @@ function formatTauUnitName(unitName) {
  * @param {boolean} smartFormat - Whether to apply smart formatting
  * @param {boolean} isTauEmpire - Whether the roster is for T'au Empire
  * @param {boolean} isChaosSpaceMarines - Whether the roster is for Chaos Space Marines
+ * @param {boolean} showModels - Whether to show model counts
  * @returns {string[]} - Array of processed unit lines
  */
-function processUnits(lines, startIndex, showPoints, smartFormat, isTauEmpire, isChaosSpaceMarines) {
+function processUnits(lines, startIndex, showPoints, smartFormat, isTauEmpire, isChaosSpaceMarines, showModels = false) {
     validateProcessUnitsInput(lines, startIndex, showPoints, smartFormat, isTauEmpire, isChaosSpaceMarines);
     const cleanedLines = [];
     let currentUnit = '';
@@ -175,6 +224,7 @@ function processUnits(lines, startIndex, showPoints, smartFormat, isTauEmpire, i
     let lastUnit = '';
     let currentUnitAdded = false;
     let headerProcessed = false;
+    let currentUnitStartIndex = startIndex;
 
     for (let i = startIndex; i < lines.length; i++) {
         let line = normalizeApostrophes(lines[i].trim());
@@ -196,7 +246,9 @@ function processUnits(lines, startIndex, showPoints, smartFormat, isTauEmpire, i
                 if (lastUnit && lastUnit !== currentUnit) {
                     cleanedLines.push('');
                 }
-                cleanedLines.push(showPoints ? `${currentUnit} (${currentPoints})` : currentUnit);
+                const modelCount = showModels ? countModelsInUnit(lines, currentUnitStartIndex) : 0;
+                const modelText = modelCount > 1 ? `${modelCount}x ` : '';
+                cleanedLines.push(showPoints ? `${modelText}${currentUnit} (${currentPoints})` : `${modelText}${currentUnit}`);
                 lastUnit = currentUnit;
             }
 
@@ -204,13 +256,16 @@ function processUnits(lines, startIndex, showPoints, smartFormat, isTauEmpire, i
             currentUnit = formatUnitName(unitName, isTauEmpire, smartFormat, isChaosSpaceMarines);
             currentPoints = pointsMatch[1];
             currentUnitAdded = false;
+            currentUnitStartIndex = i;
         } else if (line.match(ENHANCEMENT_PATTERN)) {
             const enhancement = line.split(ENHANCEMENT_PATTERN)[1].trim();
             if (currentUnit && !currentUnitAdded) {
                 if (lastUnit && lastUnit !== currentUnit) {
                     cleanedLines.push('');
                 }
-                cleanedLines.push(showPoints ? `${currentUnit} (${currentPoints})` : currentUnit);
+                const modelCount = showModels ? countModelsInUnit(lines, currentUnitStartIndex) : 0;
+                const modelText = modelCount > 1 ? `${modelCount}x ` : '';
+                cleanedLines.push(showPoints ? `${modelText}${currentUnit} (${currentPoints})` : `${modelText}${currentUnit}`);
                 cleanedLines.push(`  • Enhancement: ${enhancement}`);
                 lastUnit = currentUnit;
                 currentUnitAdded = true;
@@ -222,7 +277,9 @@ function processUnits(lines, startIndex, showPoints, smartFormat, isTauEmpire, i
         if (lastUnit && lastUnit !== currentUnit) {
             cleanedLines.push('');
         }
-        cleanedLines.push(showPoints ? `${currentUnit} (${currentPoints})` : currentUnit);
+        const modelCount = showModels ? countModelsInUnit(lines, currentUnitStartIndex) : 0;
+        const modelText = modelCount > 1 ? `${modelCount}x ` : '';
+        cleanedLines.push(showPoints ? `${modelText}${currentUnit} (${currentPoints})` : `${modelText}${currentUnit}`);
     }
 
     return cleanedLines;
@@ -233,12 +290,14 @@ function processUnits(lines, startIndex, showPoints, smartFormat, isTauEmpire, i
  * @param {any} input - The input to validate
  * @param {any} showPoints - The showPoints parameter to validate
  * @param {any} smartFormat - The smartFormat parameter to validate
+ * @param {any} showModels - The showModels parameter to validate
  * @throws {Error} If any parameter is invalid
  */
-function validateCleanRosterInput(input, showPoints, smartFormat) {
+function validateCleanRosterInput(input, showPoints, smartFormat, showModels) {
     validateString(input, 'input');
     validateBoolean(showPoints, 'showPoints');
     validateBoolean(smartFormat, 'smartFormat');
+    validateBoolean(showModels, 'showModels');
 }
 
 /**
@@ -296,11 +355,12 @@ function validateProcessArmyHeaderInput(lines) {
  * @param {string} input - The roster text to clean
  * @param {boolean} [showPoints=true] - Whether to include points in the output
  * @param {boolean} [smartFormat=true] - Whether to apply smart formatting to unit names
+ * @param {boolean} [showModels=false] - Whether to show model counts
  * @returns {string} - The cleaned roster text
  * @throws {Error} If any parameter is invalid
  */
-function cleanRosterText(input, showPoints = true, smartFormat = true) {
-    validateCleanRosterInput(input, showPoints, smartFormat);
+function cleanRosterText(input, showPoints = true, smartFormat = true, showModels = false) {
+    validateCleanRosterInput(input, showPoints, smartFormat, showModels);
 
     input = input.trim();
     if (!input) return '';
@@ -328,7 +388,7 @@ function cleanRosterText(input, showPoints = true, smartFormat = true) {
     );
 
     // Process units
-    const unitLines = processUnits(lines, headerEndIndex, showPoints, smartFormat, isTauEmpire, isChaosSpaceMarines);
+    const unitLines = processUnits(lines, headerEndIndex, showPoints, smartFormat, isTauEmpire, isChaosSpaceMarines, showModels);
     cleanedLines.push(...unitLines);
 
     return normalizeApostrophes(cleanedLines.join('\n'));
