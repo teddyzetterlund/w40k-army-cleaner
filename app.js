@@ -39,6 +39,38 @@ function setupCopyButton(copyButton, rosterOutput) {
     });
 }
 
+function setupOptionsMenu(optionsMenuButton, optionsMenu, checkboxes, updateRosterOutput) {
+    function updateOptionsButtonText() {
+        const checkedCount = checkboxes.filter(cb => cb.checked).length;
+        const totalCount = checkboxes.length;
+        optionsMenuButton.textContent = `Formatting Options (${checkedCount}/${totalCount})`;
+    }
+
+    optionsMenuButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        optionsMenu.classList.toggle('hidden');
+    });
+
+    optionsMenu.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+
+    document.addEventListener('click', () => {
+        if (!optionsMenu.classList.contains('hidden')) {
+            optionsMenu.classList.add('hidden');
+        }
+    });
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            updateRosterOutput();
+            updateOptionsButtonText();
+        });
+    });
+
+    updateOptionsButtonText();
+}
+
 function createUpdateRosterOutput(rosterInput, outputContainer, rosterOutput, showPointsCheckbox, smartFormatCheckbox, showModelsCheckbox) {
     return function updateRosterOutput() {
         const input = rosterInput.value;
@@ -66,6 +98,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const showPointsCheckbox = document.getElementById('show-points');
     const smartFormatCheckbox = document.getElementById('smart-format');
     const showModelsCheckbox = document.getElementById('show-models');
+    const optionsMenuButton = document.getElementById('options-menu-button');
+    const optionsMenu = document.getElementById('options-menu');
+
+    const checkboxes = [showPointsCheckbox, smartFormatCheckbox, showModelsCheckbox];
 
     const updateRosterOutput = createUpdateRosterOutput(
         rosterInput,
@@ -78,9 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setupDragAndDrop(rosterInput, updateRosterOutput);
     setupCopyButton(copyButton, rosterOutput);
+    setupOptionsMenu(optionsMenuButton, optionsMenu, checkboxes, updateRosterOutput);
 
     rosterInput.addEventListener('input', updateRosterOutput);
-    showPointsCheckbox.addEventListener('change', updateRosterOutput);
-    smartFormatCheckbox.addEventListener('change', updateRosterOutput);
-    showModelsCheckbox.addEventListener('change', updateRosterOutput);
 }); 
