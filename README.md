@@ -54,6 +54,13 @@ When disabled, unit names are kept in their original format from the roster.
 ### Available Scripts
 
 - `npm run generate-icons`: Generates PWA icons from the source SVG
+- `npm test`: Runs all tests using [Vitest](https://vitest.dev/)
+- `npm run test:watch`: Runs tests in watch mode
+- `npm run test:coverage`: Generates a coverage report
+- `npm run test:unit`: Runs only unit tests
+- `npm run test:integration`: Runs only integration tests
+- `npm run test:e2e`: Runs only end-to-end tests
+- `npm run test:ui`: Opens the Vitest UI for interactive test running
 
 ### Project Structure
 
