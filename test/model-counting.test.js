@@ -29,12 +29,12 @@ describe('Model Counting', () => {
 
     describe('Chaos Space Marines', () => {
         test('should correctly count models in CSM roster', () => {
-            const result = cleanRosterText(csmRoster, true, true, true);
+            const result = cleanRosterText({ input: csmRoster, showPoints: true, smartFormat: true, showModels: true });
             expect(normalizeText(result)).toBe(normalizeText(csmExpected));
         });
 
         test('should not show model counts when showModels is false', () => {
-            const result = cleanRosterText(csmRoster, true, true, false);
+            const result = cleanRosterText({ input: csmRoster, showPoints: true, smartFormat: true, showModels: false });
             const expected = readFileSync(join(__dirname, '../fixtures/sample-cleaned-gw-csm.txt'), 'utf8');
             expect(normalizeText(result)).toBe(normalizeText(expected));
         });
@@ -48,7 +48,7 @@ describe('Model Counting', () => {
                 'Vindicator (185)'
             ];
 
-            const result = cleanRosterText(csmRoster, true, true, true);
+            const result = cleanRosterText({ input: csmRoster, showPoints: true, smartFormat: true, showModels: true });
             singleModelUnits.forEach(unit => {
                 expect(result).not.toContain(`1x ${unit}`);
                 expect(result).toContain(unit);
@@ -63,14 +63,14 @@ describe('Model Counting', () => {
                 '10x Possessed (240)'
             ];
 
-            const result = cleanRosterText(csmRoster, true, true, true);
+            const result = cleanRosterText({ input: csmRoster, showPoints: true, smartFormat: true, showModels: true });
             multiModelUnits.forEach(unit => {
                 expect(result).toContain(unit);
             });
         });
 
         test('should preserve enhancements when showing model counts', () => {
-            const result = cleanRosterText(csmRoster, true, true, true);
+            const result = cleanRosterText({ input: csmRoster, showPoints: true, smartFormat: true, showModels: true });
             expect(result).toContain('Lord in Terminator Armour (105)\n  • Enhancement: Bastion Plate');
             expect(result).toContain('Sorcerer in Terminator Armour (100)\n  • Enhancement: Warp Tracer');
         });
@@ -78,12 +78,12 @@ describe('Model Counting', () => {
 
     describe('Space Marines (Dark Angels)', () => {
         test('should correctly count models in DA roster', () => {
-            const result = cleanRosterText(daRoster, true, true, true);
+            const result = cleanRosterText({ input: daRoster, showPoints: true, smartFormat: true, showModels: true });
             expect(normalizeText(result)).toBe(normalizeText(daExpected));
         });
 
         test('should not show model counts when showModels is false', () => {
-            const result = cleanRosterText(daRoster, true, true, false);
+            const result = cleanRosterText({ input: daRoster, showPoints: true, smartFormat: true, showModels: false });
             const expected = readFileSync(join(__dirname, '../fixtures/sample-cleaned-gw-da.txt'), 'utf8');
             expect(normalizeText(result)).toBe(normalizeText(expected));
         });
@@ -96,7 +96,7 @@ describe('Model Counting', () => {
                 'Lieutenant with Combi-weapon (70)',
                 'Land Raider (240)'
             ];
-            const result = cleanRosterText(daRoster, true, true, true);
+            const result = cleanRosterText({ input: daRoster, showPoints: true, smartFormat: true, showModels: true });
             singleModelUnits.forEach(unit => {
                 expect(result).not.toContain(`1x ${unit}`);
                 expect(result).toContain(unit);
@@ -112,7 +112,7 @@ describe('Model Counting', () => {
                 '10x Hellblasters (230)',
                 '5x Scouts (70)'
             ];
-            const result = cleanRosterText(daRoster, true, true, true);
+            const result = cleanRosterText({ input: daRoster, showPoints: true, smartFormat: true, showModels: true });
             multiModelUnits.forEach(unit => {
                 expect(result).toContain(unit);
             });

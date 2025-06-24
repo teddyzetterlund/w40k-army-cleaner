@@ -206,17 +206,33 @@ function countModelsInUnit(lines, startIndex) {
 }
 
 /**
- * Processes the units section of the roster
- * @param {string[]} lines - Array of roster lines
- * @param {number} startIndex - Starting index for processing
- * @param {boolean} showPoints - Whether to include points in output
- * @param {boolean} smartFormat - Whether to apply smart formatting
- * @param {boolean} isTauEmpire - Whether the roster is for T'au Empire
- * @param {boolean} isChaosSpaceMarines - Whether the roster is for Chaos Space Marines
- * @param {boolean} showModels - Whether to show model counts
+ * Options for processing units
+ * @typedef {Object} ProcessUnitsOptions
+ * @property {string[]} lines - Array of roster lines
+ * @property {number} startIndex - Starting index for processing
+ * @property {boolean} showPoints - Whether to include points in output
+ * @property {boolean} smartFormat - Whether to apply smart formatting
+ * @property {boolean} isTauEmpire - Whether the roster is for T'au Empire
+ * @property {boolean} isChaosSpaceMarines - Whether the roster is for Chaos Space Marines
+ * @property {boolean} [showModels=false] - Whether to show model counts
+ */
+
+/**
+ * Processes units in the roster according to specified options
+ * @param {ProcessUnitsOptions} options - The options for processing units
  * @returns {string[]} - Array of processed unit lines
  */
-function processUnits(lines, startIndex, showPoints, smartFormat, isTauEmpire, isChaosSpaceMarines, showModels = false) {
+function processUnits(options) {
+    const {
+        lines,
+        startIndex,
+        showPoints,
+        smartFormat,
+        isTauEmpire,
+        isChaosSpaceMarines,
+        showModels = false
+    } = options;
+
     validateProcessUnitsInput(lines, startIndex, showPoints, smartFormat, isTauEmpire, isChaosSpaceMarines);
     const cleanedLines = [];
     let currentUnit = '';
@@ -351,21 +367,34 @@ function validateProcessArmyHeaderInput(lines) {
 }
 
 /**
+ * Options for cleaning roster text
+ * @typedef {Object} CleanRosterOptions
+ * @property {string} input - The roster text to clean
+ * @property {boolean} [showPoints=true] - Whether to include points in the output
+ * @property {boolean} [smartFormat=true] - Whether to apply smart formatting to unit names
+ * @property {boolean} [showModels=false] - Whether to show model counts
+ */
+
+/**
  * Cleans and formats a roster text according to specified options
- * @param {string} input - The roster text to clean
- * @param {boolean} [showPoints=true] - Whether to include points in the output
- * @param {boolean} [smartFormat=true] - Whether to apply smart formatting to unit names
- * @param {boolean} [showModels=false] - Whether to show model counts
+ * @param {CleanRosterOptions} options - The options for cleaning the roster
  * @returns {string} - The cleaned roster text
  * @throws {Error} If any parameter is invalid
  */
-function cleanRosterText(input, showPoints = true, smartFormat = true, showModels = false) {
+function cleanRosterText(options) {
+    const {
+        input,
+        showPoints = true,
+        smartFormat = true,
+        showModels = false
+    } = options;
+
     validateCleanRosterInput(input, showPoints, smartFormat, showModels);
 
-    input = input.trim();
-    if (!input) return '';
+    const trimmedInput = input.trim();
+    if (!trimmedInput) return '';
 
-    const lines = input.split('\n');
+    const lines = trimmedInput.split('\n');
     const cleanedLines = [];
 
     // Process header
@@ -388,7 +417,15 @@ function cleanRosterText(input, showPoints = true, smartFormat = true, showModel
     );
 
     // Process units
-    const unitLines = processUnits(lines, headerEndIndex, showPoints, smartFormat, isTauEmpire, isChaosSpaceMarines, showModels);
+    const unitLines = processUnits({
+        lines,
+        startIndex: headerEndIndex,
+        showPoints,
+        smartFormat,
+        isTauEmpire,
+        isChaosSpaceMarines,
+        showModels
+    });
     cleanedLines.push(...unitLines);
 
     return normalizeApostrophes(cleanedLines.join('\n'));

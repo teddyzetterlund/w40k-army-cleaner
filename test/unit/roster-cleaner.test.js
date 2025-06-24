@@ -15,25 +15,25 @@ describe('Roster Cleaner', () => {
 
         test('cleans roster with points and smart format', () => {
             const expected = readFixture('sample-cleaned-gw-csm.txt');
-            const result = cleanRosterText(input, true, true);
+            const result = cleanRosterText({ input, showPoints: true, smartFormat: true });
             expect(result).toBe(expected);
         });
 
         test('cleans roster without points', () => {
             const expected = readFixture('sample-cleaned-gw-csm-no-points.txt');
-            const result = cleanRosterText(input, false, true);
+            const result = cleanRosterText({ input, showPoints: false, smartFormat: true });
             expect(result).toBe(expected);
         });
 
         test('cleans roster without smart format', () => {
             const expected = readFixture('sample-cleaned-gw-csm-no-smart.txt');
-            const result = cleanRosterText(input, true, false);
+            const result = cleanRosterText({ input, showPoints: true, smartFormat: false });
             expect(result).toBe(expected);
         });
 
         test('cleans roster without points and smart format', () => {
             const expected = readFixture('sample-cleaned-gw-csm-no-points-no-smart.txt');
-            const result = cleanRosterText(input, false, false);
+            const result = cleanRosterText({ input, showPoints: false, smartFormat: false });
             expect(result).toBe(expected);
         });
     });
@@ -44,25 +44,25 @@ describe('Roster Cleaner', () => {
         
         test('cleans roster with points and smart format', () => {
             const expected = readFixture('sample-cleaned-gw-da.txt');
-            const result = cleanRosterText(input, true, true);
+            const result = cleanRosterText({ input, showPoints: true, smartFormat: true });
             expect(result).toBe(expected);
         });
 
         test('cleans roster without points', () => {
             const expected = readFixture('sample-cleaned-gw-da-no-points.txt');
-            const result = cleanRosterText(input, false, true);
+            const result = cleanRosterText({ input, showPoints: false, smartFormat: true });
             expect(result).toBe(expected);
         });
 
         test('cleans roster without smart format', () => {
             const expected = readFixture('sample-cleaned-gw-da-no-smart.txt');
-            const result = cleanRosterText(input, true, false);
+            const result = cleanRosterText({ input, showPoints: true, smartFormat: false });
             expect(result).toBe(expected);
         });
 
         test('cleans roster without points and smart format', () => {
             const expected = readFixture('sample-cleaned-gw-da-no-points-no-smart.txt');
-            const result = cleanRosterText(input, false, false);
+            const result = cleanRosterText({ input, showPoints: false, smartFormat: false });
             expect(result).toBe(expected);
         });
     });
@@ -73,25 +73,25 @@ describe('Roster Cleaner', () => {
         
         test('cleans roster with points and smart format', () => {
             const expected = readFixture('sample-cleaned-gw-tau.txt');
-            const result = cleanRosterText(input, true, true);
+            const result = cleanRosterText({ input, showPoints: true, smartFormat: true });
             expect(result).toBe(expected);
         });
 
         test('cleans roster without points', () => {
             const expected = readFixture('sample-cleaned-gw-tau-no-points.txt');
-            const result = cleanRosterText(input, false, true);
+            const result = cleanRosterText({ input, showPoints: false, smartFormat: true });
             expect(result).toBe(expected);
         });
 
         test('cleans roster without smart format', () => {
             const expected = readFixture('sample-cleaned-gw-tau-no-smart.txt');
-            const result = cleanRosterText(input, true, false);
+            const result = cleanRosterText({ input, showPoints: true, smartFormat: false });
             expect(result).toBe(expected);
         });
 
         test('cleans roster without points and smart format', () => {
             const expected = readFixture('sample-cleaned-gw-tau-no-points-no-smart.txt');
-            const result = cleanRosterText(input, false, false);
+            const result = cleanRosterText({ input, showPoints: false, smartFormat: false });
             expect(result).toBe(expected);
         });
     });
@@ -99,16 +99,16 @@ describe('Roster Cleaner', () => {
     // Test edge cases
     describe('Edge Cases', () => {
         test('handles empty input', () => {
-            expect(cleanRosterText('')).toBe('');
+            expect(cleanRosterText({ input: '' })).toBe('');
         });
 
         test('handles whitespace only input', () => {
-            expect(cleanRosterText('   \n   \t   ')).toBe('');
+            expect(cleanRosterText({ input: '   \n   \t   ' })).toBe('');
         });
 
         test('handles input with only header', () => {
             const input = 'The Hunt Never Ended (2000 Points)\n\nSpace Marines\nDark Angels';
-            const result = cleanRosterText(input);
+            const result = cleanRosterText({ input });
             expect(result).toContain('The Hunt Never Ended (2000 Points)');
             expect(result).toContain('SM - Dark Angels');
         });

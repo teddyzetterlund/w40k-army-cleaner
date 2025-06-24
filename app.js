@@ -77,7 +77,7 @@ function createUpdateRosterOutput(rosterInput, outputContainer, rosterOutput, sh
         const showPoints = showPointsCheckbox.checked;
         const smartFormat = smartFormatCheckbox.checked;
         const showModels = showModelsCheckbox.checked;
-        const cleaned = cleanRosterText(input, showPoints, smartFormat, showModels);
+        const cleaned = cleanRosterText({ input, showPoints, smartFormat, showModels });
         
         if (!cleaned) {
             outputContainer.classList.add('hidden');

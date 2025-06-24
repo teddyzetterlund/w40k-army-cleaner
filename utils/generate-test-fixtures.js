@@ -80,7 +80,7 @@ cases.forEach(({ input, output, showPoints, smartFormat }) => {
     const inputPath = `fixtures/${input}`;
     const outputPath = `fixtures/${output}`;
     const roster = fs.readFileSync(inputPath, 'utf8');
-    const cleaned = cleanRosterText(roster, showPoints, smartFormat).trim() + '\n';
+    const cleaned = cleanRosterText({ input: roster, showPoints, smartFormat }).trim() + '\n';
     fs.writeFileSync(outputPath, cleaned, 'utf8');
     console.log(`Wrote: ${outputPath}`);
 });
