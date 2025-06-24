@@ -24,12 +24,16 @@ describe('Model Counting', () => {
     let csmExpected;
     let daRoster;
     let daExpected;
+    let tauRoster;
+    let tauExpected;
 
     beforeAll(() => {
         csmRoster = readFileSync(join(__dirname, '../fixtures/sample-roster-gw-csm.txt'), 'utf8');
         csmExpected = readFileSync(join(__dirname, '../fixtures/sample-cleaned-gw-csm-with-models.txt'), 'utf8');
         daRoster = readFileSync(join(__dirname, '../fixtures/sample-roster-gw-da.txt'), 'utf8');
         daExpected = readFileSync(join(__dirname, '../fixtures/sample-cleaned-gw-da-with-models.txt'), 'utf8');
+        tauRoster = readFileSync(join(__dirname, '../fixtures/sample-roster-gw-tau.txt'), 'utf8');
+        tauExpected = readFileSync(join(__dirname, '../fixtures/sample-cleaned-gw-tau-with-models.txt'), 'utf8');
     });
 
     describe('Chaos Space Marines', () => {
@@ -118,6 +122,55 @@ describe('Model Counting', () => {
                 '5x Scouts (70)'
             ];
             const result = cleanRosterText({ input: daRoster, showPoints: true, smartFormat: true, showModels: true });
+            multiModelUnits.forEach(unit => {
+                expect(result).toContain(unit);
+            });
+        });
+    });
+
+    describe('T\'au Empire', () => {
+        test('should correctly count models in T\'au roster', () => {
+            const result = cleanRosterText({ input: tauRoster, showPoints: true, smartFormat: true, showModels: true });
+            expect(normalizeText(result)).toBe(normalizeText(tauExpected));
+        });
+
+        test('should correctly count Strike Team models', () => {
+            const result = cleanRosterText({ input: tauRoster, showPoints: true, smartFormat: true, showModels: true });
+            // Strike Team should have 10 models (1 Shas'ui + 9 Fire Warriors)
+            expect(result).toContain('10x Strike Team (75)');
+        });
+
+        test('should not count equipment as models', () => {
+            const result = cleanRosterText({ input: tauRoster, showPoints: true, smartFormat: true, showModels: true });
+            // Support turret should not be counted as a model
+            expect(result).not.toContain('11x Strike Team');
+        });
+
+        test('should handle single-model units correctly', () => {
+            const singleModelUnits = [
+                'Farsight (105)',
+                'Coldstar (95)',
+                'Enforcer (100)',
+                'Ghostkeel (160)',
+                'Krootox Riders (35)',
+                'Riptide (180)'
+            ];
+            const result = cleanRosterText({ input: tauRoster, showPoints: true, smartFormat: true, showModels: true });
+            singleModelUnits.forEach(unit => {
+                expect(result).not.toContain(`1x ${unit}`);
+                expect(result).toContain(unit);
+            });
+        });
+
+        test('should handle multi-model units correctly', () => {
+            const multiModelUnits = [
+                '10x Strike Team (75)',
+                '2x Broadsides (180)',
+                '3x Crisis Fireknifes (130)',
+                '3x Crisis Starscythes (110)',
+                '3x Stealths (60)'
+            ];
+            const result = cleanRosterText({ input: tauRoster, showPoints: true, smartFormat: true, showModels: true });
             multiModelUnits.forEach(unit => {
                 expect(result).toContain(unit);
             });

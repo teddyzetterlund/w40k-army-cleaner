@@ -158,22 +158,23 @@ function formatTauUnitName(unitName) {
 }
 
 /**
- * Counts the number of models in a unit by analyzing its indentation structure
+ * Counts the number of models in a unit by analyzing the structure of indented lines
+ * Models are identified as lines with '• Nx [Name]' that are followed by indented wargear lines
+ * Equipment (like turrets, etc.) are not counted as models
  * @param {string[]} lines - Array of roster lines
- * @param {number} startIndex - Starting index for the unit
- * @returns {number} - Total number of models in the unit
+ * @param {number} startIndex - Starting index of the unit
+ * @returns {number} - Number of models in the unit
  */
 function countModelsInUnit(lines, startIndex) {
     let modelCount = 0;
     const baseIndent = lines[startIndex].search(/\S|$/);
     let i = startIndex + 1;
 
-    // Skip if this is a vehicle or character (single model)
-    const unitName = lines[startIndex].split('(')[0].trim();
-    if (unitName.match(/\b(Lord|Sorcerer|Rhino|Predator|Vindicator|Azrael|Captain|Chaplain|Lieutenant|Land Raider)\b/)) {
-        return 1;
-    }
+    console.log(`DEBUG: Counting models for unit starting at line ${startIndex}: "${lines[startIndex]}"`);
+    console.log(`DEBUG: Base indent: ${baseIndent}`);
 
+    // Find the first indentation level within this unit
+    let firstLevelIndent = null;
     while (i < lines.length) {
         const line = lines[i];
         if (!line.trim() || isKnownSectionHeader(line)) break;
@@ -185,22 +186,56 @@ function countModelsInUnit(lines, startIndex) {
         const indent = line.search(/\S|$/);
         if (indent <= baseIndent) break;
 
-        // Count all first-level bullets with '• Nx ...' as models, except known non-models
-        if (indent === baseIndent + 2) {
+        // Find the first indentation level (models are at this level)
+        if (firstLevelIndent === null) {
+            firstLevelIndent = indent;
+            console.log(`DEBUG: First level indent: ${firstLevelIndent}`);
+        }
+
+        // Only look for models at the first indentation level
+        if (indent === firstLevelIndent) {
             const modelMatch = line.match(/^\s*•\s*(\d+)x\s+([^•]+)/);
             if (modelMatch) {
-                const modelName = modelMatch[2].trim();
-                if (modelName === 'Watcher in the Dark') {
-                    i++;
-                    continue;
-                }
                 const count = parseInt(modelMatch[1], 10);
-                modelCount += count;
+                const modelName = modelMatch[2].trim();
+                
+                console.log(`DEBUG: Found potential model: ${count}x ${modelName} (indent: ${indent})`);
+                
+                // Check if this line is followed by more indented wargear lines
+                // This distinguishes models from equipment
+                let hasWargear = false;
+                let j = i + 1;
+                
+                while (j < lines.length) {
+                    const nextLine = lines[j];
+                    if (!nextLine.trim() || isKnownSectionHeader(nextLine)) break;
+                    if (isPointsLine(nextLine) || nextLine.match(ENHANCEMENT_PATTERN)) break;
+                    
+                    const nextIndent = nextLine.search(/\S|$/);
+                    if (nextIndent <= indent) break; // End of this model's section
+                    
+                    // If we find a more indented line, this model has wargear
+                    if (nextIndent > indent) {
+                        hasWargear = true;
+                        console.log(`DEBUG: Model "${modelName}" has wargear (line ${j}: "${nextLine.trim()}")`);
+                        break;
+                    }
+                    j++;
+                }
+                
+                // Only count as a model if it has wargear (indicating it's a model, not equipment)
+                if (hasWargear) {
+                    modelCount += count;
+                    console.log(`DEBUG: Counted ${count} models of type "${modelName}" (total: ${modelCount})`);
+                } else {
+                    console.log(`DEBUG: Skipped "${modelName}" as equipment (no wargear)`);
+                }
             }
         }
         i++;
     }
 
+    console.log(`DEBUG: Final model count: ${modelCount || 1}`);
     // If no models were counted, assume this is a single-model unit
     return modelCount || 1;
 }
