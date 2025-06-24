@@ -1,31 +1,193 @@
-{
-    "formatter": {
-        "indentSize": 4,
-        "useTabs": false,
-        "lineWidth": 100
-    },
-    "linter": {
-        "javascript": {
-            "rules": {
-                "no-unused-vars": "warn",
-                "no-console": "warn",
-                "semi": ["error", "always"],
-                "quotes": ["error", "single"],
-                "indent": ["error", 4],
-                "max-len": ["warn", { "code": 100 }]
-            }
-        },
-        "html": {
-            "rules": {
-                "indent": ["error", 4],
-                "max-len": ["warn", { "code": 100 }]
-            }
-        }
-    },
-    "editor": {
-        "formatOnSave": true,
-        "formatOnPaste": true,
-        "trimTrailingWhitespace": true,
-        "insertFinalNewline": true
-    }
-} 
+# Cursor AI Configuration for 40K Army Cleaner
+
+## Project Context
+
+This is a **vanilla JavaScript Progressive Web App** that processes Warhammer 40K army rosters. The project follows a modular, test-driven architecture with emphasis on maintainability and user experience.
+
+## Core Principles
+
+### Architecture Philosophy
+- **Vanilla JavaScript**: No heavy frameworks, minimal dependencies
+- **Progressive Enhancement**: Works without JS, enhanced with modern features
+- **PWA Standards**: Offline capability, app-like experience
+- **Test-Driven**: Comprehensive test coverage with real-world fixtures
+
+### Code Organization
+- **Modular Design**: Each file has single responsibility
+- **Pure Functions**: No side effects, predictable outputs
+- **ES6+ Modules**: Clean import/export patterns
+- **Configuration-Driven**: Constants centralized for easy maintenance
+
+## Development Guidelines
+
+### JavaScript Style
+- Use **ES6+ features** (arrow functions, destructuring, template literals)
+- **camelCase** for variables/functions, **PascalCase** for classes/objects
+- **UPPER_SNAKE_CASE** for constants
+- Always use **JSDoc comments** for public functions
+- Prefer **const** over **let**, avoid **var**
+
+### File Naming Conventions
+- **kebab-case** for files: `roster-cleaner.js`, `string-utils.js`
+- Test files: `*.test.js`
+- Utility files: `*-utils.js`
+
+### Function Design
+- **Pure functions** with no side effects
+- Clear input validation with descriptive error messages
+- Consistent return types
+- Single responsibility principle
+
+### Function Design Patterns
+- **Options objects** for functions with multiple parameters
+- **Early returns** over nested conditionals
+- **Pure functions** with immutable data handling
+- **Composition** over complex logic
+- **No data mutation** - work with immutable data structures
+
+## Testing Standards
+
+### Test Organization
+- **Unit tests**: `test/unit/` - Pure function testing
+- **Integration tests**: `test/integration/` - Component interaction
+- **E2E tests**: `test/e2e/` - User workflow testing
+- **Cross-cutting tests**: `test/` - Model counting, validation, etc.
+
+### Test Patterns
+- Use **real-world fixtures** from `fixtures/` directory
+- Test **all option combinations** for each faction
+- Include **edge cases** (empty input, whitespace, etc.)
+- Write **descriptive test names** that explain expected behavior
+
+### Test Data Strategy
+- **Factory functions** with optional overrides for test data
+- **Real-world fixtures** from actual roster exports
+- **Complete test coverage** for all option combinations
+- **Edge cases** included (empty, whitespace, malformed)
+- **Descriptive test names** that explain expected behavior
+
+### Testing Philosophy
+- **Test behavior, not implementation** - treat code as black box
+- **No 1:1 mapping** between test files and implementation files
+- **100% coverage through business behavior** - not implementation details
+- **Use real-world fixtures** for comprehensive testing
+- **Test through public APIs exclusively** - internals should be invisible
+
+## Module Responsibilities
+
+### Core Modules
+- **app.js**: UI event handling, DOM manipulation, user interaction
+- **roster-cleaner.js**: Core business logic, roster processing
+- **utils/**: Pure utility functions (string, validation, regex patterns)
+- **config/**: Configuration constants and game-specific data
+
+### Adding New Features
+1. **Faction Support**: Add to `config/roster-constants.js`, create fixtures, add logic to `roster-cleaner.js`
+2. **Formatting Options**: Add to UI in `index.html`, update `app.js`, modify `roster-cleaner.js`
+3. **Utility Functions**: Place in appropriate `utils/` file with JSDoc and tests
+
+## Code Quality Standards
+
+### Validation
+- All public functions must have input validation
+- Use `utils/validation-utils.js` for common validation patterns
+- Provide descriptive error messages for debugging
+
+### Documentation
+- **JSDoc comments** for all public functions
+- Include parameter types, return values, and usage examples
+- Self-documenting code with clear variable and function names
+
+### Error Handling
+- **Graceful degradation** for malformed input
+- **Descriptive error messages** for debugging
+- **Early returns** with validation
+- **No console.log** or debugging code in production
+- **Use Result patterns** or exceptions consistently
+
+## PWA Considerations
+
+### Service Worker
+- Cache-first strategy for static assets
+- Offline support for basic functionality
+- Automatic updates when available
+
+### Performance
+- Minimal dependencies for faster loading
+- CDN usage for external resources
+- Optimized assets and lazy loading
+
+## AI Assistance Guidelines
+
+### When Suggesting Code Changes
+1. **Follow existing patterns** in the codebase
+2. **Maintain test coverage** - add tests for new functionality
+3. **Use pure functions** with clear inputs/outputs
+4. **Add JSDoc documentation** for new functions
+5. **Consider PWA implications** for any changes
+
+### When Reviewing Code
+1. **Check for test coverage** of new functionality
+2. **Verify input validation** is present
+3. **Ensure error handling** is appropriate
+4. **Confirm naming conventions** are followed
+5. **Validate PWA compatibility** for UI changes
+
+### Common Patterns to Follow
+- **Faction-specific logic**: Add to `formatUnitName` function in `roster-cleaner.js`
+- **New validation**: Add to `utils/validation-utils.js`
+- **String manipulation**: Add to `utils/string-utils.js`
+- **Regex patterns**: Add to `utils/regex-patterns.js`
+- **Configuration**: Add to `config/roster-constants.js`
+
+### AI Assistance Workflow
+1. **Start with failing test** - always write test first
+2. **Write minimal code** to make test pass
+3. **Assess refactoring** after green state
+4. **Verify all tests pass** before moving on
+5. **Follow existing patterns** in codebase
+6. **Maintain PWA compatibility** for all changes
+
+## Context for AI Understanding
+
+This project processes Warhammer 40K army rosters exported from the Games Workshop app. The application:
+- Removes redundant formatting and section headers
+- Applies faction-specific unit name formatting
+- Allows toggling points display and smart formatting
+- Supports multiple factions (Space Marines, Chaos Space Marines, T'au Empire)
+- Uses real-world test data from actual roster exports
+
+The codebase is designed for maintainability and extensibility, with clear separation between UI logic, business logic, and utilities. All changes should maintain this architecture and follow the established patterns.
+
+### TDD Requirements
+- **NO PRODUCTION CODE** without a failing test first
+- Follow Red-Green-Refactor cycle strictly
+- Every feature, bug fix, and change must start with a test
+- Tests must describe expected business behavior, not implementation
+
+### Refactoring Standards
+- **Always assess after green** - evaluate refactoring opportunities
+- **Commit before refactoring** - maintain safe rollback points
+- **Only refactor if it adds value** - not all code needs refactoring
+- **Maintain external APIs** - refactoring should be invisible to consumers
+- **Verify tests pass** after every refactoring
+
+### Code Style Anti-patterns
+- **No nested if/else** - use early returns or guard clauses
+- **No data mutation** - prefer immutable updates
+- **No large functions** - keep functions small and focused
+- **No magic numbers** - use named constants
+- **No comments explaining what** - code should be self-documenting
+
+### Development Workflow
+1. **Red**: Write failing test for desired behavior
+2. **Green**: Write minimal code to make test pass
+3. **Refactor**: Assess and improve code structure (if needed)
+4. **Commit**: Working state before next iteration
+
+### Quality Gates
+- **All tests must pass** before any commit
+- **No `any` types** or type assertions (if using TypeScript)
+- **100% behavior coverage** through business-focused tests
+- **All linting rules** must pass
+- **PWA functionality** must remain intact
