@@ -6,7 +6,7 @@
   "scripts": {
     "generate-icons": "node generate-icons.js",
     "start": "npx http-server -p 3000",
-    "test": "vitest",
+    "test": "vitest --run",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage",
     "test:unit": "vitest test/unit",
