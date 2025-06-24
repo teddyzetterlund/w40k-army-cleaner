@@ -82,7 +82,7 @@ cases.forEach(({ input, output, showPoints, smartFormat }) => {
     const roster = fs.readFileSync(inputPath, 'utf8');
     const cleaned = cleanRosterText({ input: roster, showPoints, smartFormat }).trim() + '\n';
     fs.writeFileSync(outputPath, cleaned, 'utf8');
-    console.log(`Wrote: ${outputPath}`);
+    console.warn(`Wrote: ${outputPath}`);
 });
 
-console.log('All expected output files have been regenerated.'); 
+console.warn('All expected output files have been regenerated.'); 

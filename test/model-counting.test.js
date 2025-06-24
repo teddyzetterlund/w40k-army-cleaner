@@ -6,6 +6,11 @@ import { dirname, join } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+/**
+ * Normalizes text by removing extra whitespace and empty lines
+ * @param {string} text - The text to normalize
+ * @returns {string} The normalized text
+ */
 function normalizeText(text) {
     return text
         .split('\n')

@@ -132,7 +132,7 @@ function setupOptionsMenu(optionsMenuButton, optionsMenu, checkboxes, updateRost
 
 /**
  * Creates a function to update roster output based on current input and options
- * @param {Object} options - Configuration options
+ * @param {object} options - Configuration options
  * @param {HTMLTextAreaElement} options.rosterInput - The input element
  * @param {HTMLElement} options.outputContainer - The output container
  * @param {HTMLElement} options.rosterOutput - The output element

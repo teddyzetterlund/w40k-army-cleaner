@@ -140,9 +140,9 @@ function formatTauUnitName(unitName) {
         .replace(/\s+/g, ' ')
         .trim();
 
-    let battlesuitsMatch = formatted.match(BATTLESUIT_PATTERN);
+    const battlesuitsMatch = formatted.match(BATTLESUIT_PATTERN);
     if (battlesuitsMatch) {
-        let base = battlesuitsMatch[1].trim();
+        const base = battlesuitsMatch[1].trim();
         formatted = base.endsWith('s') ? base : base + 's';
     }
 
@@ -207,7 +207,7 @@ function countModelsInUnit(lines, startIndex) {
 
 /**
  * Options for processing units
- * @typedef {Object} ProcessUnitsOptions
+ * @typedef {object} ProcessUnitsOptions
  * @property {string[]} lines - Array of roster lines
  * @property {number} startIndex - Starting index for processing
  * @property {boolean} showPoints - Whether to include points in output
@@ -243,7 +243,7 @@ function processUnits(options) {
     let currentUnitStartIndex = startIndex;
 
     for (let i = startIndex; i < lines.length; i++) {
-        let line = normalizeApostrophes(lines[i].trim());
+        const line = normalizeApostrophes(lines[i].trim());
         if (!line) continue;
 
         if (isKnownSectionHeader(line)) continue;
@@ -268,7 +268,7 @@ function processUnits(options) {
                 lastUnit = currentUnit;
             }
 
-            let unitName = line.split('(')[0].trim();
+            const unitName = line.split('(')[0].trim();
             currentUnit = formatUnitName(unitName, isTauEmpire, smartFormat, isChaosSpaceMarines);
             currentPoints = pointsMatch[1];
             currentUnitAdded = false;
@@ -368,7 +368,7 @@ function validateProcessArmyHeaderInput(lines) {
 
 /**
  * Options for cleaning roster text
- * @typedef {Object} CleanRosterOptions
+ * @typedef {object} CleanRosterOptions
  * @property {string} input - The roster text to clean
  * @property {boolean} [showPoints=true] - Whether to include points in the output
  * @property {boolean} [smartFormat=true] - Whether to apply smart formatting to unit names

@@ -3,7 +3,7 @@ import { UI_CONSTANTS } from '../config/ui-constants.js';
 
 /**
  * Gets all required DOM elements for the application
- * @returns {Object} Object containing all required DOM elements
+ * @returns {object} Object containing all required DOM elements
  * @throws {Error} If any required element is not found
  */
 export function getDOMElements() {

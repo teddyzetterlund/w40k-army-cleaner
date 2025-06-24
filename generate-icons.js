@@ -1,6 +1,10 @@
 const sharp = require('sharp');
 const fs = require('fs');
 
+/**
+ * Generates PWA icons from the source SVG file
+ * @returns {Promise<void>} Promise that resolves when icons are generated
+ */
 async function generateIcons() {
     try {
         // Read the SVG file
@@ -18,7 +22,7 @@ async function generateIcons() {
             .png()
             .toFile('icon-512.png');
 
-        console.log('Icons generated successfully!');
+        console.warn('Icons generated successfully!');
     } catch (error) {
         console.error('Error generating icons:', error);
     }
