@@ -54,4 +54,40 @@ export function validateArrayIndex(value, paramName, arrayLength) {
     if (value >= arrayLength) {
         throw new Error(`${paramName} must be less than array length ${arrayLength}`);
     }
+}
+
+/**
+ * Validates that a value is a DOM element
+ * @param {any} value - The value to check
+ * @param {string} paramName - The parameter name for the error message
+ * @throws {Error} If the value is not a DOM element
+ */
+export function validateElement(value, paramName) {
+    if (!(value instanceof Element)) {
+        throw new Error(`${paramName} must be a DOM element`);
+    }
+}
+
+/**
+ * Validates that a value is a function
+ * @param {any} value - The value to check
+ * @param {string} paramName - The parameter name for the error message
+ * @throws {Error} If the value is not a function
+ */
+export function validateFunction(value, paramName) {
+    if (typeof value !== 'function') {
+        throw new Error(`${paramName} must be a function`);
+    }
+}
+
+/**
+ * Validates that a value is a File object
+ * @param {any} value - The value to check
+ * @param {string} paramName - The parameter name for the error message
+ * @throws {Error} If the value is not a File object
+ */
+export function validateFile(value, paramName) {
+    if (!(value instanceof File)) {
+        throw new Error(`${paramName} must be a File object`);
+    }
 } 
