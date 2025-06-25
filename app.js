@@ -218,5 +218,16 @@ function initializeApp() {
     }
 }
 
+// Export functions for testing
+export {
+    setupDragAndDrop,
+    setupCopyButton,
+    setupMenuToggle,
+    setupCheckboxHandlers,
+    setupOptionsMenu,
+    createUpdateRosterOutput,
+    initializeApp
+};
+
 // Initialize the application when DOM is ready
 document.addEventListener('DOMContentLoaded', initializeApp); 
