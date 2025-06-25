@@ -63,80 +63,92 @@
                                 </div>
                                 <div id="options-menu" class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none hidden" role="menu" aria-orientation="vertical" aria-labelledby="options-menu-button">
                                     <div class="py-1" role="none">
-                                        <label class="flex items-center px-4 py-2 text-sm text-gray-700">
+                                        <!-- Content Display Options Group -->
+                                        <div class="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                                            Content Display
+                                        </div>
+                                        <label class="flex items-center px-4 py-2 text-sm text-gray-700 whitespace-nowrap">
                                             <input
                                                 type="checkbox"
-                                                id="inline-enhancements"
+                                                id="hide-header"
                                                 class="form-checkbox h-4 w-4 text-blue-500"
-                                                checked
                                             >
-                                            <span class="ml-2">Inline enhancements</span>
+                                            <span class="ml-2 truncate">Hide roster header</span>
                                         </label>
-                                        <label class="flex items-center px-4 py-2 text-sm text-gray-700">
+                                        <label class="flex items-center px-4 py-2 text-sm text-gray-700 whitespace-nowrap">
                                             <input
                                                 type="checkbox"
                                                 id="show-points"
                                                 class="form-checkbox h-4 w-4 text-blue-500"
                                                 checked
                                             >
-                                            <span class="ml-2">Show points</span>
+                                            <span class="ml-2 truncate">Show unit points</span>
                                         </label>
-                                        <label class="flex items-center px-4 py-2 text-sm text-gray-700">
+                                        <label class="flex items-center px-4 py-2 text-sm text-gray-700 whitespace-nowrap">
+                                            <input
+                                                type="checkbox"
+                                                id="show-models"
+                                                class="form-checkbox h-4 w-4 text-blue-500"
+                                            >
+                                            <span class="ml-2 truncate">Show model counts</span>
+                                        </label>
+                                        
+                                        <!-- Visual Separator -->
+                                        <div class="border-t border-gray-200 my-1"></div>
+                                        
+                                        <!-- Formatting & Layout Options Group -->
+                                        <div class="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                                            Formatting & Layout
+                                        </div>
+                                        <label class="flex items-center px-4 py-2 text-sm text-gray-700 whitespace-nowrap">
+                                            <input
+                                                type="checkbox"
+                                                id="inline-enhancements"
+                                                class="form-checkbox h-4 w-4 text-blue-500"
+                                                checked
+                                            >
+                                            <span class="ml-2 truncate">Inline enhancements</span>
+                                        </label>
+                                        <label class="flex items-center px-4 py-2 text-sm text-gray-700 whitespace-nowrap">
                                             <input
                                                 type="checkbox"
                                                 id="smart-format"
                                                 class="form-checkbox h-4 w-4 text-blue-500"
                                                 checked
                                             >
-                                            <span class="ml-2">Smart format</span>
+                                            <span class="ml-2 truncate">Smart unit formatting</span>
                                         </label>
-                                        <label class="flex items-center px-4 py-2 text-sm text-gray-700">
-                                            <input
-                                                type="checkbox"
-                                                id="show-models"
-                                                class="form-checkbox h-4 w-4 text-blue-500"
-                                            >
-                                            <span class="ml-2">Show model counts</span>
-                                        </label>
-                                        <label class="flex items-center px-4 py-2 text-sm text-gray-700">
+                                        <label class="flex items-center px-4 py-2 text-sm text-gray-700 whitespace-nowrap">
                                             <input
                                                 type="checkbox"
                                                 id="consolidate-duplicates"
                                                 class="form-checkbox h-4 w-4 text-blue-500"
                                             >
-                                            <span class="ml-2">Consolidate duplicates</span>
+                                            <span class="ml-2 truncate">Consolidate duplicate units</span>
                                         </label>
-                                        <label class="flex items-center px-4 py-2 text-sm text-gray-700">
-                                            <input
-                                                type="checkbox"
-                                                id="one-liner"
-                                                class="form-checkbox h-4 w-4 text-blue-500"
-                                            >
-                                            <span class="ml-2">One-liner output</span>
-                                        </label>
-                                        <label class="flex items-center px-4 py-2 text-sm text-gray-700">
-                                            <input
-                                                type="checkbox"
-                                                id="discord-format"
-                                                class="form-checkbox h-4 w-4 text-blue-500"
-                                            >
-                                            <span class="ml-2">Discord-friendly format</span>
-                                        </label>
-                                        <label class="flex items-center px-4 py-2 text-sm text-gray-700">
-                                            <input
-                                                type="checkbox"
-                                                id="hide-header"
-                                                class="form-checkbox h-4 w-4 text-blue-500"
-                                            >
-                                            <span class="ml-2">Hide header</span>
-                                        </label>
-                                        <label class="flex items-center px-4 py-2 text-sm text-gray-700">
+                                        <label class="flex items-center px-4 py-2 text-sm text-gray-700 whitespace-nowrap">
                                             <input
                                                 type="checkbox"
                                                 id="no-empty-lines"
                                                 class="form-checkbox h-4 w-4 text-blue-500"
                                             >
-                                            <span class="ml-2">No empty lines</span>
+                                            <span class="ml-2 truncate">Remove empty lines</span>
+                                        </label>
+                                        <label class="flex items-center px-4 py-2 text-sm text-gray-700 whitespace-nowrap">
+                                            <input
+                                                type="checkbox"
+                                                id="one-liner"
+                                                class="form-checkbox h-4 w-4 text-blue-500"
+                                            >
+                                            <span class="ml-2 truncate">Everything as one line</span>
+                                        </label>
+                                        <label class="flex items-center px-4 py-2 text-sm text-gray-700 whitespace-nowrap">
+                                            <input
+                                                type="checkbox"
+                                                id="discord-format"
+                                                class="form-checkbox h-4 w-4 text-blue-500"
+                                            >
+                                            <span class="ml-2 truncate">Discord-friendly format</span>
                                         </label>
                                     </div>
                                 </div>

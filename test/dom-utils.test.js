@@ -36,6 +36,8 @@ describe('DOM Utilities', () => {
             'one-liner': document.createElement('input'),
             'inline-enhancements': document.createElement('input'),
             'discord-format': document.createElement('input'),
+            'hide-header': document.createElement('input'),
+            'no-empty-lines': document.createElement('input'),
             'options-menu-button': document.createElement('button'),
             'options-menu': document.createElement('div')
         };
@@ -66,6 +68,8 @@ describe('DOM Utilities', () => {
             expect(elements.oneLinerCheckbox).toBe(mockElements['one-liner']);
             expect(elements.inlineEnhancementsCheckbox).toBe(mockElements['inline-enhancements']);
             expect(elements.discordFormatCheckbox).toBe(mockElements['discord-format']);
+            expect(elements.hideHeaderCheckbox).toBe(mockElements['hide-header']);
+            expect(elements.noEmptyLinesCheckbox).toBe(mockElements['no-empty-lines']);
             expect(elements.optionsMenuButton).toBe(mockElements['options-menu-button']);
             expect(elements.optionsMenu).toBe(mockElements['options-menu']);
         });
@@ -91,7 +95,7 @@ describe('DOM Utilities', () => {
 
             updateOptionsButtonText(button, checkboxes);
             
-            expect(button.textContent).toBe('Formatting Options (6/6)');
+            expect(button.textContent).toBe('Formatting (6/6)');
         });
 
         it('should update button text with correct count when some checkboxes are checked', () => {
@@ -107,7 +111,7 @@ describe('DOM Utilities', () => {
 
             updateOptionsButtonText(button, checkboxes);
             
-            expect(button.textContent).toBe('Formatting Options (3/6)');
+            expect(button.textContent).toBe('Formatting (3/6)');
         });
 
         it('should update button text with correct count when no checkboxes are checked', () => {
@@ -123,7 +127,7 @@ describe('DOM Utilities', () => {
 
             updateOptionsButtonText(button, checkboxes);
             
-            expect(button.textContent).toBe('Formatting Options (0/6)');
+            expect(button.textContent).toBe('Formatting (0/6)');
         });
 
         it('should throw error when button is not a DOM element', () => {

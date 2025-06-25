@@ -51,7 +51,9 @@ describe('App Unit Tests', () => {
             inlineEnhancementsCheckbox: document.createElement('input'),
             optionsMenuButton: document.createElement('button'),
             optionsMenu: document.createElement('div'),
-            discordFormatCheckbox: document.createElement('input')
+            discordFormatCheckbox: document.createElement('input'),
+            hideHeaderCheckbox: document.createElement('input'),
+            noEmptyLinesCheckbox: document.createElement('input')
         };
 
         // Set up checkbox types
@@ -62,6 +64,8 @@ describe('App Unit Tests', () => {
         mockElements.oneLinerCheckbox.type = 'checkbox';
         mockElements.inlineEnhancementsCheckbox.type = 'checkbox';
         mockElements.discordFormatCheckbox.type = 'checkbox';
+        mockElements.hideHeaderCheckbox.type = 'checkbox';
+        mockElements.noEmptyLinesCheckbox.type = 'checkbox';
 
         // Set initial menu state to hidden
         mockElements.optionsMenu.classList.add('hidden');
@@ -304,7 +308,9 @@ describe('App Unit Tests', () => {
                 showModelsCheckbox: mockElements.showModelsCheckbox,
                 consolidateDuplicatesCheckbox: mockElements.consolidateDuplicatesCheckbox,
                 oneLinerCheckbox: mockElements.oneLinerCheckbox,
-                inlineEnhancementsCheckbox: mockElements.inlineEnhancementsCheckbox
+                inlineEnhancementsCheckbox: mockElements.inlineEnhancementsCheckbox,
+                hideHeaderCheckbox: mockElements.hideHeaderCheckbox,
+                noEmptyLinesCheckbox: mockElements.noEmptyLinesCheckbox
             };
 
             // Set checkbox states
@@ -314,6 +320,8 @@ describe('App Unit Tests', () => {
             options.consolidateDuplicatesCheckbox.checked = false;
             options.oneLinerCheckbox.checked = true;
             options.inlineEnhancementsCheckbox.checked = false;
+            options.hideHeaderCheckbox.checked = true;
+            options.noEmptyLinesCheckbox.checked = false;
             options.rosterInput.value = 'test input';
 
             const updateRosterOutput = createUpdateRosterOutput(options);
@@ -326,7 +334,9 @@ describe('App Unit Tests', () => {
                 showModels: true,
                 consolidateDuplicates: false,
                 oneLiner: true,
-                inlineEnhancements: false
+                inlineEnhancements: false,
+                hideHeader: true,
+                noEmptyLines: false
             });
         });
 
@@ -340,7 +350,9 @@ describe('App Unit Tests', () => {
                 showModelsCheckbox: mockElements.showModelsCheckbox,
                 consolidateDuplicatesCheckbox: mockElements.consolidateDuplicatesCheckbox,
                 oneLinerCheckbox: mockElements.oneLinerCheckbox,
-                inlineEnhancementsCheckbox: mockElements.inlineEnhancementsCheckbox
+                inlineEnhancementsCheckbox: mockElements.inlineEnhancementsCheckbox,
+                hideHeaderCheckbox: mockElements.hideHeaderCheckbox,
+                noEmptyLinesCheckbox: mockElements.noEmptyLinesCheckbox
             };
 
             options.rosterInput.value = 'test input';
@@ -363,7 +375,9 @@ describe('App Unit Tests', () => {
                 showModelsCheckbox: mockElements.showModelsCheckbox,
                 consolidateDuplicatesCheckbox: mockElements.consolidateDuplicatesCheckbox,
                 oneLinerCheckbox: mockElements.oneLinerCheckbox,
-                inlineEnhancementsCheckbox: mockElements.inlineEnhancementsCheckbox
+                inlineEnhancementsCheckbox: mockElements.inlineEnhancementsCheckbox,
+                hideHeaderCheckbox: mockElements.hideHeaderCheckbox,
+                noEmptyLinesCheckbox: mockElements.noEmptyLinesCheckbox
             };
 
             options.rosterInput.value = '';

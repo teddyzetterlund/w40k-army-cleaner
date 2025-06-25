@@ -15,5 +15,5 @@ export const UI_CONSTANTS = {
     COPY_SUCCESS_TEXT: 'Copied!',
     
     /** Default options button text format */
-    OPTIONS_BUTTON_TEXT_FORMAT: 'Formatting Options ({checked}/{total})'
+    OPTIONS_BUTTON_TEXT_FORMAT: 'Formatting ({checked}/{total})'
 }; 

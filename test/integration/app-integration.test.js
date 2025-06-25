@@ -17,7 +17,8 @@ vi.mock('../../config/ui-constants.js', () => ({
         DRAG_OVER_CLASS: 'drag-over',
         HIDDEN_CLASS: 'hidden',
         COPY_SUCCESS_TEXT: 'Copied!',
-        COPY_FEEDBACK_DURATION_MS: 2000
+        COPY_FEEDBACK_DURATION_MS: 2000,
+        OPTIONS_BUTTON_TEXT_FORMAT: 'Formatting ({checked}/{total})'
     }
 }));
 
@@ -42,6 +43,8 @@ describe('App Integration Tests', () => {
             oneLinerCheckbox: document.createElement('input'),
             inlineEnhancementsCheckbox: document.createElement('input'),
             discordFormatCheckbox: document.createElement('input'),
+            hideHeaderCheckbox: document.createElement('input'),
+            noEmptyLinesCheckbox: document.createElement('input'),
             optionsMenuButton: document.createElement('button'),
             optionsMenu: document.createElement('div')
         };
@@ -54,6 +57,8 @@ describe('App Integration Tests', () => {
         mockElements.oneLinerCheckbox.type = 'checkbox';
         mockElements.inlineEnhancementsCheckbox.type = 'checkbox';
         mockElements.discordFormatCheckbox.type = 'checkbox';
+        mockElements.hideHeaderCheckbox.type = 'checkbox';
+        mockElements.noEmptyLinesCheckbox.type = 'checkbox';
 
         // Set default states
         mockElements.showPointsCheckbox.checked = true;
@@ -63,6 +68,8 @@ describe('App Integration Tests', () => {
         mockElements.oneLinerCheckbox.checked = false;
         mockElements.inlineEnhancementsCheckbox.checked = true;
         mockElements.discordFormatCheckbox.checked = false;
+        mockElements.hideHeaderCheckbox.checked = false;
+        mockElements.noEmptyLinesCheckbox.checked = false;
 
         // Set initial menu state to hidden
         mockElements.optionsMenu.classList.add('hidden');
@@ -115,7 +122,9 @@ describe('App Integration Tests', () => {
                 showModels: false,
                 consolidateDuplicates: false,
                 oneLiner: false,
-                inlineEnhancements: true
+                inlineEnhancements: true,
+                hideHeader: false,
+                noEmptyLines: false
             });
 
             // Verify output is displayed
@@ -147,7 +156,9 @@ describe('App Integration Tests', () => {
                 showModels: false,
                 consolidateDuplicates: true,
                 oneLiner: true,
-                inlineEnhancements: true
+                inlineEnhancements: true,
+                hideHeader: false,
+                noEmptyLines: false
             });
 
             // Verify options button text was updated (5 times: 4 changes + 1 initial setup)
@@ -175,7 +186,9 @@ describe('App Integration Tests', () => {
                 showModels: false,
                 consolidateDuplicates: false,
                 oneLiner: false,
-                inlineEnhancements: true
+                inlineEnhancements: true,
+                hideHeader: false,
+                noEmptyLines: false
             });
         });
 
