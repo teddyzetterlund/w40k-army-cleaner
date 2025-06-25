@@ -15,6 +15,7 @@ export function getDOMElements() {
         showPointsCheckbox: document.getElementById('show-points'),
         smartFormatCheckbox: document.getElementById('smart-format'),
         showModelsCheckbox: document.getElementById('show-models'),
+        consolidateDuplicatesCheckbox: document.getElementById('consolidate-duplicates'),
         optionsMenuButton: document.getElementById('options-menu-button'),
         optionsMenu: document.getElementById('options-menu')
     };

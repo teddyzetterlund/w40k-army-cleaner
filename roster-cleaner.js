@@ -321,18 +321,57 @@ function processUnits(options) {
 }
 
 /**
+ * Consolidates consecutive duplicate lines by adding a count prefix
+ * @param {string} text - The text to process
+ * @returns {string} - The text with consecutive duplicates consolidated
+ */
+function consolidateDuplicateLines(text) {
+    if (!text) return text;
+
+    const lines = text.split('\n');
+    const consolidatedLines = [];
+    let i = 0;
+
+    while (i < lines.length) {
+        const currentLine = lines[i];
+        let count = 1;
+        let j = i + 1;
+
+        // Count consecutive duplicates
+        while (j < lines.length && lines[j] === currentLine) {
+            count++;
+            j++;
+        }
+
+        if (count > 1) {
+            // Add count prefix to the line
+            consolidatedLines.push(`${count} ${currentLine}`);
+        } else {
+            // No duplicates, keep the line as is
+            consolidatedLines.push(currentLine);
+        }
+
+        i = j; // Skip the duplicates we just processed
+    }
+
+    return consolidatedLines.join('\n');
+}
+
+/**
  * Validates input parameters for the cleanRosterText function
  * @param {any} input - The input to validate
  * @param {any} showPoints - The showPoints parameter to validate
  * @param {any} smartFormat - The smartFormat parameter to validate
  * @param {any} showModels - The showModels parameter to validate
+ * @param {any} consolidateDuplicates - The consolidateDuplicates parameter to validate
  * @throws {Error} If any parameter is invalid
  */
-function validateCleanRosterInput(input, showPoints, smartFormat, showModels) {
+function validateCleanRosterInput(input, showPoints, smartFormat, showModels, consolidateDuplicates) {
     validateString(input, 'input');
     validateBoolean(showPoints, 'showPoints');
     validateBoolean(smartFormat, 'smartFormat');
     validateBoolean(showModels, 'showModels');
+    validateBoolean(consolidateDuplicates, 'consolidateDuplicates');
 }
 
 /**
@@ -392,6 +431,7 @@ function validateProcessArmyHeaderInput(lines) {
  * @property {boolean} [showPoints=true] - Whether to include points in the output
  * @property {boolean} [smartFormat=true] - Whether to apply smart formatting to unit names
  * @property {boolean} [showModels=false] - Whether to show model counts
+ * @property {boolean} [consolidateDuplicates=false] - Whether to consolidate consecutive duplicate lines
  */
 
 /**
@@ -405,10 +445,11 @@ function cleanRosterText(options) {
         input,
         showPoints = true,
         smartFormat = true,
-        showModels = false
+        showModels = false,
+        consolidateDuplicates = false
     } = options;
 
-    validateCleanRosterInput(input, showPoints, smartFormat, showModels);
+    validateCleanRosterInput(input, showPoints, smartFormat, showModels, consolidateDuplicates);
 
     const trimmedInput = input.trim();
     if (!trimmedInput) return '';
@@ -447,7 +488,14 @@ function cleanRosterText(options) {
     });
     cleanedLines.push(...unitLines);
 
-    return normalizeApostrophes(cleanedLines.join('\n'));
+    let result = normalizeApostrophes(cleanedLines.join('\n'));
+
+    // Apply consolidation if requested
+    if (consolidateDuplicates) {
+        result = consolidateDuplicateLines(result);
+    }
+
+    return result;
 }
 
 // Ensure only one export block at the end
@@ -462,5 +510,6 @@ export {
     processArmyHeader,
     formatUnitName,
     formatTauUnitName,
-    processUnits
+    processUnits,
+    consolidateDuplicateLines
 }; 

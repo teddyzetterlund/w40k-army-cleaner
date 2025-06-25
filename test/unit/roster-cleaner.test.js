@@ -113,4 +113,84 @@ describe('Roster Cleaner', () => {
             expect(result).toContain('SM - Dark Angels');
         });
     });
+
+    // Test consolidate duplicates feature
+    describe('Consolidate Duplicates', () => {
+        test('consolidates consecutive duplicate lines in cleaned output', () => {
+            const input = readFixture('sample-roster-gw-csm.txt');
+            
+            const result = cleanRosterText({ 
+                input, 
+                showPoints: true, 
+                smartFormat: true, 
+                consolidateDuplicates: true 
+            });
+
+            // Should consolidate the duplicate entries
+            expect(result).toContain('2 Legionaries (90)');
+            expect(result).toContain('2 Predator Annihilator (135)');
+            expect(result).toContain('2 Vindicator (185)');
+            expect(result).toContain('2 Possessed (240)');
+            
+            // Should not have the individual duplicate entries
+            const lines = result.split('\n');
+            const legionariesLines = lines.filter(line => line.includes('Legionaries (90)'));
+            expect(legionariesLines).toHaveLength(1);
+            expect(legionariesLines[0]).toBe('2 Legionaries (90)');
+        });
+
+        test('does not consolidate duplicates when option is disabled', () => {
+            const input = readFixture('sample-roster-gw-csm.txt');
+            
+            const result = cleanRosterText({ 
+                input, 
+                showPoints: true, 
+                smartFormat: true, 
+                consolidateDuplicates: false 
+            });
+
+            // Should have individual duplicate entries
+            const lines = result.split('\n');
+            const legionariesLines = lines.filter(line => line.includes('Legionaries (90)'));
+            expect(legionariesLines).toHaveLength(2);
+            expect(legionariesLines[0]).toBe('Legionaries (90)');
+            expect(legionariesLines[1]).toBe('Legionaries (90)');
+        });
+
+        test('consolidates duplicates without points', () => {
+            const input = readFixture('sample-roster-gw-csm.txt');
+            
+            const result = cleanRosterText({ 
+                input, 
+                showPoints: false, 
+                smartFormat: true, 
+                consolidateDuplicates: true 
+            });
+
+            expect(result).toContain('2 Legionaries');
+            expect(result).not.toContain('(90)');
+        });
+
+        test('handles non-consecutive duplicates correctly', () => {
+            const input = readFixture('sample-roster-gw-da.txt');
+            
+            const result = cleanRosterText({ 
+                input, 
+                showPoints: true, 
+                smartFormat: true, 
+                consolidateDuplicates: true 
+            });
+
+            // Should consolidate consecutive duplicates
+            expect(result).toContain('2 Assault Intercessors (75)');
+            expect(result).toContain('2 Deathwing Knights (250)');
+            expect(result).toContain('2 Deathwing Terminators (180)');
+            
+            // Should not consolidate non-consecutive duplicates (if any)
+            const lines = result.split('\n');
+            const intercessorsLines = lines.filter(line => line.includes('Intercessors'));
+            // Should have both "2 Assault Intercessors" and "Intercessors" (non-consecutive)
+            expect(intercessorsLines.length).toBeGreaterThanOrEqual(2);
+        });
+    });
 }); 

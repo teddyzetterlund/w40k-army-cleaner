@@ -139,6 +139,7 @@ function setupOptionsMenu(optionsMenuButton, optionsMenu, checkboxes, updateRost
  * @param {HTMLInputElement} options.showPointsCheckbox - Show points checkbox
  * @param {HTMLInputElement} options.smartFormatCheckbox - Smart format checkbox
  * @param {HTMLInputElement} options.showModelsCheckbox - Show models checkbox
+ * @param {HTMLInputElement} options.consolidateDuplicatesCheckbox - Consolidate duplicates checkbox
  * @returns {Function} Function to update roster output
  */
 function createUpdateRosterOutput(options) {
@@ -148,13 +149,14 @@ function createUpdateRosterOutput(options) {
         rosterOutput, 
         showPointsCheckbox, 
         smartFormatCheckbox, 
-        showModelsCheckbox 
+        showModelsCheckbox,
+        consolidateDuplicatesCheckbox
     } = options;
 
     // Validate all required elements
-    [rosterInput, outputContainer, rosterOutput, showPointsCheckbox, smartFormatCheckbox, showModelsCheckbox]
+    [rosterInput, outputContainer, rosterOutput, showPointsCheckbox, smartFormatCheckbox, showModelsCheckbox, consolidateDuplicatesCheckbox]
         .forEach((element, index) => {
-            const names = ['rosterInput', 'outputContainer', 'rosterOutput', 'showPointsCheckbox', 'smartFormatCheckbox', 'showModelsCheckbox'];
+            const names = ['rosterInput', 'outputContainer', 'rosterOutput', 'showPointsCheckbox', 'smartFormatCheckbox', 'showModelsCheckbox', 'consolidateDuplicatesCheckbox'];
             validateElement(element, names[index]);
         });
 
@@ -163,8 +165,9 @@ function createUpdateRosterOutput(options) {
         const showPoints = showPointsCheckbox.checked;
         const smartFormat = smartFormatCheckbox.checked;
         const showModels = showModelsCheckbox.checked;
+        const consolidateDuplicates = consolidateDuplicatesCheckbox.checked;
         
-        const cleaned = cleanRosterText({ input, showPoints, smartFormat, showModels });
+        const cleaned = cleanRosterText({ input, showPoints, smartFormat, showModels, consolidateDuplicates });
         
         if (!cleaned) {
             outputContainer.classList.add(UI_CONSTANTS.HIDDEN_CLASS);
@@ -185,7 +188,8 @@ function initializeApp() {
         const checkboxes = [
             elements.showPointsCheckbox, 
             elements.smartFormatCheckbox, 
-            elements.showModelsCheckbox
+            elements.showModelsCheckbox,
+            elements.consolidateDuplicatesCheckbox
         ];
 
         const updateRosterOutput = createUpdateRosterOutput(elements);
