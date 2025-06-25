@@ -8,6 +8,10 @@ import {
     copyToClipboard,
     scrollToOutput
 } from './utils/dom-utils.js';
+import { 
+    saveFormattingOptions, 
+    loadFormattingOptions 
+} from './utils/storage-utils.js';
 
 /**
  * Sets up drag and drop functionality for roster input
@@ -107,7 +111,7 @@ function setupMenuToggle(optionsMenuButton, optionsMenu) {
 }
 
 /**
- * Sets up checkbox change handlers
+ * Sets up checkbox change handlers with storage persistence
  * @param {HTMLInputElement[]} checkboxes - Array of checkbox elements
  * @param {Function} updateRosterOutput - Callback to update roster output
  * @param {HTMLButtonElement} optionsMenuButton - The options menu button
@@ -118,6 +122,20 @@ function setupCheckboxHandlers(checkboxes, updateRosterOutput, optionsMenuButton
         checkbox.addEventListener('change', () => {
             updateRosterOutput();
             updateOptionsButtonText(optionsMenuButton, checkboxes);
+            
+            // Save current checkbox states to localStorage
+            const currentOptions = {
+                showHeader: checkboxes.find(cb => cb.id === 'show-header')?.checked ?? true,
+                showPoints: checkboxes.find(cb => cb.id === 'show-points')?.checked ?? true,
+                showModels: checkboxes.find(cb => cb.id === 'show-models')?.checked ?? false,
+                inlineEnhancements: checkboxes.find(cb => cb.id === 'inline-enhancements')?.checked ?? true,
+                smartFormat: checkboxes.find(cb => cb.id === 'smart-format')?.checked ?? true,
+                consolidateDuplicates: checkboxes.find(cb => cb.id === 'consolidate-duplicates')?.checked ?? false,
+                noEmptyLines: checkboxes.find(cb => cb.id === 'no-empty-lines')?.checked ?? false,
+                oneLiner: checkboxes.find(cb => cb.id === 'one-liner')?.checked ?? false,
+                discordFormat: checkboxes.find(cb => cb.id === 'discord-format')?.checked ?? false
+            };
+            saveFormattingOptions(currentOptions);
         });
     });
 }
@@ -209,11 +227,33 @@ function createUpdateRosterOutput(options) {
 }
 
 /**
+ * Applies saved formatting options to checkbox elements
+ * @param {object} elements - DOM elements object
+ * @param {object} savedOptions - Saved formatting options
+ */
+function applySavedOptions(elements, savedOptions) {
+    elements.showHeaderCheckbox.checked = savedOptions.showHeader;
+    elements.showPointsCheckbox.checked = savedOptions.showPoints;
+    elements.showModelsCheckbox.checked = savedOptions.showModels;
+    elements.inlineEnhancementsCheckbox.checked = savedOptions.inlineEnhancements;
+    elements.smartFormatCheckbox.checked = savedOptions.smartFormat;
+    elements.consolidateDuplicatesCheckbox.checked = savedOptions.consolidateDuplicates;
+    elements.noEmptyLinesCheckbox.checked = savedOptions.noEmptyLines;
+    elements.oneLinerCheckbox.checked = savedOptions.oneLiner;
+    elements.discordFormatCheckbox.checked = savedOptions.discordFormat;
+}
+
+/**
  * Initializes the application by setting up all DOM elements and event listeners
  */
 function initializeApp() {
     try {
         const elements = getDOMElements();
+        
+        // Load saved formatting options and apply them to checkboxes
+        const savedOptions = loadFormattingOptions();
+        applySavedOptions(elements, savedOptions);
+        
         const checkboxes = [
             elements.showPointsCheckbox, 
             elements.smartFormatCheckbox, 
@@ -252,6 +292,7 @@ export {
     setupCheckboxHandlers,
     setupOptionsMenu,
     createUpdateRosterOutput,
+    applySavedOptions,
     initializeApp
 };
 
