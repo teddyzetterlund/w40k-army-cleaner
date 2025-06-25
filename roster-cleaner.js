@@ -581,7 +581,10 @@ function cleanRosterText(options) {
 
     let result = normalizeApostrophes(cleanedLines.join('\n'));
 
-    if (inlineEnhancements) {
+    // Force inline enhancements when one-liner is enabled
+    const effectiveInlineEnhancements = inlineEnhancements || oneLiner;
+    
+    if (effectiveInlineEnhancements) {
         result = inlineEnhancementLines(result);
     }
     if (consolidateDuplicates) {
