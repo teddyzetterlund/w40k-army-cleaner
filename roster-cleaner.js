@@ -1,4 +1,4 @@
-import { normalizeApostrophes, normalizeFactionName } from './utils/string-utils.js';
+import { normalizeApostrophes, normalizeFactionName, getLineBeforePoints, getPointsPart } from './utils/string-utils.js';
 import { ROSTER_CONFIG } from './config/roster-constants.js';
 import {
     validateString,
@@ -12,7 +12,8 @@ import {
     POINTS_REMOVAL_PATTERN,
     BATTLESUIT_PATTERN,
     COMMANDER_PATTERN,
-    MULTIPLE_S_PATTERN
+    MULTIPLE_S_PATTERN,
+    ENHANCEMENT_LINE_PATTERN
 } from './utils/regex-patterns.js';
 
 /**
@@ -373,27 +374,30 @@ function inlineEnhancementLines(text) {
         const currentLine = lines[i];
         
         // Check if next line is an enhancement line
-        if (i + 1 < lines.length && lines[i + 1].trim().startsWith('• Enhancement:')) {
-            const enhancementLine = lines[i + 1].trim();
-            const enhancementName = enhancementLine.replace('• Enhancement:', '').trim();
-            
-            // Add enhancement in square brackets to the current line
-            if (currentLine.includes('(')) {
-                // Line has points, insert enhancement before points
-                const beforePoints = currentLine.substring(0, currentLine.lastIndexOf('('));
-                const points = currentLine.substring(currentLine.lastIndexOf('('));
-                processedLines.push(`${beforePoints.trim()} [${enhancementName}] ${points}`);
-            } else {
-                // Line has no points, just add enhancement at the end
-                processedLines.push(`${currentLine.trim()} [${enhancementName}]`);
+        if (i + 1 < lines.length) {
+            const enhancementMatch = lines[i + 1].match(ENHANCEMENT_LINE_PATTERN);
+            if (enhancementMatch) {
+                const enhancementName = enhancementMatch[1].trim();
+                
+                // Add enhancement in square brackets to the current line
+                if (currentLine.includes('(')) {
+                    // Line has points, insert enhancement before points
+                    const beforePoints = getLineBeforePoints(currentLine);
+                    const points = getPointsPart(currentLine);
+                    processedLines.push(`${beforePoints} [${enhancementName}] ${points}`);
+                } else {
+                    // Line has no points, just add enhancement at the end
+                    processedLines.push(`${currentLine.trim()} [${enhancementName}]`);
+                }
+                
+                i += 2; // Skip the enhancement line
+                continue;
             }
-            
-            i += 2; // Skip the enhancement line
-        } else {
-            // No enhancement, keep line as is
-            processedLines.push(currentLine);
-            i++;
         }
+        
+        // No enhancement, keep line as is
+        processedLines.push(currentLine);
+        i++;
     }
 
     return processedLines.join('\n');

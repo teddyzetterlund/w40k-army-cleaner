@@ -18,4 +18,7 @@ export const BATTLESUIT_PATTERN = /(.+) Battlesuits?$/;
 export const COMMANDER_PATTERN = /^Commander (?:in )?/;
 
 // Multiple 's' pattern: matches one or more 's' at the end of a string
-export const MULTIPLE_S_PATTERN = /\s+s$/; 
+export const MULTIPLE_S_PATTERN = /\s+s$/;
+
+// Enhancement detection pattern
+export const ENHANCEMENT_LINE_PATTERN = /^\s*•\s*Enhancement:\s*(.+)$/; 
