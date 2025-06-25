@@ -37,6 +37,9 @@ describe('App Unit Tests', () => {
         // Reset all mocks
         vi.clearAllMocks();
         
+        // Mock window.addEventListener for global event listeners
+        window.addEventListener = vi.fn();
+        
         // Create mock DOM elements
         mockElements = {
             rosterInput: document.createElement('textarea'),
@@ -429,6 +432,43 @@ describe('App Unit Tests', () => {
             expect(consoleSpy).toHaveBeenCalledWith('Failed to initialize app:', expect.any(Error));
 
             consoleSpy.mockRestore();
+        });
+
+        it('should copy roster output and show feedback when CMD/CTRL+C is pressed and nothing is focused', async () => {
+            // Arrange
+            initializeApp();
+
+            // Mock navigator.platform to Mac
+            Object.defineProperty(window.navigator, 'platform', { value: 'MacIntel', configurable: true });
+
+            // Get the event listener for keydown
+            const addEventListenerCall = window.addEventListener.mock.calls.find(
+                call => call[0] === 'keydown'
+            );
+            const keydownListener = addEventListenerCall ? addEventListenerCall[1] : null;
+            expect(keydownListener).toBeInstanceOf(Function);
+
+            // Set up DOM state: output visible, nothing focused
+            mockElements.outputContainer.classList.remove('hidden');
+            mockElements.copyButton.textContent = 'Copy';
+            mockElements.discordFormatCheckbox.checked = false;
+            mockElements.rosterOutput.textContent = 'cleaned output';
+            document.activeElement.blur && document.activeElement.blur(); // Ensure nothing is focused
+
+            // Act: simulate CMD/CTRL+C
+            const event = new window.KeyboardEvent('keydown', {
+                key: 'c',
+                code: 'KeyC',
+                metaKey: true, // Simulate CMD
+                ctrlKey: false,
+                bubbles: true,
+                cancelable: true
+            });
+            await keydownListener(event);
+
+            // Assert: copy logic called, feedback shown
+            expect(copyToClipboard).toHaveBeenCalledWith('cleaned output');
+            expect(mockElements.copyButton.textContent).toBe('Copied!');
         });
     });
 }); 

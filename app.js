@@ -53,6 +53,30 @@ function setupDragAndDrop(rosterInput, updateRosterOutput) {
 }
 
 /**
+ * Copies the roster output to clipboard and shows feedback on the copy button
+ * @param {HTMLElement} rosterOutput - The output element containing text to copy
+ * @param {HTMLButtonElement} copyButton - The copy button element
+ * @param {HTMLInputElement} discordFormatCheckbox - The Discord format checkbox element
+ */
+async function handleCopyRosterOutput(rosterOutput, copyButton, discordFormatCheckbox) {
+    const originalText = copyButton.textContent;
+    try {
+        let textToCopy = rosterOutput.textContent;
+        if (discordFormatCheckbox.checked) {
+            textToCopy = `\`\`\`\n${textToCopy}\n\`\`\``;
+        }
+        await copyToClipboard(textToCopy);
+        copyButton.textContent = UI_CONSTANTS.COPY_SUCCESS_TEXT;
+        setTimeout(() => {
+            copyButton.textContent = originalText;
+        }, UI_CONSTANTS.COPY_FEEDBACK_DURATION_MS);
+    } catch (error) {
+        console.error('Copy failed:', error);
+        // Could add user feedback here for clipboard errors
+    }
+}
+
+/**
  * Sets up copy button functionality with error handling
  * @param {HTMLButtonElement} copyButton - The copy button element
  * @param {HTMLElement} rosterOutput - The output element containing text to copy
@@ -64,24 +88,7 @@ function setupCopyButton(copyButton, rosterOutput, discordFormatCheckbox) {
     validateElement(discordFormatCheckbox, 'discordFormatCheckbox');
 
     copyButton.addEventListener('click', async () => {
-        const originalText = copyButton.textContent;
-        
-        try {
-            let textToCopy = rosterOutput.textContent;
-            
-            if (discordFormatCheckbox.checked) {
-                textToCopy = `\`\`\`\n${textToCopy}\n\`\`\``;
-            }
-            
-            await copyToClipboard(textToCopy);
-            copyButton.textContent = UI_CONSTANTS.COPY_SUCCESS_TEXT;
-            setTimeout(() => {
-                copyButton.textContent = originalText;
-            }, UI_CONSTANTS.COPY_FEEDBACK_DURATION_MS);
-        } catch (error) {
-            console.error('Copy failed:', error);
-            // Could add user feedback here for clipboard errors
-        }
+        await handleCopyRosterOutput(rosterOutput, copyButton, discordFormatCheckbox);
     });
 }
 
@@ -281,6 +288,21 @@ function initializeApp() {
         );
 
         elements.rosterInput.addEventListener('input', updateRosterOutput);
+
+        // Add global keydown listener for CMD/CTRL+C copy shortcut
+        window.addEventListener('keydown', async (e) => {
+            // Only trigger if output is visible
+            if (elements.outputContainer.classList.contains(UI_CONSTANTS.HIDDEN_CLASS)) return;
+            // Only trigger if nothing is focused or focus is not on input/textarea/button
+            const active = document.activeElement;
+            if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.tagName === 'BUTTON')) return;
+            // Only trigger on CMD/CTRL+C
+            const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+            const isCopy = (isMac && e.metaKey && e.key.toLowerCase() === 'c') || (!isMac && e.ctrlKey && e.key.toLowerCase() === 'c');
+            if (!isCopy) return;
+            e.preventDefault();
+            await handleCopyRosterOutput(elements.rosterOutput, elements.copyButton, elements.discordFormatCheckbox);
+        });
     } catch (error) {
         console.error('Failed to initialize app:', error);
         // Could add user feedback here for initialization errors
