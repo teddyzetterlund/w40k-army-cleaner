@@ -212,8 +212,9 @@ describe('Roster Cleaner', () => {
             
             // Should contain commas separating units
             expect(result).toContain(',');
-            expect(result).toContain('Lord in Terminator Armour (105)');
-            expect(result).toContain('Sorcerer in Terminator Armour (100)');
+            // Should have inline enhancements since one-liner forces it
+            expect(result).toContain('Lord in Terminator Armour [Bastion Plate] (105)');
+            expect(result).toContain('Sorcerer in Terminator Armour [Warp Tracer] (100)');
             expect(result).toContain('Cultists (50)');
         });
 
@@ -294,6 +295,125 @@ describe('Roster Cleaner', () => {
             });
 
             expect(result).toBe('');
+        });
+    });
+
+    // Test inline enhancements feature
+    describe('Inline Enhancements', () => {
+        test('moves enhancement lines into square brackets with unit name', () => {
+            const input = readFixture('sample-roster-gw-csm.txt');
+            
+            const result = cleanRosterText({ 
+                input, 
+                showPoints: true, 
+                smartFormat: true, 
+                inlineEnhancements: true 
+            });
+
+            // Should have enhancements in square brackets
+            expect(result).toContain('Lord in Terminator Armour [Bastion Plate] (105)');
+            expect(result).toContain('Sorcerer in Terminator Armour [Warp Tracer] (100)');
+            
+            // Should not have separate enhancement lines
+            expect(result).not.toContain('  • Enhancement: Bastion Plate');
+            expect(result).not.toContain('  • Enhancement: Warp Tracer');
+        });
+
+        test('does not inline enhancements when option is disabled', () => {
+            const input = readFixture('sample-roster-gw-csm.txt');
+            
+            const result = cleanRosterText({ 
+                input, 
+                showPoints: true, 
+                smartFormat: true, 
+                inlineEnhancements: false 
+            });
+
+            // Should have separate enhancement lines
+            expect(result).toContain('Lord in Terminator Armour (105)');
+            expect(result).toContain('  • Enhancement: Bastion Plate');
+            expect(result).toContain('Sorcerer in Terminator Armour (100)');
+            expect(result).toContain('  • Enhancement: Warp Tracer');
+            
+            // Should not have enhancements in square brackets
+            expect(result).not.toContain('[Bastion Plate]');
+            expect(result).not.toContain('[Warp Tracer]');
+        });
+
+        test('works without points', () => {
+            const input = readFixture('sample-roster-gw-csm.txt');
+            
+            const result = cleanRosterText({ 
+                input, 
+                showPoints: false, 
+                smartFormat: true, 
+                inlineEnhancements: true 
+            });
+
+            // Should have enhancements in square brackets without points
+            expect(result).toContain('Lord in Terminator Armour [Bastion Plate]');
+            expect(result).toContain('Sorcerer in Terminator Armour [Warp Tracer]');
+            expect(result).not.toContain('(105)');
+            expect(result).not.toContain('(100)');
+        });
+
+        test('works with one-liner option', () => {
+            const input = readFixture('sample-roster-gw-csm.txt');
+            
+            const result = cleanRosterText({ 
+                input, 
+                showPoints: true, 
+                smartFormat: true, 
+                inlineEnhancements: true,
+                oneLiner: true 
+            });
+
+            // Should be a single line with inline enhancements
+            const lines = result.split('\n');
+            expect(lines).toHaveLength(1);
+            
+            // Should contain inline enhancements
+            expect(result).toContain('Lord in Terminator Armour [Bastion Plate] (105)');
+            expect(result).toContain('Sorcerer in Terminator Armour [Warp Tracer] (100)');
+            
+            // Should contain commas
+            expect(result).toContain(',');
+        });
+
+        test('one-liner forces inline enhancements to be enabled', () => {
+            const input = readFixture('sample-roster-gw-csm.txt');
+            
+            const result = cleanRosterText({ 
+                input, 
+                showPoints: true, 
+                smartFormat: true, 
+                inlineEnhancements: false, // Explicitly disabled
+                oneLiner: true 
+            });
+
+            // Should still have inline enhancements because one-liner forces it
+            expect(result).toContain('Lord in Terminator Armour [Bastion Plate] (105)');
+            expect(result).toContain('Sorcerer in Terminator Armour [Warp Tracer] (100)');
+            expect(result).not.toContain('  • Enhancement:');
+        });
+
+        test('handles units without enhancements correctly', () => {
+            const input = readFixture('sample-roster-gw-csm.txt');
+            
+            const result = cleanRosterText({ 
+                input, 
+                showPoints: true, 
+                smartFormat: true, 
+                inlineEnhancements: true 
+            });
+
+            // Units without enhancements should remain unchanged
+            expect(result).toContain('Cultists (50)');
+            expect(result).toContain('Legionaries (90)');
+            expect(result).toContain('Rhino (75)');
+            
+            // Should not have empty square brackets
+            expect(result).not.toContain('[]');
         });
     });
 }); 

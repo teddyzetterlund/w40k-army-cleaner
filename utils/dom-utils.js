@@ -17,6 +17,7 @@ export function getDOMElements() {
         showModelsCheckbox: document.getElementById('show-models'),
         consolidateDuplicatesCheckbox: document.getElementById('consolidate-duplicates'),
         oneLinerCheckbox: document.getElementById('one-liner'),
+        inlineEnhancementsCheckbox: document.getElementById('inline-enhancements'),
         optionsMenuButton: document.getElementById('options-menu-button'),
         optionsMenu: document.getElementById('options-menu')
     };

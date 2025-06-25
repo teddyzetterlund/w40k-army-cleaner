@@ -358,7 +358,49 @@ function consolidateDuplicateLines(text) {
 }
 
 /**
- * Converts a multi-line roster to a single line with colon separators
+ * Moves enhancement lines into square brackets with their preceding unit line
+ * @param {string} text - The text to process
+ * @returns {string} - The text with enhancement lines inlined
+ */
+function inlineEnhancementLines(text) {
+    if (!text) return text;
+
+    const lines = text.split('\n');
+    const processedLines = [];
+    let i = 0;
+
+    while (i < lines.length) {
+        const currentLine = lines[i];
+        
+        // Check if next line is an enhancement line
+        if (i + 1 < lines.length && lines[i + 1].trim().startsWith('• Enhancement:')) {
+            const enhancementLine = lines[i + 1].trim();
+            const enhancementName = enhancementLine.replace('• Enhancement:', '').trim();
+            
+            // Add enhancement in square brackets to the current line
+            if (currentLine.includes('(')) {
+                // Line has points, insert enhancement before points
+                const beforePoints = currentLine.substring(0, currentLine.lastIndexOf('('));
+                const points = currentLine.substring(currentLine.lastIndexOf('('));
+                processedLines.push(`${beforePoints.trim()} [${enhancementName}] ${points}`);
+            } else {
+                // Line has no points, just add enhancement at the end
+                processedLines.push(`${currentLine.trim()} [${enhancementName}]`);
+            }
+            
+            i += 2; // Skip the enhancement line
+        } else {
+            // No enhancement, keep line as is
+            processedLines.push(currentLine);
+            i++;
+        }
+    }
+
+    return processedLines.join('\n');
+}
+
+/**
+ * Converts a multi-line roster to a single line with comma separators
  * @param {string} text - The text to convert
  * @returns {string} - The text converted to a single line
  */
@@ -381,15 +423,17 @@ function convertToOneLiner(text) {
  * @param {any} showModels - The showModels parameter to validate
  * @param {any} consolidateDuplicates - The consolidateDuplicates parameter to validate
  * @param {any} oneLiner - The oneLiner parameter to validate
+ * @param {any} inlineEnhancements - The inlineEnhancements parameter to validate
  * @throws {Error} If any parameter is invalid
  */
-function validateCleanRosterInput(input, showPoints, smartFormat, showModels, consolidateDuplicates, oneLiner) {
+function validateCleanRosterInput(input, showPoints, smartFormat, showModels, consolidateDuplicates, oneLiner, inlineEnhancements) {
     validateString(input, 'input');
     validateBoolean(showPoints, 'showPoints');
     validateBoolean(smartFormat, 'smartFormat');
     validateBoolean(showModels, 'showModels');
     validateBoolean(consolidateDuplicates, 'consolidateDuplicates');
     validateBoolean(oneLiner, 'oneLiner');
+    validateBoolean(inlineEnhancements, 'inlineEnhancements');
 }
 
 /**
@@ -450,7 +494,8 @@ function validateProcessArmyHeaderInput(lines) {
  * @property {boolean} [smartFormat=true] - Whether to apply smart formatting to unit names
  * @property {boolean} [showModels=false] - Whether to show model counts
  * @property {boolean} [consolidateDuplicates=false] - Whether to consolidate consecutive duplicate lines
- * @property {boolean} [oneLiner=false] - Whether to convert output to a single line with colon separators
+ * @property {boolean} [oneLiner=false] - Whether to convert output to a single line with comma separators
+ * @property {boolean} [inlineEnhancements=false] - Whether to move enhancement lines into square brackets with unit names
  */
 
 /**
@@ -466,10 +511,11 @@ function cleanRosterText(options) {
         smartFormat = true,
         showModels = false,
         consolidateDuplicates = false,
-        oneLiner = false
+        oneLiner = false,
+        inlineEnhancements = false
     } = options;
 
-    validateCleanRosterInput(input, showPoints, smartFormat, showModels, consolidateDuplicates, oneLiner);
+    validateCleanRosterInput(input, showPoints, smartFormat, showModels, consolidateDuplicates, oneLiner, inlineEnhancements);
 
     const trimmedInput = input.trim();
     if (!trimmedInput) return '';
@@ -515,6 +561,11 @@ function cleanRosterText(options) {
         result = consolidateDuplicateLines(result);
     }
 
+    // Apply inline enhancements if requested (or forced by one-liner)
+    if (inlineEnhancements || oneLiner) {
+        result = inlineEnhancementLines(result);
+    }
+
     // Apply one-liner conversion if requested
     if (oneLiner) {
         result = convertToOneLiner(result);
@@ -537,5 +588,6 @@ export {
     formatTauUnitName,
     processUnits,
     consolidateDuplicateLines,
-    convertToOneLiner
+    convertToOneLiner,
+    inlineEnhancementLines
 }; 

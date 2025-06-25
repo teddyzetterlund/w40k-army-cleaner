@@ -34,6 +34,7 @@ describe('DOM Utilities', () => {
             'show-models': document.createElement('input'),
             'consolidate-duplicates': document.createElement('input'),
             'one-liner': document.createElement('input'),
+            'inline-enhancements': document.createElement('input'),
             'options-menu-button': document.createElement('button'),
             'options-menu': document.createElement('div')
         };
@@ -62,6 +63,7 @@ describe('DOM Utilities', () => {
             expect(elements.showModelsCheckbox).toBe(mockElements['show-models']);
             expect(elements.consolidateDuplicatesCheckbox).toBe(mockElements['consolidate-duplicates']);
             expect(elements.oneLinerCheckbox).toBe(mockElements['one-liner']);
+            expect(elements.inlineEnhancementsCheckbox).toBe(mockElements['inline-enhancements']);
             expect(elements.optionsMenuButton).toBe(mockElements['options-menu-button']);
             expect(elements.optionsMenu).toBe(mockElements['options-menu']);
         });
@@ -81,12 +83,13 @@ describe('DOM Utilities', () => {
                 { checked: true },
                 { checked: true },
                 { checked: true },
+                { checked: true },
                 { checked: true }
             ];
 
             updateOptionsButtonText(button, checkboxes);
             
-            expect(button.textContent).toBe('Formatting Options (5/5)');
+            expect(button.textContent).toBe('Formatting Options (6/6)');
         });
 
         it('should update button text with correct count when some checkboxes are checked', () => {
@@ -96,12 +99,13 @@ describe('DOM Utilities', () => {
                 { checked: false },
                 { checked: true },
                 { checked: false },
-                { checked: true }
+                { checked: true },
+                { checked: false }
             ];
 
             updateOptionsButtonText(button, checkboxes);
             
-            expect(button.textContent).toBe('Formatting Options (3/5)');
+            expect(button.textContent).toBe('Formatting Options (3/6)');
         });
 
         it('should update button text with correct count when no checkboxes are checked', () => {
@@ -111,12 +115,13 @@ describe('DOM Utilities', () => {
                 { checked: false },
                 { checked: false },
                 { checked: false },
+                { checked: false },
                 { checked: false }
             ];
 
             updateOptionsButtonText(button, checkboxes);
             
-            expect(button.textContent).toBe('Formatting Options (0/5)');
+            expect(button.textContent).toBe('Formatting Options (0/6)');
         });
 
         it('should throw error when button is not a DOM element', () => {
