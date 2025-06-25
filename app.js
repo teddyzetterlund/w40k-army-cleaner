@@ -223,6 +223,9 @@ function createUpdateRosterOutput(options) {
         if (wasHidden) {
             scrollToOutput(outputContainer);
         }
+
+        // Remove focus from the input field after processing
+        rosterInput.blur();
     };
 }
 

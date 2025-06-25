@@ -399,6 +399,26 @@ describe('App Unit Tests', () => {
             expect(mockElements.rosterInput.addEventListener).toHaveBeenCalledWith('input', expect.any(Function));
         });
 
+        it('should remove focus from roster input after pasting content', () => {
+            // Mock the blur method
+            const blurSpy = vi.spyOn(mockElements.rosterInput, 'blur');
+            
+            initializeApp();
+
+            // Get the event listener function that was added
+            const addEventListenerCall = mockElements.rosterInput.addEventListener.mock.calls.find(
+                call => call[0] === 'input'
+            );
+            const inputEventListener = addEventListenerCall[1];
+
+            // Simulate pasting content by calling the event listener directly
+            mockElements.rosterInput.value = 'pasted content';
+            inputEventListener();
+
+            // Verify that blur was called to remove focus
+            expect(blurSpy).toHaveBeenCalled();
+        });
+
         it('should handle initialization errors gracefully', () => {
             const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
             getDOMElements.mockImplementation(() => {
