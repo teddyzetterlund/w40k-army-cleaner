@@ -4,7 +4,8 @@ import {
     updateOptionsButtonText, 
     readFileAsText, 
     copyToClipboard,
-    scrollToOutput
+    scrollToOutput,
+    getKeyboardShortcutText
 } from '../utils/dom-utils.js';
 
 // Improved FileReader mock
@@ -246,6 +247,58 @@ describe('DOM Utilities', () => {
         it('should throw error for invalid element', () => {
             expect(() => scrollToOutput(null)).toThrow('outputContainer must be a DOM element');
             expect(() => scrollToOutput(undefined)).toThrow('outputContainer must be a DOM element');
+        });
+    });
+
+    describe('getKeyboardShortcutText', () => {
+        let originalUserAgent;
+        let originalPlatform;
+
+        beforeEach(() => {
+            // Store original values
+            originalUserAgent = navigator.userAgent;
+            originalPlatform = navigator.platform;
+        });
+
+        afterEach(() => {
+            // Restore original values
+            Object.defineProperty(navigator, 'userAgent', { value: originalUserAgent, configurable: true });
+            Object.defineProperty(navigator, 'platform', { value: originalPlatform, configurable: true });
+        });
+
+        it('should return (CMD+C) for Mac desktop', () => {
+            Object.defineProperty(navigator, 'userAgent', { value: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', configurable: true });
+            Object.defineProperty(navigator, 'platform', { value: 'MacIntel', configurable: true });
+            
+            expect(getKeyboardShortcutText()).toBe(' (CMD+C)');
+        });
+
+        it('should return (CTRL+C) for Windows desktop', () => {
+            Object.defineProperty(navigator, 'userAgent', { value: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', configurable: true });
+            Object.defineProperty(navigator, 'platform', { value: 'Win32', configurable: true });
+            
+            expect(getKeyboardShortcutText()).toBe(' (CTRL+C)');
+        });
+
+        it('should return (CMD+C) for iPad with Mac platform', () => {
+            Object.defineProperty(navigator, 'userAgent', { value: 'Mozilla/5.0 (iPad; CPU OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15', configurable: true });
+            Object.defineProperty(navigator, 'platform', { value: 'MacIntel', configurable: true });
+            
+            expect(getKeyboardShortcutText()).toBe(' (CMD+C)');
+        });
+
+        it('should return empty string for iPhone', () => {
+            Object.defineProperty(navigator, 'userAgent', { value: 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15', configurable: true });
+            Object.defineProperty(navigator, 'platform', { value: 'iPhone', configurable: true });
+            
+            expect(getKeyboardShortcutText()).toBe('');
+        });
+
+        it('should return empty string for Android mobile', () => {
+            Object.defineProperty(navigator, 'userAgent', { value: 'Mozilla/5.0 (Linux; Android 11; SM-G991B) AppleWebKit/537.36', configurable: true });
+            Object.defineProperty(navigator, 'platform', { value: 'Linux armv8l', configurable: true });
+            
+            expect(getKeyboardShortcutText()).toBe('');
         });
     });
 }); 

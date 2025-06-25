@@ -11,6 +11,9 @@ export const UI_CONSTANTS = {
     /** CSS class for hidden elements */
     HIDDEN_CLASS: 'hidden',
     
+    /** Base text for the copy button (without keyboard shortcut) */
+    COPY_BUTTON_BASE_TEXT: 'Copy',
+    
     /** Text to show when copy is successful */
     COPY_SUCCESS_TEXT: 'Copied!',
     

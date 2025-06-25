@@ -13,7 +13,8 @@ import {
     getDOMElements, 
     updateOptionsButtonText, 
     readFileAsText, 
-    copyToClipboard 
+    copyToClipboard,
+    getKeyboardShortcutText
 } from '../../utils/dom-utils.js';
 
 // Mock dependencies
@@ -24,6 +25,7 @@ vi.mock('../../config/ui-constants.js', () => ({
     UI_CONSTANTS: {
         DRAG_OVER_CLASS: 'drag-over',
         HIDDEN_CLASS: 'hidden',
+        COPY_BUTTON_BASE_TEXT: 'Copy',
         COPY_SUCCESS_TEXT: 'Copied!',
         COPY_FEEDBACK_DURATION_MS: 2000
     }
@@ -93,6 +95,9 @@ describe('App Unit Tests', () => {
         // Mock copyToClipboard
         copyToClipboard.mockResolvedValue();
 
+        // Mock getKeyboardShortcutText
+        getKeyboardShortcutText.mockReturnValue(' (CMD+C)');
+
         // Create mock update function
         mockUpdateRosterOutput = vi.fn();
     });
@@ -139,6 +144,19 @@ describe('App Unit Tests', () => {
             expect(copyToClipboard).toHaveBeenCalledWith('test content');
         });
 
+        it('should set copy button text with keyboard shortcut', () => {
+            const copyButton = mockElements.copyButton;
+            const rosterOutput = mockElements.rosterOutput;
+            const discordFormatCheckbox = mockElements.discordFormatCheckbox;
+
+            // Mock the keyboard shortcut text
+            getKeyboardShortcutText.mockReturnValue(' (CMD+C)');
+
+            setupCopyButton(copyButton, rosterOutput, discordFormatCheckbox);
+
+            expect(copyButton.textContent).toBe('Copy (CMD+C)');
+        });
+
         it('should wrap output in markdown fenced code blocks when Discord format is enabled', async () => {
             const copyButton = mockElements.copyButton;
             const rosterOutput = mockElements.rosterOutput;
@@ -175,7 +193,7 @@ describe('App Unit Tests', () => {
             const copyButton = mockElements.copyButton;
             const rosterOutput = mockElements.rosterOutput;
             const discordFormatCheckbox = mockElements.discordFormatCheckbox;
-            const originalText = 'Copy';
+            const originalText = 'Copy (CMD+C)';
             copyButton.textContent = originalText;
 
             setupCopyButton(copyButton, rosterOutput, discordFormatCheckbox);

@@ -6,7 +6,8 @@ import {
     updateOptionsButtonText, 
     readFileAsText, 
     copyToClipboard,
-    scrollToOutput
+    scrollToOutput,
+    getKeyboardShortcutText
 } from './utils/dom-utils.js';
 import { 
     saveFormattingOptions, 
@@ -57,9 +58,12 @@ function setupDragAndDrop(rosterInput, updateRosterOutput) {
  * @param {HTMLElement} rosterOutput - The output element containing text to copy
  * @param {HTMLButtonElement} copyButton - The copy button element
  * @param {HTMLInputElement} discordFormatCheckbox - The Discord format checkbox element
+ * @param {string} shortcutText - The keyboard shortcut text to preserve
  */
-async function handleCopyRosterOutput(rosterOutput, copyButton, discordFormatCheckbox) {
-    const originalText = copyButton.textContent;
+async function handleCopyRosterOutput(rosterOutput, copyButton, discordFormatCheckbox, shortcutText) {
+    const baseText = UI_CONSTANTS.COPY_BUTTON_BASE_TEXT;
+    const originalText = baseText + shortcutText;
+    
     try {
         let textToCopy = rosterOutput.textContent;
         if (discordFormatCheckbox.checked) {
@@ -87,8 +91,13 @@ function setupCopyButton(copyButton, rosterOutput, discordFormatCheckbox) {
     validateElement(rosterOutput, 'rosterOutput');
     validateElement(discordFormatCheckbox, 'discordFormatCheckbox');
 
+    // Set initial button text with keyboard shortcut
+    const shortcutText = getKeyboardShortcutText();
+    const baseText = UI_CONSTANTS.COPY_BUTTON_BASE_TEXT;
+    copyButton.textContent = baseText + shortcutText;
+
     copyButton.addEventListener('click', async () => {
-        await handleCopyRosterOutput(rosterOutput, copyButton, discordFormatCheckbox);
+        await handleCopyRosterOutput(rosterOutput, copyButton, discordFormatCheckbox, shortcutText);
     });
 }
 
@@ -301,7 +310,7 @@ function initializeApp() {
             const isCopy = (isMac && e.metaKey && e.key.toLowerCase() === 'c') || (!isMac && e.ctrlKey && e.key.toLowerCase() === 'c');
             if (!isCopy) return;
             e.preventDefault();
-            await handleCopyRosterOutput(elements.rosterOutput, elements.copyButton, elements.discordFormatCheckbox);
+            await handleCopyRosterOutput(elements.rosterOutput, elements.copyButton, elements.discordFormatCheckbox, getKeyboardShortcutText());
         });
     } catch (error) {
         console.error('Failed to initialize app:', error);
