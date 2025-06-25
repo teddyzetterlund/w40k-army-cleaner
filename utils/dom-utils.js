@@ -16,6 +16,7 @@ export function getDOMElements() {
         smartFormatCheckbox: document.getElementById('smart-format'),
         showModelsCheckbox: document.getElementById('show-models'),
         consolidateDuplicatesCheckbox: document.getElementById('consolidate-duplicates'),
+        oneLinerCheckbox: document.getElementById('one-liner'),
         optionsMenuButton: document.getElementById('options-menu-button'),
         optionsMenu: document.getElementById('options-menu')
     };

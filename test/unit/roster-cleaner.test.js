@@ -193,4 +193,107 @@ describe('Roster Cleaner', () => {
             expect(intercessorsLines.length).toBeGreaterThanOrEqual(2);
         });
     });
+
+    // Test one-liner feature
+    describe('One-Liner Output', () => {
+        test('converts cleaned roster to single line with comma separators', () => {
+            const input = readFixture('sample-roster-gw-csm.txt');
+            
+            const result = cleanRosterText({ 
+                input, 
+                showPoints: true, 
+                smartFormat: true, 
+                oneLiner: true 
+            });
+
+            // Should be a single line with commas
+            const lines = result.split('\n');
+            expect(lines).toHaveLength(1);
+            
+            // Should contain commas separating units
+            expect(result).toContain(',');
+            expect(result).toContain('Lord in Terminator Armour (105)');
+            expect(result).toContain('Sorcerer in Terminator Armour (100)');
+            expect(result).toContain('Cultists (50)');
+        });
+
+        test('does not convert to one-liner when option is disabled', () => {
+            const input = readFixture('sample-roster-gw-csm.txt');
+            
+            const result = cleanRosterText({ 
+                input, 
+                showPoints: true, 
+                smartFormat: true, 
+                oneLiner: false 
+            });
+
+            // Should have multiple lines
+            const lines = result.split('\n');
+            expect(lines.length).toBeGreaterThan(1);
+            
+            // Should not contain commas as separators between units
+            // (but may contain commas in unit names or enhancements)
+            // We'll check that there is no single line with many commas
+            expect(lines.some(line => line.split(',').length > 2)).toBe(false);
+        });
+
+        test('works with consolidate duplicates option', () => {
+            const input = readFixture('sample-roster-gw-csm.txt');
+            
+            const result = cleanRosterText({ 
+                input, 
+                showPoints: true, 
+                smartFormat: true, 
+                consolidateDuplicates: true,
+                oneLiner: true 
+            });
+
+            // Should be a single line
+            const lines = result.split('\n');
+            expect(lines).toHaveLength(1);
+            
+            // Should contain consolidated duplicates
+            expect(result).toContain('2 Legionaries (90)');
+            expect(result).toContain('2 Predator Annihilator (135)');
+            expect(result).toContain('2 Vindicator (185)');
+            expect(result).toContain('2 Possessed (240)');
+            
+            // Should contain commas
+            expect(result).toContain(',');
+        });
+
+        test('works without points', () => {
+            const input = readFixture('sample-roster-gw-csm.txt');
+            
+            const result = cleanRosterText({ 
+                input, 
+                showPoints: false, 
+                smartFormat: true, 
+                oneLiner: true 
+            });
+
+            // Should be a single line
+            const lines = result.split('\n');
+            expect(lines).toHaveLength(1);
+            
+            // Should not contain points
+            expect(result).not.toContain('(105)');
+            expect(result).not.toContain('(100)');
+            expect(result).not.toContain('(50)');
+            
+            // Should contain unit names
+            expect(result).toContain('Lord in Terminator Armour');
+            expect(result).toContain('Sorcerer in Terminator Armour');
+            expect(result).toContain('Cultists');
+        });
+
+        test('handles empty roster correctly', () => {
+            const result = cleanRosterText({ 
+                input: '', 
+                oneLiner: true 
+            });
+
+            expect(result).toBe('');
+        });
+    });
 }); 

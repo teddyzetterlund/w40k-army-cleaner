@@ -358,20 +358,38 @@ function consolidateDuplicateLines(text) {
 }
 
 /**
+ * Converts a multi-line roster to a single line with colon separators
+ * @param {string} text - The text to convert
+ * @returns {string} - The text converted to a single line
+ */
+function convertToOneLiner(text) {
+    if (!text) return text;
+
+    const lines = text.split('\n');
+    const nonEmptyLines = lines
+        .map(line => line.trim())
+        .filter(line => line.length > 0);
+
+    return nonEmptyLines.join(', ');
+}
+
+/**
  * Validates input parameters for the cleanRosterText function
  * @param {any} input - The input to validate
  * @param {any} showPoints - The showPoints parameter to validate
  * @param {any} smartFormat - The smartFormat parameter to validate
  * @param {any} showModels - The showModels parameter to validate
  * @param {any} consolidateDuplicates - The consolidateDuplicates parameter to validate
+ * @param {any} oneLiner - The oneLiner parameter to validate
  * @throws {Error} If any parameter is invalid
  */
-function validateCleanRosterInput(input, showPoints, smartFormat, showModels, consolidateDuplicates) {
+function validateCleanRosterInput(input, showPoints, smartFormat, showModels, consolidateDuplicates, oneLiner) {
     validateString(input, 'input');
     validateBoolean(showPoints, 'showPoints');
     validateBoolean(smartFormat, 'smartFormat');
     validateBoolean(showModels, 'showModels');
     validateBoolean(consolidateDuplicates, 'consolidateDuplicates');
+    validateBoolean(oneLiner, 'oneLiner');
 }
 
 /**
@@ -432,6 +450,7 @@ function validateProcessArmyHeaderInput(lines) {
  * @property {boolean} [smartFormat=true] - Whether to apply smart formatting to unit names
  * @property {boolean} [showModels=false] - Whether to show model counts
  * @property {boolean} [consolidateDuplicates=false] - Whether to consolidate consecutive duplicate lines
+ * @property {boolean} [oneLiner=false] - Whether to convert output to a single line with colon separators
  */
 
 /**
@@ -446,10 +465,11 @@ function cleanRosterText(options) {
         showPoints = true,
         smartFormat = true,
         showModels = false,
-        consolidateDuplicates = false
+        consolidateDuplicates = false,
+        oneLiner = false
     } = options;
 
-    validateCleanRosterInput(input, showPoints, smartFormat, showModels, consolidateDuplicates);
+    validateCleanRosterInput(input, showPoints, smartFormat, showModels, consolidateDuplicates, oneLiner);
 
     const trimmedInput = input.trim();
     if (!trimmedInput) return '';
@@ -495,6 +515,11 @@ function cleanRosterText(options) {
         result = consolidateDuplicateLines(result);
     }
 
+    // Apply one-liner conversion if requested
+    if (oneLiner) {
+        result = convertToOneLiner(result);
+    }
+
     return result;
 }
 
@@ -511,5 +536,6 @@ export {
     formatUnitName,
     formatTauUnitName,
     processUnits,
-    consolidateDuplicateLines
+    consolidateDuplicateLines,
+    convertToOneLiner
 }; 
