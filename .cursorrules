@@ -119,6 +119,9 @@ This is a **vanilla JavaScript Progressive Web App** that processes Warhammer 40
 
 ## AI Assistance Guidelines
 
+### When Implementing New Features
+1. **Show understanding of the assignment** first
+
 ### When Suggesting Code Changes
 1. **Follow existing patterns** in the codebase
 2. **Maintain test coverage** - add tests for new functionality
