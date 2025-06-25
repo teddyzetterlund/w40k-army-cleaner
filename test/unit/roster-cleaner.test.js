@@ -528,4 +528,142 @@ describe('Roster Cleaner', () => {
             expect(result).toBe('');
         });
     });
+
+    // Test no empty lines feature
+    describe('No Empty Lines', () => {
+        test('removes empty lines when noEmptyLines is enabled', () => {
+            const input = readFixture('sample-roster-gw-csm.txt');
+            
+            const result = cleanRosterText({ 
+                input, 
+                showPoints: true, 
+                smartFormat: true, 
+                noEmptyLines: true 
+            });
+
+            // Should not contain consecutive empty lines
+            expect(result).not.toContain('\n\n\n');
+            
+            // Should not contain empty lines between units
+            expect(result).not.toMatch(/Lord in Terminator Armour.*\n\n.*Sorcerer in Terminator Armour/);
+            expect(result).not.toMatch(/Sorcerer in Terminator Armour.*\n\n.*Cultists/);
+            
+            // Should still contain unit names
+            expect(result).toContain('Lord in Terminator Armour (105)');
+            expect(result).toContain('Sorcerer in Terminator Armour (100)');
+            expect(result).toContain('Cultists (50)');
+        });
+
+        test('keeps empty lines when noEmptyLines is disabled', () => {
+            const input = readFixture('sample-roster-gw-csm.txt');
+            
+            const result = cleanRosterText({ 
+                input, 
+                showPoints: true, 
+                smartFormat: true, 
+                noEmptyLines: false 
+            });
+
+            // Should contain empty lines between units (normal format)
+            expect(result).toMatch(/Lord in Terminator Armour.*\n  • Enhancement: Bastion Plate\n\n.*Sorcerer in Terminator Armour/);
+            expect(result).toMatch(/Sorcerer in Terminator Armour.*\n  • Enhancement: Warp Tracer\n\n.*Cultists/);
+        });
+
+        test('works without points', () => {
+            const input = readFixture('sample-roster-gw-csm.txt');
+            
+            const result = cleanRosterText({ 
+                input, 
+                showPoints: false, 
+                smartFormat: true, 
+                noEmptyLines: true 
+            });
+
+            // Should not contain empty lines
+            expect(result).not.toContain('\n\n\n');
+            
+            // Should not contain points
+            expect(result).not.toContain('(105)');
+            expect(result).not.toContain('(100)');
+            expect(result).not.toContain('(50)');
+            
+            // Should contain unit names without empty lines between them
+            expect(result).toContain('Lord in Terminator Armour');
+            expect(result).toContain('Sorcerer in Terminator Armour');
+            expect(result).toContain('Cultists');
+        });
+
+        test('works with one-liner option', () => {
+            const input = readFixture('sample-roster-gw-csm.txt');
+            
+            const result = cleanRosterText({ 
+                input, 
+                showPoints: true, 
+                smartFormat: true, 
+                noEmptyLines: true,
+                oneLiner: true 
+            });
+
+            // Should be a single line (one-liner overrides no empty lines)
+            const lines = result.split('\n');
+            expect(lines).toHaveLength(1);
+            
+            // Should contain unit names
+            expect(result).toContain('Lord in Terminator Armour');
+            expect(result).toContain('Sorcerer in Terminator Armour');
+            expect(result).toContain('Cultists');
+        });
+
+        test('works with consolidate duplicates option', () => {
+            const input = readFixture('sample-roster-gw-csm.txt');
+            
+            const result = cleanRosterText({ 
+                input, 
+                showPoints: true, 
+                smartFormat: true, 
+                noEmptyLines: true,
+                consolidateDuplicates: true 
+            });
+
+            // Should not contain empty lines
+            expect(result).not.toContain('\n\n\n');
+            
+            // Should contain consolidated duplicates
+            expect(result).toContain('2 Legionaries (90)');
+            expect(result).toContain('2 Predator Annihilator (135)');
+            expect(result).toContain('2 Vindicator (185)');
+            expect(result).toContain('2 Possessed (240)');
+        });
+
+        test('works with hide header option', () => {
+            const input = readFixture('sample-roster-gw-csm.txt');
+            
+            const result = cleanRosterText({ 
+                input, 
+                showPoints: true, 
+                smartFormat: true, 
+                noEmptyLines: true,
+                hideHeader: true 
+            });
+
+            // Should not contain empty lines
+            expect(result).not.toContain('\n\n\n');
+            
+            // Should not contain header information
+            expect(result).not.toContain('The Goal is to Survive the Shooting Phase');
+            expect(result).not.toContain('Chaos Space Marines');
+            
+            // Should start directly with units
+            expect(result.trim()).toMatch(/^Lord in Terminator Armour/);
+        });
+
+        test('handles empty roster correctly', () => {
+            const result = cleanRosterText({ 
+                input: '', 
+                noEmptyLines: true 
+            });
+
+            expect(result).toBe('');
+        });
+    });
 }); 

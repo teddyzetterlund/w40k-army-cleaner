@@ -151,6 +151,7 @@ function setupOptionsMenu(optionsMenuButton, optionsMenu, checkboxes, updateRost
  * @param {HTMLInputElement} options.oneLinerCheckbox - One-liner output checkbox
  * @param {HTMLInputElement} options.inlineEnhancementsCheckbox - Inline enhancements checkbox
  * @param {HTMLInputElement} options.hideHeaderCheckbox - Hide header checkbox
+ * @param {HTMLInputElement} options.noEmptyLinesCheckbox - No empty lines checkbox
  * @returns {Function} Function to update roster output
  */
 function createUpdateRosterOutput(options) {
@@ -164,13 +165,14 @@ function createUpdateRosterOutput(options) {
         consolidateDuplicatesCheckbox,
         oneLinerCheckbox,
         inlineEnhancementsCheckbox,
-        hideHeaderCheckbox
+        hideHeaderCheckbox,
+        noEmptyLinesCheckbox
     } = options;
 
     // Validate all required elements
-    [rosterInput, outputContainer, rosterOutput, showPointsCheckbox, smartFormatCheckbox, showModelsCheckbox, consolidateDuplicatesCheckbox, oneLinerCheckbox, inlineEnhancementsCheckbox, hideHeaderCheckbox]
+    [rosterInput, outputContainer, rosterOutput, showPointsCheckbox, smartFormatCheckbox, showModelsCheckbox, consolidateDuplicatesCheckbox, oneLinerCheckbox, inlineEnhancementsCheckbox, hideHeaderCheckbox, noEmptyLinesCheckbox]
         .forEach((element, index) => {
-            const names = ['rosterInput', 'outputContainer', 'rosterOutput', 'showPointsCheckbox', 'smartFormatCheckbox', 'showModelsCheckbox', 'consolidateDuplicatesCheckbox', 'oneLinerCheckbox', 'inlineEnhancementsCheckbox', 'hideHeaderCheckbox'];
+            const names = ['rosterInput', 'outputContainer', 'rosterOutput', 'showPointsCheckbox', 'smartFormatCheckbox', 'showModelsCheckbox', 'consolidateDuplicatesCheckbox', 'oneLinerCheckbox', 'inlineEnhancementsCheckbox', 'hideHeaderCheckbox', 'noEmptyLinesCheckbox'];
             validateElement(element, names[index]);
         });
 
@@ -183,8 +185,9 @@ function createUpdateRosterOutput(options) {
         const oneLiner = oneLinerCheckbox.checked;
         const inlineEnhancements = inlineEnhancementsCheckbox.checked;
         const hideHeader = hideHeaderCheckbox.checked;
+        const noEmptyLines = noEmptyLinesCheckbox.checked;
         
-        const cleaned = cleanRosterText({ input, showPoints, smartFormat, showModels, consolidateDuplicates, oneLiner, inlineEnhancements, hideHeader });
+        const cleaned = cleanRosterText({ input, showPoints, smartFormat, showModels, consolidateDuplicates, oneLiner, inlineEnhancements, hideHeader, noEmptyLines });
         
         if (!cleaned) {
             outputContainer.classList.add(UI_CONSTANTS.HIDDEN_CLASS);
@@ -210,7 +213,8 @@ function initializeApp() {
             elements.oneLinerCheckbox,
             elements.inlineEnhancementsCheckbox,
             elements.discordFormatCheckbox,
-            elements.hideHeaderCheckbox
+            elements.hideHeaderCheckbox,
+            elements.noEmptyLinesCheckbox
         ];
 
         const updateRosterOutput = createUpdateRosterOutput(elements);

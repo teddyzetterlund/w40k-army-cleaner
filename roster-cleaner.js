@@ -503,7 +503,20 @@ function validateProcessArmyHeaderInput(lines) {
  * @property {boolean} [oneLiner=false] - Whether to convert output to a single line with comma separators
  * @property {boolean} [inlineEnhancements=false] - Whether to move enhancement lines into square brackets with unit names
  * @property {boolean} [hideHeader=false] - Whether to hide army header information
+ * @property {boolean} [noEmptyLines=false] - Whether to remove all empty lines from the output
  */
+
+/**
+ * Removes all empty lines from the given text
+ * @param {string} text - The text to process
+ * @returns {string} - The text with all empty lines removed
+ */
+function removeEmptyLines(text) {
+    return text
+        .split('\n')
+        .filter(line => line.trim().length > 0)
+        .join('\n');
+}
 
 /**
  * Cleans and formats a roster text according to specified options
@@ -520,7 +533,8 @@ function cleanRosterText(options) {
         consolidateDuplicates = false,
         oneLiner = false,
         inlineEnhancements = false,
-        hideHeader = false
+        hideHeader = false,
+        noEmptyLines = false
     } = options;
 
     validateCleanRosterInput(input, showPoints, smartFormat, showModels, consolidateDuplicates, oneLiner, inlineEnhancements, hideHeader);
@@ -582,6 +596,11 @@ function cleanRosterText(options) {
         result = convertToOneLiner(result);
     }
 
+    // Remove empty lines if requested (unless one-liner is enabled)
+    if (noEmptyLines && !oneLiner) {
+        result = removeEmptyLines(result);
+    }
+
     return result;
 }
 
@@ -600,5 +619,6 @@ export {
     processUnits,
     consolidateDuplicateLines,
     convertToOneLiner,
-    inlineEnhancementLines
+    inlineEnhancementLines,
+    removeEmptyLines
 }; 

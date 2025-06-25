@@ -21,7 +21,8 @@ export function getDOMElements() {
         discordFormatCheckbox: document.getElementById('discord-format'),
         hideHeaderCheckbox: document.getElementById('hide-header'),
         optionsMenuButton: document.getElementById('options-menu-button'),
-        optionsMenu: document.getElementById('options-menu')
+        optionsMenu: document.getElementById('options-menu'),
+        noEmptyLinesCheckbox: document.getElementById('no-empty-lines'),
     };
 
     // Validate all elements exist
