@@ -5,7 +5,8 @@ import {
     getDOMElements, 
     updateOptionsButtonText, 
     readFileAsText, 
-    copyToClipboard 
+    copyToClipboard,
+    scrollToOutput
 } from './utils/dom-utils.js';
 
 /**
@@ -194,8 +195,16 @@ function createUpdateRosterOutput(options) {
             return;
         }
 
+        // Check if output container was previously hidden
+        const wasHidden = outputContainer.classList.contains(UI_CONSTANTS.HIDDEN_CLASS);
+        
         rosterOutput.textContent = cleaned;
         outputContainer.classList.remove(UI_CONSTANTS.HIDDEN_CLASS);
+        
+        // Only scroll if the container was previously hidden (new content)
+        if (wasHidden) {
+            scrollToOutput(outputContainer);
+        }
     };
 }
 

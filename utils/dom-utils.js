@@ -83,4 +83,19 @@ export async function copyToClipboard(text) {
     } catch (error) {
         throw new Error(`Failed to copy to clipboard: ${error.message}`);
     }
+}
+
+/**
+ * Smoothly scrolls to the output container with a subtle animation
+ * @param {HTMLElement} outputContainer - The output container element to scroll to
+ */
+export function scrollToOutput(outputContainer) {
+    validateElement(outputContainer, 'outputContainer');
+    
+    // Use smooth scrolling with a reasonable duration (not too slow)
+    outputContainer.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start',
+        inline: 'nearest'
+    });
 } 
