@@ -428,9 +428,10 @@ function convertToOneLiner(text) {
  * @param {any} consolidateDuplicates - The consolidateDuplicates parameter to validate
  * @param {any} oneLiner - The oneLiner parameter to validate
  * @param {any} inlineEnhancements - The inlineEnhancements parameter to validate
+ * @param {any} hideHeader - The hideHeader parameter to validate
  * @throws {Error} If any parameter is invalid
  */
-function validateCleanRosterInput(input, showPoints, smartFormat, showModels, consolidateDuplicates, oneLiner, inlineEnhancements) {
+function validateCleanRosterInput(input, showPoints, smartFormat, showModels, consolidateDuplicates, oneLiner, inlineEnhancements, hideHeader) {
     validateString(input, 'input');
     validateBoolean(showPoints, 'showPoints');
     validateBoolean(smartFormat, 'smartFormat');
@@ -438,6 +439,7 @@ function validateCleanRosterInput(input, showPoints, smartFormat, showModels, co
     validateBoolean(consolidateDuplicates, 'consolidateDuplicates');
     validateBoolean(oneLiner, 'oneLiner');
     validateBoolean(inlineEnhancements, 'inlineEnhancements');
+    validateBoolean(hideHeader, 'hideHeader');
 }
 
 /**
@@ -500,6 +502,7 @@ function validateProcessArmyHeaderInput(lines) {
  * @property {boolean} [consolidateDuplicates=false] - Whether to consolidate consecutive duplicate lines
  * @property {boolean} [oneLiner=false] - Whether to convert output to a single line with comma separators
  * @property {boolean} [inlineEnhancements=false] - Whether to move enhancement lines into square brackets with unit names
+ * @property {boolean} [hideHeader=false] - Whether to hide army header information
  */
 
 /**
@@ -516,10 +519,11 @@ function cleanRosterText(options) {
         showModels = false,
         consolidateDuplicates = false,
         oneLiner = false,
-        inlineEnhancements = false
+        inlineEnhancements = false,
+        hideHeader = false
     } = options;
 
-    validateCleanRosterInput(input, showPoints, smartFormat, showModels, consolidateDuplicates, oneLiner, inlineEnhancements);
+    validateCleanRosterInput(input, showPoints, smartFormat, showModels, consolidateDuplicates, oneLiner, inlineEnhancements, hideHeader);
 
     const trimmedInput = input.trim();
     if (!trimmedInput) return '';
@@ -530,13 +534,16 @@ function cleanRosterText(options) {
     // Process header
     const { armyInfo, firstPointsLine, headerEndIndex } = processArmyHeader(lines);
     
-    if (firstPointsLine) {
-        cleanedLines.push(showPoints ? firstPointsLine : firstPointsLine.replace(POINTS_REMOVAL_PATTERN, ''));
-    }
+    // Only include header information if hideHeader is false
+    if (!hideHeader) {
+        if (firstPointsLine) {
+            cleanedLines.push(showPoints ? firstPointsLine : firstPointsLine.replace(POINTS_REMOVAL_PATTERN, ''));
+        }
 
-    if (armyInfo.length > 0) {
-        cleanedLines.push(armyInfo.join(' - '));
-        cleanedLines.push('');
+        if (armyInfo.length > 0) {
+            cleanedLines.push(armyInfo.join(' - '));
+            cleanedLines.push('');
+        }
     }
 
     const isTauEmpire = armyInfo.some(line => 

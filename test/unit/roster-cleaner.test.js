@@ -416,4 +416,116 @@ describe('Roster Cleaner', () => {
             expect(result).not.toContain('[]');
         });
     });
+
+    // Test hide header feature
+    describe('Hide Header', () => {
+        test('removes army header information when hideHeader is enabled', () => {
+            const input = readFixture('sample-roster-gw-csm.txt');
+            
+            const result = cleanRosterText({ 
+                input, 
+                showPoints: true, 
+                smartFormat: true, 
+                hideHeader: true 
+            });
+
+            // Should not contain the army header information
+            expect(result).not.toContain('The Goal is to Survive the Shooting Phase');
+            expect(result).not.toContain('Chaos Space Marines');
+            expect(result).not.toContain('Strike Force');
+            expect(result).not.toContain('Fellhammer Siege-host');
+            
+            // Should start directly with units
+            expect(result.trim()).toMatch(/^Lord in Terminator Armour/);
+        });
+
+        test('includes army header information when hideHeader is disabled', () => {
+            const input = readFixture('sample-roster-gw-csm.txt');
+            
+            const result = cleanRosterText({ 
+                input, 
+                showPoints: true, 
+                smartFormat: true, 
+                hideHeader: false 
+            });
+
+            // Should contain the army header information
+            expect(result).toContain('The Goal is to Survive the Shooting Phase  (1990 points)');
+            expect(result).toContain('Chaos Space Marines - Fellhammer Siege-host');
+        });
+
+        test('works without points', () => {
+            const input = readFixture('sample-roster-gw-csm.txt');
+            
+            const result = cleanRosterText({ 
+                input, 
+                showPoints: false, 
+                smartFormat: true, 
+                hideHeader: true 
+            });
+
+            // Should not contain the army header information
+            expect(result).not.toContain('The Goal is to Survive the Shooting Phase');
+            expect(result).not.toContain('Chaos Space Marines');
+            expect(result).not.toContain('Strike Force');
+            expect(result).not.toContain('Fellhammer Siege-host');
+            
+            // Should start directly with units without points
+            expect(result.trim()).toMatch(/^Lord in Terminator Armour/);
+            expect(result).not.toContain('(105)');
+        });
+
+        test('works with one-liner option', () => {
+            const input = readFixture('sample-roster-gw-csm.txt');
+            
+            const result = cleanRosterText({ 
+                input, 
+                showPoints: true, 
+                smartFormat: true, 
+                hideHeader: true,
+                oneLiner: true 
+            });
+
+            // Should be a single line without header
+            const lines = result.split('\n');
+            expect(lines).toHaveLength(1);
+            
+            // Should not contain header information
+            expect(result).not.toContain('The Goal is to Survive the Shooting Phase');
+            expect(result).not.toContain('Chaos Space Marines');
+            
+            // Should contain unit names
+            expect(result).toContain('Lord in Terminator Armour');
+            expect(result).toContain('Sorcerer in Terminator Armour');
+        });
+
+        test('works with consolidate duplicates option', () => {
+            const input = readFixture('sample-roster-gw-csm.txt');
+            
+            const result = cleanRosterText({ 
+                input, 
+                showPoints: true, 
+                smartFormat: true, 
+                hideHeader: true,
+                consolidateDuplicates: true 
+            });
+
+            // Should not contain header information
+            expect(result).not.toContain('The Goal is to Survive the Shooting Phase');
+            expect(result).not.toContain('Chaos Space Marines');
+            
+            // Should contain consolidated duplicates
+            expect(result).toContain('2 Legionaries (90)');
+            expect(result).toContain('2 Predator Annihilator (135)');
+        });
+
+        test('handles empty roster correctly', () => {
+            const result = cleanRosterText({ 
+                input: '', 
+                hideHeader: true 
+            });
+
+            expect(result).toBe('');
+        });
+    });
 }); 

@@ -19,6 +19,7 @@ export function getDOMElements() {
         oneLinerCheckbox: document.getElementById('one-liner'),
         inlineEnhancementsCheckbox: document.getElementById('inline-enhancements'),
         discordFormatCheckbox: document.getElementById('discord-format'),
+        hideHeaderCheckbox: document.getElementById('hide-header'),
         optionsMenuButton: document.getElementById('options-menu-button'),
         optionsMenu: document.getElementById('options-menu')
     };
