@@ -35,6 +35,7 @@ describe('DOM Utilities', () => {
             'consolidate-duplicates': document.createElement('input'),
             'one-liner': document.createElement('input'),
             'inline-enhancements': document.createElement('input'),
+            'discord-format': document.createElement('input'),
             'options-menu-button': document.createElement('button'),
             'options-menu': document.createElement('div')
         };
@@ -64,6 +65,7 @@ describe('DOM Utilities', () => {
             expect(elements.consolidateDuplicatesCheckbox).toBe(mockElements['consolidate-duplicates']);
             expect(elements.oneLinerCheckbox).toBe(mockElements['one-liner']);
             expect(elements.inlineEnhancementsCheckbox).toBe(mockElements['inline-enhancements']);
+            expect(elements.discordFormatCheckbox).toBe(mockElements['discord-format']);
             expect(elements.optionsMenuButton).toBe(mockElements['options-menu-button']);
             expect(elements.optionsMenu).toBe(mockElements['options-menu']);
         });

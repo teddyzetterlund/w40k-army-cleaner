@@ -50,7 +50,8 @@ describe('App Unit Tests', () => {
             oneLinerCheckbox: document.createElement('input'),
             inlineEnhancementsCheckbox: document.createElement('input'),
             optionsMenuButton: document.createElement('button'),
-            optionsMenu: document.createElement('div')
+            optionsMenu: document.createElement('div'),
+            discordFormatCheckbox: document.createElement('input')
         };
 
         // Set up checkbox types
@@ -60,6 +61,7 @@ describe('App Unit Tests', () => {
         mockElements.consolidateDuplicatesCheckbox.type = 'checkbox';
         mockElements.oneLinerCheckbox.type = 'checkbox';
         mockElements.inlineEnhancementsCheckbox.type = 'checkbox';
+        mockElements.discordFormatCheckbox.type = 'checkbox';
 
         // Set initial menu state to hidden
         mockElements.optionsMenu.classList.add('hidden');
@@ -119,9 +121,42 @@ describe('App Unit Tests', () => {
         it('should set up copy button click handler', async () => {
             const copyButton = mockElements.copyButton;
             const rosterOutput = mockElements.rosterOutput;
+            const discordFormatCheckbox = mockElements.discordFormatCheckbox;
             rosterOutput.textContent = 'test content';
 
-            setupCopyButton(copyButton, rosterOutput);
+            setupCopyButton(copyButton, rosterOutput, discordFormatCheckbox);
+
+            const clickEvent = new Event('click');
+            await copyButton.dispatchEvent(clickEvent);
+
+            expect(copyToClipboard).toHaveBeenCalledWith('test content');
+        });
+
+        it('should wrap output in markdown fenced code blocks when Discord format is enabled', async () => {
+            const copyButton = mockElements.copyButton;
+            const rosterOutput = mockElements.rosterOutput;
+            const discordFormatCheckbox = mockElements.discordFormatCheckbox;
+            
+            rosterOutput.textContent = 'test content';
+            discordFormatCheckbox.checked = true;
+
+            setupCopyButton(copyButton, rosterOutput, discordFormatCheckbox);
+
+            const clickEvent = new Event('click');
+            await copyButton.dispatchEvent(clickEvent);
+
+            expect(copyToClipboard).toHaveBeenCalledWith('```\ntest content\n```');
+        });
+
+        it('should not wrap output in markdown when Discord format is disabled', async () => {
+            const copyButton = mockElements.copyButton;
+            const rosterOutput = mockElements.rosterOutput;
+            const discordFormatCheckbox = mockElements.discordFormatCheckbox;
+            
+            rosterOutput.textContent = 'test content';
+            discordFormatCheckbox.checked = false;
+
+            setupCopyButton(copyButton, rosterOutput, discordFormatCheckbox);
 
             const clickEvent = new Event('click');
             await copyButton.dispatchEvent(clickEvent);
@@ -132,10 +167,11 @@ describe('App Unit Tests', () => {
         it('should show success feedback and restore original text', async () => {
             const copyButton = mockElements.copyButton;
             const rosterOutput = mockElements.rosterOutput;
+            const discordFormatCheckbox = mockElements.discordFormatCheckbox;
             const originalText = 'Copy';
             copyButton.textContent = originalText;
 
-            setupCopyButton(copyButton, rosterOutput);
+            setupCopyButton(copyButton, rosterOutput, discordFormatCheckbox);
 
             const clickEvent = new Event('click');
             await copyButton.dispatchEvent(clickEvent);
@@ -150,11 +186,12 @@ describe('App Unit Tests', () => {
         it('should handle copy errors gracefully', async () => {
             const copyButton = mockElements.copyButton;
             const rosterOutput = mockElements.rosterOutput;
+            const discordFormatCheckbox = mockElements.discordFormatCheckbox;
             const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
             copyToClipboard.mockRejectedValue(new Error('Copy failed'));
 
-            setupCopyButton(copyButton, rosterOutput);
+            setupCopyButton(copyButton, rosterOutput, discordFormatCheckbox);
 
             const clickEvent = new Event('click');
             await copyButton.dispatchEvent(clickEvent);

@@ -41,6 +41,7 @@ describe('App Integration Tests', () => {
             consolidateDuplicatesCheckbox: document.createElement('input'),
             oneLinerCheckbox: document.createElement('input'),
             inlineEnhancementsCheckbox: document.createElement('input'),
+            discordFormatCheckbox: document.createElement('input'),
             optionsMenuButton: document.createElement('button'),
             optionsMenu: document.createElement('div')
         };
@@ -52,6 +53,7 @@ describe('App Integration Tests', () => {
         mockElements.consolidateDuplicatesCheckbox.type = 'checkbox';
         mockElements.oneLinerCheckbox.type = 'checkbox';
         mockElements.inlineEnhancementsCheckbox.type = 'checkbox';
+        mockElements.discordFormatCheckbox.type = 'checkbox';
 
         // Set default states
         mockElements.showPointsCheckbox.checked = true;
@@ -60,6 +62,7 @@ describe('App Integration Tests', () => {
         mockElements.consolidateDuplicatesCheckbox.checked = false;
         mockElements.oneLinerCheckbox.checked = false;
         mockElements.inlineEnhancementsCheckbox.checked = true;
+        mockElements.discordFormatCheckbox.checked = false;
 
         // Set initial menu state to hidden
         mockElements.optionsMenu.classList.add('hidden');

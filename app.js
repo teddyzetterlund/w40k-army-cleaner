@@ -51,16 +51,24 @@ function setupDragAndDrop(rosterInput, updateRosterOutput) {
  * Sets up copy button functionality with error handling
  * @param {HTMLButtonElement} copyButton - The copy button element
  * @param {HTMLElement} rosterOutput - The output element containing text to copy
+ * @param {HTMLInputElement} discordFormatCheckbox - The Discord format checkbox element
  */
-function setupCopyButton(copyButton, rosterOutput) {
+function setupCopyButton(copyButton, rosterOutput, discordFormatCheckbox) {
     validateElement(copyButton, 'copyButton');
     validateElement(rosterOutput, 'rosterOutput');
+    validateElement(discordFormatCheckbox, 'discordFormatCheckbox');
 
     copyButton.addEventListener('click', async () => {
         const originalText = copyButton.textContent;
         
         try {
-            await copyToClipboard(rosterOutput.textContent);
+            let textToCopy = rosterOutput.textContent;
+            
+            if (discordFormatCheckbox.checked) {
+                textToCopy = `\`\`\`\n${textToCopy}\n\`\`\``;
+            }
+            
+            await copyToClipboard(textToCopy);
             copyButton.textContent = UI_CONSTANTS.COPY_SUCCESS_TEXT;
             setTimeout(() => {
                 copyButton.textContent = originalText;
@@ -197,13 +205,14 @@ function initializeApp() {
             elements.showModelsCheckbox,
             elements.consolidateDuplicatesCheckbox,
             elements.oneLinerCheckbox,
-            elements.inlineEnhancementsCheckbox
+            elements.inlineEnhancementsCheckbox,
+            elements.discordFormatCheckbox
         ];
 
         const updateRosterOutput = createUpdateRosterOutput(elements);
 
         setupDragAndDrop(elements.rosterInput, updateRosterOutput);
-        setupCopyButton(elements.copyButton, elements.rosterOutput);
+        setupCopyButton(elements.copyButton, elements.rosterOutput, elements.discordFormatCheckbox);
         setupOptionsMenu(
             elements.optionsMenuButton, 
             elements.optionsMenu, 
