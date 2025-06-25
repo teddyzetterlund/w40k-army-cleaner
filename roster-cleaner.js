@@ -428,10 +428,10 @@ function convertToOneLiner(text) {
  * @param {any} consolidateDuplicates - The consolidateDuplicates parameter to validate
  * @param {any} oneLiner - The oneLiner parameter to validate
  * @param {any} inlineEnhancements - The inlineEnhancements parameter to validate
- * @param {any} hideHeader - The hideHeader parameter to validate
+ * @param {any} showHeader - The showHeader parameter to validate
  * @throws {Error} If any parameter is invalid
  */
-function validateCleanRosterInput(input, showPoints, smartFormat, showModels, consolidateDuplicates, oneLiner, inlineEnhancements, hideHeader) {
+function validateCleanRosterInput(input, showPoints, smartFormat, showModels, consolidateDuplicates, oneLiner, inlineEnhancements, showHeader) {
     validateString(input, 'input');
     validateBoolean(showPoints, 'showPoints');
     validateBoolean(smartFormat, 'smartFormat');
@@ -439,7 +439,7 @@ function validateCleanRosterInput(input, showPoints, smartFormat, showModels, co
     validateBoolean(consolidateDuplicates, 'consolidateDuplicates');
     validateBoolean(oneLiner, 'oneLiner');
     validateBoolean(inlineEnhancements, 'inlineEnhancements');
-    validateBoolean(hideHeader, 'hideHeader');
+    validateBoolean(showHeader, 'showHeader');
 }
 
 /**
@@ -502,7 +502,7 @@ function validateProcessArmyHeaderInput(lines) {
  * @property {boolean} [consolidateDuplicates=false] - Whether to consolidate consecutive duplicate lines
  * @property {boolean} [oneLiner=false] - Whether to convert output to a single line with comma separators
  * @property {boolean} [inlineEnhancements=false] - Whether to move enhancement lines into square brackets with unit names
- * @property {boolean} [hideHeader=false] - Whether to hide army header information
+ * @property {boolean} [showHeader=true] - Whether to show army header information
  * @property {boolean} [noEmptyLines=false] - Whether to remove all empty lines from the output
  */
 
@@ -533,11 +533,11 @@ function cleanRosterText(options) {
         consolidateDuplicates = false,
         oneLiner = false,
         inlineEnhancements = false,
-        hideHeader = false,
+        showHeader = true,
         noEmptyLines = false
     } = options;
 
-    validateCleanRosterInput(input, showPoints, smartFormat, showModels, consolidateDuplicates, oneLiner, inlineEnhancements, hideHeader);
+    validateCleanRosterInput(input, showPoints, smartFormat, showModels, consolidateDuplicates, oneLiner, inlineEnhancements, showHeader);
 
     const trimmedInput = input.trim();
     if (!trimmedInput) return '';
@@ -548,8 +548,8 @@ function cleanRosterText(options) {
     // Process header
     const { armyInfo, firstPointsLine, headerEndIndex } = processArmyHeader(lines);
     
-    // Only include header information if hideHeader is false
-    if (!hideHeader) {
+    // Only include header information if showHeader is true
+    if (showHeader) {
         if (firstPointsLine) {
             cleanedLines.push(showPoints ? firstPointsLine : firstPointsLine.replace(POINTS_REMOVAL_PATTERN, ''));
         }
@@ -581,23 +581,16 @@ function cleanRosterText(options) {
 
     let result = normalizeApostrophes(cleanedLines.join('\n'));
 
-    // Apply consolidation if requested
+    if (inlineEnhancements) {
+        result = inlineEnhancementLines(result);
+    }
     if (consolidateDuplicates) {
         result = consolidateDuplicateLines(result);
     }
-
-    // Apply inline enhancements if requested (or forced by one-liner)
-    if (inlineEnhancements || oneLiner) {
-        result = inlineEnhancementLines(result);
-    }
-
-    // Apply one-liner conversion if requested
     if (oneLiner) {
         result = convertToOneLiner(result);
     }
-
-    // Remove empty lines if requested (unless one-liner is enabled)
-    if (noEmptyLines && !oneLiner) {
+    if (noEmptyLines) {
         result = removeEmptyLines(result);
     }
 

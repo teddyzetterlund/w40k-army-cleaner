@@ -43,7 +43,7 @@ describe('App Integration Tests', () => {
             oneLinerCheckbox: document.createElement('input'),
             inlineEnhancementsCheckbox: document.createElement('input'),
             discordFormatCheckbox: document.createElement('input'),
-            hideHeaderCheckbox: document.createElement('input'),
+            showHeaderCheckbox: document.createElement('input'),
             noEmptyLinesCheckbox: document.createElement('input'),
             optionsMenuButton: document.createElement('button'),
             optionsMenu: document.createElement('div')
@@ -57,7 +57,7 @@ describe('App Integration Tests', () => {
         mockElements.oneLinerCheckbox.type = 'checkbox';
         mockElements.inlineEnhancementsCheckbox.type = 'checkbox';
         mockElements.discordFormatCheckbox.type = 'checkbox';
-        mockElements.hideHeaderCheckbox.type = 'checkbox';
+        mockElements.showHeaderCheckbox.type = 'checkbox';
         mockElements.noEmptyLinesCheckbox.type = 'checkbox';
 
         // Set default states
@@ -68,7 +68,7 @@ describe('App Integration Tests', () => {
         mockElements.oneLinerCheckbox.checked = false;
         mockElements.inlineEnhancementsCheckbox.checked = true;
         mockElements.discordFormatCheckbox.checked = false;
-        mockElements.hideHeaderCheckbox.checked = false;
+        mockElements.showHeaderCheckbox.checked = true;
         mockElements.noEmptyLinesCheckbox.checked = false;
 
         // Set initial menu state to hidden
@@ -123,7 +123,7 @@ describe('App Integration Tests', () => {
                 consolidateDuplicates: false,
                 oneLiner: false,
                 inlineEnhancements: true,
-                hideHeader: false,
+                showHeader: true,
                 noEmptyLines: false
             });
 
@@ -157,7 +157,7 @@ describe('App Integration Tests', () => {
                 consolidateDuplicates: true,
                 oneLiner: true,
                 inlineEnhancements: true,
-                hideHeader: false,
+                showHeader: true,
                 noEmptyLines: false
             });
 
@@ -187,7 +187,7 @@ describe('App Integration Tests', () => {
                 consolidateDuplicates: false,
                 oneLiner: false,
                 inlineEnhancements: true,
-                hideHeader: false,
+                showHeader: true,
                 noEmptyLines: false
             });
         });

@@ -419,14 +419,14 @@ describe('Roster Cleaner', () => {
 
     // Test hide header feature
     describe('Hide Header', () => {
-        test('removes army header information when hideHeader is enabled', () => {
+        test('removes army header information when showHeader is false', () => {
             const input = readFixture('sample-roster-gw-csm.txt');
             
             const result = cleanRosterText({ 
                 input, 
                 showPoints: true, 
                 smartFormat: true, 
-                hideHeader: true 
+                showHeader: false 
             });
 
             // Should not contain the army header information
@@ -439,14 +439,14 @@ describe('Roster Cleaner', () => {
             expect(result.trim()).toMatch(/^Lord in Terminator Armour/);
         });
 
-        test('includes army header information when hideHeader is disabled', () => {
+        test('includes army header information when showHeader is true', () => {
             const input = readFixture('sample-roster-gw-csm.txt');
             
             const result = cleanRosterText({ 
                 input, 
                 showPoints: true, 
                 smartFormat: true, 
-                hideHeader: false 
+                showHeader: true 
             });
 
             // Should contain the army header information
@@ -461,7 +461,7 @@ describe('Roster Cleaner', () => {
                 input, 
                 showPoints: false, 
                 smartFormat: true, 
-                hideHeader: true 
+                showHeader: false 
             });
 
             // Should not contain the army header information
@@ -482,7 +482,7 @@ describe('Roster Cleaner', () => {
                 input, 
                 showPoints: true, 
                 smartFormat: true, 
-                hideHeader: true,
+                showHeader: false,
                 oneLiner: true 
             });
 
@@ -506,7 +506,7 @@ describe('Roster Cleaner', () => {
                 input, 
                 showPoints: true, 
                 smartFormat: true, 
-                hideHeader: true,
+                showHeader: false,
                 consolidateDuplicates: true 
             });
 
@@ -522,7 +522,7 @@ describe('Roster Cleaner', () => {
         test('handles empty roster correctly', () => {
             const result = cleanRosterText({ 
                 input: '', 
-                hideHeader: true 
+                showHeader: false 
             });
 
             expect(result).toBe('');
@@ -635,7 +635,7 @@ describe('Roster Cleaner', () => {
             expect(result).toContain('2 Possessed (240)');
         });
 
-        test('works with hide header option', () => {
+        test('works with showHeader option', () => {
             const input = readFixture('sample-roster-gw-csm.txt');
             
             const result = cleanRosterText({ 
@@ -643,7 +643,7 @@ describe('Roster Cleaner', () => {
                 showPoints: true, 
                 smartFormat: true, 
                 noEmptyLines: true,
-                hideHeader: true 
+                showHeader: false 
             });
 
             // Should not contain empty lines

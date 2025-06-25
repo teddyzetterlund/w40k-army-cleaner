@@ -151,7 +151,7 @@ function setupOptionsMenu(optionsMenuButton, optionsMenu, checkboxes, updateRost
  * @param {HTMLInputElement} options.consolidateDuplicatesCheckbox - Consolidate duplicates checkbox
  * @param {HTMLInputElement} options.oneLinerCheckbox - One-liner output checkbox
  * @param {HTMLInputElement} options.inlineEnhancementsCheckbox - Inline enhancements checkbox
- * @param {HTMLInputElement} options.hideHeaderCheckbox - Hide header checkbox
+ * @param {HTMLInputElement} options.showHeaderCheckbox - Show header checkbox
  * @param {HTMLInputElement} options.noEmptyLinesCheckbox - No empty lines checkbox
  * @returns {Function} Function to update roster output
  */
@@ -166,14 +166,14 @@ function createUpdateRosterOutput(options) {
         consolidateDuplicatesCheckbox,
         oneLinerCheckbox,
         inlineEnhancementsCheckbox,
-        hideHeaderCheckbox,
+        showHeaderCheckbox,
         noEmptyLinesCheckbox
     } = options;
 
     // Validate all required elements
-    [rosterInput, outputContainer, rosterOutput, showPointsCheckbox, smartFormatCheckbox, showModelsCheckbox, consolidateDuplicatesCheckbox, oneLinerCheckbox, inlineEnhancementsCheckbox, hideHeaderCheckbox, noEmptyLinesCheckbox]
+    [rosterInput, outputContainer, rosterOutput, showPointsCheckbox, smartFormatCheckbox, showModelsCheckbox, consolidateDuplicatesCheckbox, oneLinerCheckbox, inlineEnhancementsCheckbox, showHeaderCheckbox, noEmptyLinesCheckbox]
         .forEach((element, index) => {
-            const names = ['rosterInput', 'outputContainer', 'rosterOutput', 'showPointsCheckbox', 'smartFormatCheckbox', 'showModelsCheckbox', 'consolidateDuplicatesCheckbox', 'oneLinerCheckbox', 'inlineEnhancementsCheckbox', 'hideHeaderCheckbox', 'noEmptyLinesCheckbox'];
+            const names = ['rosterInput', 'outputContainer', 'rosterOutput', 'showPointsCheckbox', 'smartFormatCheckbox', 'showModelsCheckbox', 'consolidateDuplicatesCheckbox', 'oneLinerCheckbox', 'inlineEnhancementsCheckbox', 'showHeaderCheckbox', 'noEmptyLinesCheckbox'];
             validateElement(element, names[index]);
         });
 
@@ -185,10 +185,10 @@ function createUpdateRosterOutput(options) {
         const consolidateDuplicates = consolidateDuplicatesCheckbox.checked;
         const oneLiner = oneLinerCheckbox.checked;
         const inlineEnhancements = inlineEnhancementsCheckbox.checked;
-        const hideHeader = hideHeaderCheckbox.checked;
+        const showHeader = showHeaderCheckbox.checked;
         const noEmptyLines = noEmptyLinesCheckbox.checked;
         
-        const cleaned = cleanRosterText({ input, showPoints, smartFormat, showModels, consolidateDuplicates, oneLiner, inlineEnhancements, hideHeader, noEmptyLines });
+        const cleaned = cleanRosterText({ input, showPoints, smartFormat, showModels, consolidateDuplicates, oneLiner, inlineEnhancements, showHeader, noEmptyLines });
         
         if (!cleaned) {
             outputContainer.classList.add(UI_CONSTANTS.HIDDEN_CLASS);
@@ -222,7 +222,7 @@ function initializeApp() {
             elements.oneLinerCheckbox,
             elements.inlineEnhancementsCheckbox,
             elements.discordFormatCheckbox,
-            elements.hideHeaderCheckbox,
+            elements.showHeaderCheckbox,
             elements.noEmptyLinesCheckbox
         ];
 

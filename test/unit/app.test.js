@@ -52,7 +52,7 @@ describe('App Unit Tests', () => {
             optionsMenuButton: document.createElement('button'),
             optionsMenu: document.createElement('div'),
             discordFormatCheckbox: document.createElement('input'),
-            hideHeaderCheckbox: document.createElement('input'),
+            showHeaderCheckbox: document.createElement('input'),
             noEmptyLinesCheckbox: document.createElement('input')
         };
 
@@ -64,7 +64,7 @@ describe('App Unit Tests', () => {
         mockElements.oneLinerCheckbox.type = 'checkbox';
         mockElements.inlineEnhancementsCheckbox.type = 'checkbox';
         mockElements.discordFormatCheckbox.type = 'checkbox';
-        mockElements.hideHeaderCheckbox.type = 'checkbox';
+        mockElements.showHeaderCheckbox.type = 'checkbox';
         mockElements.noEmptyLinesCheckbox.type = 'checkbox';
 
         // Set initial menu state to hidden
@@ -309,7 +309,7 @@ describe('App Unit Tests', () => {
                 consolidateDuplicatesCheckbox: mockElements.consolidateDuplicatesCheckbox,
                 oneLinerCheckbox: mockElements.oneLinerCheckbox,
                 inlineEnhancementsCheckbox: mockElements.inlineEnhancementsCheckbox,
-                hideHeaderCheckbox: mockElements.hideHeaderCheckbox,
+                showHeaderCheckbox: mockElements.showHeaderCheckbox,
                 noEmptyLinesCheckbox: mockElements.noEmptyLinesCheckbox
             };
 
@@ -320,7 +320,7 @@ describe('App Unit Tests', () => {
             options.consolidateDuplicatesCheckbox.checked = false;
             options.oneLinerCheckbox.checked = true;
             options.inlineEnhancementsCheckbox.checked = false;
-            options.hideHeaderCheckbox.checked = true;
+            options.showHeaderCheckbox.checked = true;
             options.noEmptyLinesCheckbox.checked = false;
             options.rosterInput.value = 'test input';
 
@@ -335,7 +335,7 @@ describe('App Unit Tests', () => {
                 consolidateDuplicates: false,
                 oneLiner: true,
                 inlineEnhancements: false,
-                hideHeader: true,
+                showHeader: true,
                 noEmptyLines: false
             });
         });
@@ -351,7 +351,7 @@ describe('App Unit Tests', () => {
                 consolidateDuplicatesCheckbox: mockElements.consolidateDuplicatesCheckbox,
                 oneLinerCheckbox: mockElements.oneLinerCheckbox,
                 inlineEnhancementsCheckbox: mockElements.inlineEnhancementsCheckbox,
-                hideHeaderCheckbox: mockElements.hideHeaderCheckbox,
+                showHeaderCheckbox: mockElements.showHeaderCheckbox,
                 noEmptyLinesCheckbox: mockElements.noEmptyLinesCheckbox
             };
 
@@ -376,7 +376,7 @@ describe('App Unit Tests', () => {
                 consolidateDuplicatesCheckbox: mockElements.consolidateDuplicatesCheckbox,
                 oneLinerCheckbox: mockElements.oneLinerCheckbox,
                 inlineEnhancementsCheckbox: mockElements.inlineEnhancementsCheckbox,
-                hideHeaderCheckbox: mockElements.hideHeaderCheckbox,
+                showHeaderCheckbox: mockElements.showHeaderCheckbox,
                 noEmptyLinesCheckbox: mockElements.noEmptyLinesCheckbox
             };
 
