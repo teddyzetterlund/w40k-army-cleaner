@@ -14,6 +14,7 @@
     "test:e2e": "vitest test/e2e",
     "test:ui": "vitest --ui",
     "dev": "npx http-server -p 3000 -c-1",
+    "dev:https": "npx http-server --ssl --cert ~/.localhost-ssl/localhost.crt --key ~/.localhost-ssl/localhost.key -p 3000 -c-1",
     "lint": "eslint . --ext .js",
     "lint:fix": "eslint . --ext .js --fix"
   },

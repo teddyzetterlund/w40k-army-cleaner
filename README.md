@@ -54,6 +54,8 @@ When disabled, unit names are kept in their original format from the roster.
 ### Available Scripts
 
 - `npm run generate-icons`: Generates PWA icons from the source SVG
+- `npm run dev`: Starts development server on HTTP (port 3000)
+- `npm run dev:https`: Starts development server on HTTPS (port 3000) - requires SSL certificates
 - `npm test`: Runs all tests using [Vitest](https://vitest.dev/)
 - `npm run test:watch`: Runs tests in watch mode
 - `npm run test:coverage`: Generates a coverage report
@@ -61,6 +63,31 @@ When disabled, unit names are kept in their original format from the roster.
 - `npm run test:integration`: Runs only integration tests
 - `npm run test:e2e`: Runs only end-to-end tests
 - `npm run test:ui`: Opens the Vitest UI for interactive test running
+
+### HTTPS Development Setup
+
+For mobile testing and clipboard functionality, you'll need to run the app over HTTPS. Follow these steps to set up local SSL certificates:
+
+1. Create the certificates directory:
+   ```bash
+   mkdir -p ~/.localhost-ssl
+   ```
+
+2. Generate self-signed certificates:
+   ```bash
+   openssl req -x509 -out ~/.localhost-ssl/localhost.crt -keyout ~/.localhost-ssl/localhost.key -newkey rsa:2048 -nodes -sha256 -subj '/CN=localhost' -extensions EXT -config <(printf "[dn]\nCN=localhost\n[req]\ndistinguished_name = dn\n[EXT]\nsubjectAltName=DNS:localhost\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")
+   ```
+
+3. Start the HTTPS development server:
+   ```bash
+   npm run dev:https
+   ```
+
+4. Access the app at `https://localhost:3000` on your computer
+
+5. For mobile testing, find your computer's IP address and access `https://YOUR_IP:3000` on your mobile device
+
+**Note**: You'll need to accept the self-signed certificate warning in your browser the first time you access the HTTPS URL.
 
 ### Project Structure
 
