@@ -36,7 +36,9 @@ export default defineConfig({
     // Terser options for better minification
     terserOptions: {
       compress: {
+        // eslint-disable-next-line camelcase
         drop_console: false, // Keep console.warn and console.error
+        // eslint-disable-next-line camelcase
         drop_debugger: true
       }
     }
