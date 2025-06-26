@@ -3,6 +3,23 @@
   "version": "1.0.0",
   "description": "Warhammer 40K Army Roster Cleaner",
   "type": "module",
+  "keywords": [
+    "warhammer",
+    "warhammer-40k",
+    "roster-cleaner",
+    "vanilla-javascript",
+    "pwa"
+  ],
+  "homepage": "https://github.com/teddyzetterlund/w40k-army-cleaner#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/teddyzetterlund/w40k-army-cleaner.git"
+  },
+  "bugs": {
+    "url": "https://github.com/teddyzetterlund/w40k-army-cleaner/issues"
+  },
+  "license": "MIT",
+  "author": "Teddy Zetterlund",
   "scripts": {
     "generate-icons": "node generate-icons.js",
     "start": "npx http-server -p 3000",

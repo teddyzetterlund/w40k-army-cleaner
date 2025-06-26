@@ -40,4 +40,20 @@ coverage/
 
 # Temporary files
 *.tmp
-*.temp 
+*.temp
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Local SSL certificates
+~/.localhost-ssl/
+
+# Editor backup files
+*~
+*.bak
+*.backup
+
+# Local development files
+.local/ 
