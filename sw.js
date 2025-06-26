@@ -3,8 +3,8 @@ const CACHE_NAME = `40k-army-cleaner-v${CACHE_VERSION}`;
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
-    './app.js',
-    './roster-cleaner.js',
+    `./app.js?v=${CACHE_VERSION}`,
+    `./roster-cleaner.js?v=${CACHE_VERSION}`,
     './manifest.json',
     'https://cdn.tailwindcss.com'
 ];
@@ -36,8 +36,8 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-    // For HTML files, try network first, then cache
-    if (event.request.url.includes('.html') || event.request.url.endsWith('/')) {
+    // For HTML files and JavaScript files, try network first, then cache
+    if (event.request.url.includes('.html') || event.request.url.endsWith('/') || event.request.url.includes('.js')) {
         event.respondWith(
             fetch(event.request)
                 .then((response) => {
