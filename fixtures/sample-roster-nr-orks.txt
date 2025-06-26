@@ -1,0 +1,175 @@
++++++++++++++++++++++++++++++++++++++++++++++++
++ FACTION KEYWORD: Xenos - Orks
++ DETACHMENT: War Horde
++ TOTAL ARMY POINTS: 1955pts
++
++ WARLORD: Char2: Ghazghkull Thraka
++ ENHANCEMENT: Kunnin’ But Brutal (on Char1: Beastboss)
+& Follow Me Ladz (on Char3: Warboss)
++ NUMBER OF UNITS: 20
++ SECONDARY: - Bring It Down: (1x2) + (2x4) - Assassination: 6 Characters
++++++++++++++++++++++++++++++++++++++++++++++++
+
+CHARACTER
+
+1x Boss Snikrot (95 pts)
+• 1x Mork’s Teeth
+• 1x Slugga
+
+2x Ghazghkull Thraka (235 pts)
+• 1x Ghazghkull Thraka
+    • 1x Gork’s Klaw
+    • 1x Mork’s Roar
+    • Ghazghkull Thraka, Invulnerable Save (4+): Ghazghkull
+• 1x Makari
+    • 1x Makari’s stabba
+    • Makari, Invulnerable Save (2+*): Makari, Warlord
+
+1x Zodgrod Wortsnagga (90 pts)
+• 1x Da Grabzappa
+• 1x Squigstoppa
+
+1x Beastboss (95 pts)
+• 1x Beast Snagga klaw
+• 1x Beastchoppa
+• 1x Shoota
+• Kunnin’ But Brutal (+15 pts)
+
+1x Beastboss (80 pts)
+• 1x Beast Snagga klaw
+• 1x Beastchoppa
+• 1x Shoota
+
+1x Warboss (100 pts)
+• 1x Kombi-weapon
+• 1x Twin slugga
+• 1x Attack squig
+• 1x Power klaw
+• Follow Me Ladz (+25 pts)
+
+BATTLELINE
+
+10x Beast Snagga Boyz (95 pts)
+• 1x Beast Snagga Nob
+    • 1x Power snappa
+    • 1x Slugga
+    • Beast Snagga Nob
+• 9x Beast Snagga Boy
+    • 9x Choppa
+    • 9x Slugga
+    • 9x Beast Snagga Boy
+
+10x Beast Snagga Boyz (95 pts)
+• 1x Beast Snagga Nob
+    • 1x Power snappa
+    • 1x Slugga
+    • Beast Snagga Nob
+• 9x Beast Snagga Boy
+    • 9x Choppa
+    • 9x Slugga
+    • 9x Beast Snagga Boy
+
+10x Beast Snagga Boyz (95 pts)
+• 1x Beast Snagga Nob
+    • 1x Power snappa
+    • 1x Slugga
+    • Beast Snagga Nob
+• 9x Beast Snagga Boy
+    • 9x Choppa
+    • 9x Slugga
+    • 9x Beast Snagga Boy
+
+OTHER DATASHEETS
+
+11x Gretchin (40 pts)
+• 10x Gretchin
+    • 10x Close combat weapon
+    • 10x Grot blasta
+    • 10x Gretchin
+• 1x Runtherd
+    • 1x Grot-smacka
+    • 1x Slugga
+    • Runtherd
+
+11x Gretchin (40 pts)
+• 10x Gretchin
+    • 10x Close combat weapon
+    • 10x Grot blasta
+    • 10x Gretchin
+• 1x Runtherd
+    • 1x Grot-smacka
+    • 1x Slugga
+    • Runtherd
+
+11x Gretchin (40 pts)
+• 10x Gretchin
+    • 10x Close combat weapon
+    • 10x Grot blasta
+    • 10x Gretchin
+• 1x Runtherd
+    • 1x Grot-smacka
+    • 1x Slugga
+    • Runtherd
+
+2x Meganobz (70 pts)
+• 2x Meganob
+    • 2x Twin killsaw
+
+10x Nobz (210 pts)
+• 1x Boss Nob
+    • 1x Power klaw
+    • 1x Slugga
+• 9x Nob
+    • 9x Power klaw
+    • 9x Slugga
+  • Ammo Runt
+
+5x Stormboyz (65 pts)
+• 1x Boss Nob
+    • 1x Slugga
+    • 1x Power klaw
+    • Boss Nob
+• 4x Stormboy
+    • 4x Choppa
+    • 4x Slugga
+    • 4x Stormboy
+
+5x Stormboyz (65 pts)
+• 1x Boss Nob
+    • 1x Slugga
+    • 1x Power klaw
+    • Boss Nob
+• 4x Stormboy
+    • 4x Choppa
+    • 4x Slugga
+    • 4x Stormboy
+
+5x Stormboyz (65 pts)
+• 1x Boss Nob
+    • 1x Slugga
+    • 1x Power klaw
+    • Boss Nob
+• 4x Stormboy
+    • 4x Choppa
+    • 4x Slugga
+    • 4x Stormboy
+
+1x Kill Rig (155 pts)
+• 1x ’Eavy lobba
+• 1x Butcha boyz
+• 1x Savage horns and hooves
+• 1x Saw blades
+• 1x Stikka kannon
+• 1x Wurrtower
+
+1x Kill Rig (155 pts)
+• 1x ’Eavy lobba
+• 1x Butcha boyz
+• 1x Savage horns and hooves
+• 1x Saw blades
+• 1x Stikka kannon
+• 1x Wurrtower
+
+1x Trukk (70 pts)
+• 1x Big shoota
+• 1x Spiked wheel

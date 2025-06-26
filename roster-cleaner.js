@@ -777,15 +777,24 @@ function cleanNewRecruitRosterText(options) {
     const lines = input.trim().split('\n');
     const cleanedLines = [];
     const { armyInfo, firstPointsLine, headerEndIndex } = processNewRecruitHeader(lines);
+    
+    // For NewRecruit rosters, we include faction and detachment info with points appended
+    // since they don't have roster names but do have faction/detachment information
     if (showHeader) {
-        if (firstPointsLine) {
-            cleanedLines.push(showPoints ? firstPointsLine : firstPointsLine.replace(POINTS_REMOVAL_PATTERN, ''));
-        }
         if (armyInfo.length > 0) {
-            cleanedLines.push(armyInfo.join(' - '));
+            let headerLine = armyInfo.join(' - ');
+            // Append points to the faction/detachment line if points are enabled
+            if (showPoints && firstPointsLine) {
+                const pointsMatch = firstPointsLine.match(/\((\d+)\s*points\)/);
+                if (pointsMatch) {
+                    headerLine += ` (${pointsMatch[1]} Points)`;
+                }
+            }
+            cleanedLines.push(headerLine);
             cleanedLines.push('');
         }
     }
+    
     const isTauEmpire = armyInfo.some(line => normalizeFactionName(line).includes('tauempire'));
     const isChaosSpaceMarines = armyInfo.some(line => normalizeFactionName(line).includes('chaosspacemarines'));
     cleanedLines.push(...processUnits({
