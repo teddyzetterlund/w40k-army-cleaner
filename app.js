@@ -289,8 +289,9 @@ function setupEditInput(editButton, inputPhase, outputPhase, rosterInput) {
         outputPhase.classList.add(UI_CONSTANTS.HIDDEN_CLASS);
         inputPhase.classList.remove(UI_CONSTANTS.HIDDEN_CLASS);
         
-        // Focus the input field
+        // Focus the input field and select all text
         rosterInput.focus();
+        rosterInput.select();
         
         // Scroll to top
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -349,6 +350,9 @@ function initializeApp() {
         });
 
         setupEditInput(elements.editButton, elements.inputPhase, elements.outputPhase, elements.rosterInput);
+        
+        // Focus the roster input on page load
+        elements.rosterInput.focus();
     } catch (error) {
         console.error('Failed to initialize app:', error);
         // Could add user feedback here for initialization errors
