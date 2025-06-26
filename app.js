@@ -6,8 +6,6 @@ if ('serviceWorker' in navigator) {
     // Register service worker
     navigator.serviceWorker.register('./sw.js')
         .then((registration) => {
-            console.log('Service Worker registered successfully:', registration.scope);
-            
             // Check for updates
             registration.addEventListener('updatefound', () => {
                 newWorker = registration.installing;
