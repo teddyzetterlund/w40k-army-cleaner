@@ -198,7 +198,7 @@ describe('App Integration Tests', () => {
 
             // Set up output content
             mockElements.rosterOutput.textContent = 'roster to copy';
-            const originalText = mockElements.copyButton.textContent;
+            const originalText = mockElements.copyButton.innerHTML;
 
             // Simulate copy button click
             await mockElements.copyButton.dispatchEvent(new Event('click'));
@@ -211,7 +211,7 @@ describe('App Integration Tests', () => {
 
             // Wait for timeout and verify original text restored
             await new Promise(resolve => setTimeout(resolve, 2100));
-            expect(mockElements.copyButton.textContent).toBe(originalText);
+            expect(mockElements.copyButton.innerHTML).toBe(originalText);
         });
 
         it('should handle options menu interaction workflow', () => {

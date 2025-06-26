@@ -266,25 +266,25 @@ describe('DOM Utilities', () => {
             Object.defineProperty(navigator, 'platform', { value: originalPlatform, configurable: true });
         });
 
-        it('should return (CMD+C) for Mac desktop', () => {
+        it('should return (<kbd>CMD</kbd>+<kbd>C</kbd>) for Mac desktop', () => {
             Object.defineProperty(navigator, 'userAgent', { value: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', configurable: true });
             Object.defineProperty(navigator, 'platform', { value: 'MacIntel', configurable: true });
             
-            expect(getKeyboardShortcutText()).toBe(' (CMD+C)');
+            expect(getKeyboardShortcutText()).toBe(' (<kbd>CMD</kbd>+<kbd>C</kbd>)');
         });
 
-        it('should return (CTRL+C) for Windows desktop', () => {
+        it('should return (<kbd>CTRL</kbd>+<kbd>C</kbd>) for Windows desktop', () => {
             Object.defineProperty(navigator, 'userAgent', { value: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', configurable: true });
             Object.defineProperty(navigator, 'platform', { value: 'Win32', configurable: true });
             
-            expect(getKeyboardShortcutText()).toBe(' (CTRL+C)');
+            expect(getKeyboardShortcutText()).toBe(' (<kbd>CTRL</kbd>+<kbd>C</kbd>)');
         });
 
-        it('should return (CMD+C) for iPad with Mac platform', () => {
+        it('should return (<kbd>CMD</kbd>+<kbd>C</kbd>) for iPad with Mac platform', () => {
             Object.defineProperty(navigator, 'userAgent', { value: 'Mozilla/5.0 (iPad; CPU OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15', configurable: true });
             Object.defineProperty(navigator, 'platform', { value: 'MacIntel', configurable: true });
             
-            expect(getKeyboardShortcutText()).toBe(' (CMD+C)');
+            expect(getKeyboardShortcutText()).toBe(' (<kbd>CMD</kbd>+<kbd>C</kbd>)');
         });
 
         it('should return empty string for iPhone', () => {

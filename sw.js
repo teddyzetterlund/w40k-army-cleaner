@@ -4,8 +4,7 @@ const ASSETS_TO_CACHE = [
     '/index.html',
     '/app.js',
     '/manifest.json',
-    'https://cdn.tailwindcss.com',
-    'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap'
+    'https://cdn.tailwindcss.com'
 ];
 
 self.addEventListener('install', (event) => {

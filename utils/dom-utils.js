@@ -102,7 +102,7 @@ export function scrollToOutput(outputContainer) {
 
 /**
  * Gets the appropriate keyboard shortcut text for the current platform
- * @returns {string} The keyboard shortcut text (e.g., "(CMD+C)" or "(CTRL+C)") or empty string for mobile
+ * @returns {string} The keyboard shortcut text with kbd tags (e.g., " (<kbd>CMD</kbd>+<kbd>C</kbd>)" or " (<kbd>CTRL</kbd>+<kbd>C</kbd>)") or empty string for mobile
  */
 export function getKeyboardShortcutText() {
     // Check if this is a mobile device without a physical keyboard
@@ -115,7 +115,7 @@ export function getKeyboardShortcutText() {
             // For iPads with Magic Keyboard or other external keyboards, show the shortcut
             // We'll assume iPad users might have keyboards, but iPhone users typically don't
             if (/iPad/.test(navigator.userAgent)) {
-                return navigator.platform.toUpperCase().indexOf('MAC') >= 0 ? ' (CMD+C)' : ' (CTRL+C)';
+                return navigator.platform.toUpperCase().indexOf('MAC') >= 0 ? ' (<kbd>CMD</kbd>+<kbd>C</kbd>)' : ' (<kbd>CTRL</kbd>+<kbd>C</kbd>)';
             }
             return ''; // No shortcut for iPhone
         }
@@ -124,5 +124,5 @@ export function getKeyboardShortcutText() {
     
     // For desktop devices, show the appropriate shortcut
     const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
-    return isMac ? ' (CMD+C)' : ' (CTRL+C)';
+    return isMac ? ' (<kbd>CMD</kbd>+<kbd>C</kbd>)' : ' (<kbd>CTRL</kbd>+<kbd>C</kbd>)';
 } 

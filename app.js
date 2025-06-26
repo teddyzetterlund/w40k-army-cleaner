@@ -72,7 +72,7 @@ async function handleCopyRosterOutput(rosterOutput, copyButton, discordFormatChe
         await copyToClipboard(textToCopy);
         copyButton.textContent = UI_CONSTANTS.COPY_SUCCESS_TEXT;
         setTimeout(() => {
-            copyButton.textContent = originalText;
+            copyButton.innerHTML = originalText;
         }, UI_CONSTANTS.COPY_FEEDBACK_DURATION_MS);
     } catch (error) {
         console.error('Copy failed:', error);
@@ -94,7 +94,7 @@ function setupCopyButton(copyButton, rosterOutput, discordFormatCheckbox) {
     // Set initial button text with keyboard shortcut
     const shortcutText = getKeyboardShortcutText();
     const baseText = UI_CONSTANTS.COPY_BUTTON_BASE_TEXT;
-    copyButton.textContent = baseText + shortcutText;
+    copyButton.innerHTML = baseText + shortcutText;
 
     copyButton.addEventListener('click', async () => {
         await handleCopyRosterOutput(rosterOutput, copyButton, discordFormatCheckbox, shortcutText);

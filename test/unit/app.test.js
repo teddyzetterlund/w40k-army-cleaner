@@ -96,7 +96,7 @@ describe('App Unit Tests', () => {
         copyToClipboard.mockResolvedValue();
 
         // Mock getKeyboardShortcutText
-        getKeyboardShortcutText.mockReturnValue(' (CMD+C)');
+        getKeyboardShortcutText.mockReturnValue(' (<kbd>CMD</kbd>+<kbd>C</kbd>)');
 
         // Create mock update function
         mockUpdateRosterOutput = vi.fn();
@@ -150,11 +150,11 @@ describe('App Unit Tests', () => {
             const discordFormatCheckbox = mockElements.discordFormatCheckbox;
 
             // Mock the keyboard shortcut text
-            getKeyboardShortcutText.mockReturnValue(' (CMD+C)');
+            getKeyboardShortcutText.mockReturnValue(' (<kbd>CMD</kbd>+<kbd>C</kbd>)');
 
             setupCopyButton(copyButton, rosterOutput, discordFormatCheckbox);
 
-            expect(copyButton.textContent).toBe('Copy (CMD+C)');
+            expect(copyButton.innerHTML).toBe('Copy (<kbd>CMD</kbd>+<kbd>C</kbd>)');
         });
 
         it('should wrap output in markdown fenced code blocks when Discord format is enabled', async () => {
@@ -193,8 +193,8 @@ describe('App Unit Tests', () => {
             const copyButton = mockElements.copyButton;
             const rosterOutput = mockElements.rosterOutput;
             const discordFormatCheckbox = mockElements.discordFormatCheckbox;
-            const originalText = 'Copy (CMD+C)';
-            copyButton.textContent = originalText;
+            const originalText = 'Copy (<kbd>CMD</kbd>+<kbd>C</kbd>)';
+            copyButton.innerHTML = originalText;
 
             setupCopyButton(copyButton, rosterOutput, discordFormatCheckbox);
 
@@ -205,7 +205,7 @@ describe('App Unit Tests', () => {
             
             // Wait for timeout to restore original text
             await new Promise(resolve => setTimeout(resolve, 2100));
-            expect(copyButton.textContent).toBe(originalText);
+            expect(copyButton.innerHTML).toBe(originalText);
         });
 
         it('should handle copy errors gracefully', async () => {
