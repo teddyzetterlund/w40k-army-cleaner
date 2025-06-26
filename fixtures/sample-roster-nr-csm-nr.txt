@@ -1,0 +1,39 @@
+Chaos - Chaos Space Marines - The Goal is to Survive the Shooting Phase - [1990 pts]
+
+# ++ Army Roster ++ [1990 pts]
+## Configuration
+Battle Size: Strike Force (2000 Point limit)
+Detachment Choice: Fellhammer Siege-host
+Show/Hide Options
+
+## Character [205 pts]
+Chaos Lord in Terminator Armour [105 pts]: Warlord, Bastion Plate, Combi-bolter, Exalted weapon
+Sorcerer in Terminator Armour [100 pts]: Force weapon, Infernal Gaze, Warp Tracer, Combi-bolter
+
+## Battleline [230 pts]
+Cultist Mob [50 pts]:
+• 1x Cultist Champion: Brutal assault weapon, Autopistol
+• 9x Cultist w/ autopistol and brutal assault weapon: Autopistol, Brutal assault weapon
+Legionaries [90 pts]:
+• 1x Aspiring Champion: Close combat weapon, Bolt pistol, Boltgun
+• 4x Legionary w/ boltgun: Bolt pistol, Boltgun, Close combat weapon
+Legionaries [90 pts]:
+• 1x Aspiring Champion: Close combat weapon, Bolt pistol, Boltgun
+• 4x Legionary w/ boltgun: Bolt pistol, Boltgun, Close combat weapon
+
+## Infantry [840 pts]
+Chaos Terminator Squad [360 pts]:
+• 10x Accursed weapon and combi-bolter: Accursed weapon, Combi-bolter
+Possessed [240 pts]:
+• 10x Possessed: Hideous mutations
+Possessed [240 pts]:
+• 10x Possessed: Hideous mutations
+
+## Vehicle [640 pts]
+Chaos Predator Annihilator [135 pts]: Armoured tracks, Predator twin lascannon
+Chaos Predator Annihilator [135 pts]: Armoured tracks, Predator twin lascannon
+Chaos Vindicator [185 pts]: Armoured tracks, Demolisher cannon
+Chaos Vindicator [185 pts]: Armoured tracks, Demolisher cannon
+
+## Dedicated Transport [75 pts]
+Chaos Rhino [75 pts]: Armoured tracks, Combi-bolter

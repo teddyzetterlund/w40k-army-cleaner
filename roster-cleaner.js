@@ -16,6 +16,12 @@ import {
     ENHANCEMENT_LINE_PATTERN
 } from './utils/regex-patterns.js';
 
+const NR_NR_ENHANCEMENTS = [
+    'Bastion Plate',
+    'Warp Tracer',
+    // Add more known enhancements as needed
+];
+
 /**
  * Checks if a roster is in NewRecruit format by looking for the characteristic header structure
  * @param {string[]} lines - Array of roster lines
@@ -861,6 +867,73 @@ function cleanGWRosterText(options) {
     return normalizeApostrophes(cleanedLines.join('\n'));
 }
 
+function isNewRecruitNRFormat(lines) {
+    // Detects the NR-NR format by header and section structure
+    return (
+        lines[0] && lines[0].match(/\[\d+ pts\]/) &&
+        lines.some(line => line.match(/^## /))
+    );
+}
+
+function processNewRecruitNRHeader(lines) {
+    // Extracts faction, detachment, and points from the NR-NR header
+    let faction = '';
+    let detachment = '';
+    let points = '';
+    // First line: Chaos - Chaos Space Marines - The Goal is to Survive the Shooting Phase - [1990 pts]
+    const headerMatch = lines[0].match(/^(.*?)-\s*\[(\d+) pts\]/);
+    if (headerMatch) {
+        // Faction and detachment are before the last dash
+        const beforePoints = headerMatch[1].trim();
+        const parts = beforePoints.split(' - ');
+        // Try to find detachment from Detachment Choice line
+        const detachmentLine = lines.find(line => line.startsWith('Detachment Choice:'));
+        if (detachmentLine) {
+            detachment = detachmentLine.replace('Detachment Choice:', '').trim();
+        } else if (parts.length > 2) {
+            detachment = parts[parts.length - 1];
+        }
+        // Faction is the last 'Chaos Space Marines' part
+        faction = parts.find(p => p.includes('Space Marines')) || parts[1] || parts[0];
+        points = headerMatch[2];
+    }
+    return {
+        armyInfo: [faction + (detachment ? ' - ' + detachment : '')],
+        points,
+        headerEndIndex: 1 // Start after the first line
+    };
+}
+
+function processNewRecruitNRUnits(lines, startIndex, showPoints, smartFormat, isTauEmpire, isChaosSpaceMarines) {
+    // Parse units from NR-NR format
+    const cleanedLines = [];
+    let lastUnit = '';
+    for (let i = startIndex; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line || line.startsWith('#') || line.startsWith('•')) continue;
+        // Match unit lines: Unit Name [105 pts]: ... or Unit Name [105 pts]:
+        const unitMatch = line.match(/^([\w\s\-]+) \[(\d+) pts\]:\s*(.*)$/);
+        if (unitMatch) {
+            let unitName = unitMatch[1].trim();
+            let points = unitMatch[2];
+            let details = unitMatch[3] || '';
+            unitName = formatUnitName(unitName, isTauEmpire, smartFormat, isChaosSpaceMarines);
+            const unitLine = showPoints ? `${unitName} (${points})` : unitName;
+            if (lastUnit && lastUnit !== unitName) {
+                cleanedLines.push('');
+            }
+            cleanedLines.push(unitLine);
+            // Find enhancement in details
+            const enhancement = NR_NR_ENHANCEMENTS.find(e => details.includes(e));
+            if (enhancement) {
+                cleanedLines.push(`  • Enhancement: ${enhancement}`);
+            }
+            lastUnit = unitName;
+        }
+    }
+    return cleanedLines;
+}
+
 /**
  * Cleans and formats a roster text according to specified options
  * @param {CleanRosterOptions} options - The options for cleaning the roster
@@ -884,7 +957,19 @@ function cleanRosterText(options) {
     if (!trimmedInput) return '';
     const lines = trimmedInput.split('\n');
     let result = '';
-    if (isNewRecruitFormat(lines)) {
+    if (isNewRecruitNRFormat(lines)) {
+        // Handle NR-NR format
+        const { armyInfo, points, headerEndIndex } = processNewRecruitNRHeader(lines);
+        let headerLine = armyInfo.join(' - ');
+        if (showPoints && points) {
+            headerLine += ` (${points} Points)`;
+        }
+        const isTauEmpire = armyInfo.some(line => normalizeFactionName(line).includes('tauempire'));
+        const isChaosSpaceMarines = armyInfo.some(line => normalizeFactionName(line).includes('chaosspacemarines'));
+        const cleanedLines = [headerLine, ''];
+        cleanedLines.push(...processNewRecruitNRUnits(lines, headerEndIndex, showPoints, smartFormat, isTauEmpire, isChaosSpaceMarines));
+        result = normalizeApostrophes(cleanedLines.join('\n'));
+    } else if (isNewRecruitFormat(lines)) {
         result = cleanNewRecruitRosterText({ input, showPoints, smartFormat, showModels, showHeader });
     } else {
         result = cleanGWRosterText({ input, showPoints, smartFormat, showModels, showHeader });
