@@ -2,6 +2,12 @@
 
 A web-based tool that helps clean and format Warhammer 40K army rosters for better readability and sharing. This tool takes exported army rosters and removes unnecessary information while maintaining the essential unit and points data.
 
+## Live Demo
+
+🌐 **Live Application**: [https://teddyzetterlund.github.io/w40k-army-cleaner/](https://teddyzetterlund.github.io/w40k-army-cleaner/)
+
+The application is automatically deployed to GitHub Pages and updates whenever changes are pushed to the main branch.
+
 ## Features
 
 ### Core Functionality
@@ -114,6 +120,32 @@ For mobile testing and clipboard functionality, you'll need to run the app over 
 5. For mobile testing, find your computer's IP address and access `https://YOUR_IP:3000` on your mobile device
 
 **Note**: You'll need to accept the self-signed certificate warning in your browser the first time you access the HTTPS URL.
+
+### Deployment
+
+This application is automatically deployed to GitHub Pages using GitHub Actions. The deployment process:
+
+1. **Automatic Deployment**: Every push to the `main` branch triggers a deployment
+2. **Quality Gates**: The deployment runs tests and linting before publishing
+3. **PWA Support**: The deployed site includes full PWA functionality
+4. **Live URL**: Available at `https://teddyzetterlund.github.io/w40k-army-cleaner/`
+
+#### Manual Deployment
+
+If you need to deploy manually:
+
+1. Ensure all tests pass: `npm test`
+2. Ensure linting passes: `npm run lint`
+3. Push to the main branch: `git push origin main`
+4. The GitHub Action will automatically deploy to GitHub Pages
+
+#### Custom Domain (Optional)
+
+To use a custom domain:
+
+1. Add your domain to the `cname` field in `.github/workflows/deploy.yml`
+2. Configure your domain's DNS to point to `teddyzetterlund.github.io`
+3. The deployment will automatically set up the custom domain
 
 ### Project Structure
 

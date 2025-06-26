@@ -30,10 +30,13 @@
     "test:integration": "vitest test/integration",
     "test:e2e": "vitest test/e2e",
     "test:ui": "vitest --ui",
+    "test:core": "vitest test/unit/roster-cleaner.test.js test/string-utils.test.js test/validation-utils.test.js test/model-counting.test.js --run",
     "dev": "npx http-server -p 3000 -c-1",
     "dev:https": "npx http-server --ssl --cert ~/.localhost-ssl/localhost.crt --key ~/.localhost-ssl/localhost.key -p 3000 -c-1",
     "lint": "eslint . --ext .js",
-    "lint:fix": "eslint . --ext .js --fix"
+    "lint:fix": "eslint . --ext .js --fix",
+    "predeploy": "npm test && npm run lint",
+    "deploy": "echo 'Deployment is handled by GitHub Actions. Push to main branch to deploy.'"
   },
   "dependencies": {
     "sharp": "^0.34.2"

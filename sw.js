@@ -1,9 +1,9 @@
 const CACHE_NAME = '40k-army-cleaner-v1';
 const ASSETS_TO_CACHE = [
-    '/',
-    '/index.html',
-    '/app.js',
-    '/manifest.json',
+    './',
+    './index.html',
+    './app.js',
+    './manifest.json',
     'https://cdn.tailwindcss.com'
 ];
 
