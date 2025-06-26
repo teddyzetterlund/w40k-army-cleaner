@@ -14,6 +14,11 @@ export default defineConfig({
     
     // Rollup options for better PWA support
     rollupOptions: {
+      input: {
+        main: 'index.html',
+        about: 'about.html',
+        install: 'install.html'
+      },
       output: {
         // Generate hashed filenames for cache busting
         entryFileNames: 'assets/[name].[hash].js',
