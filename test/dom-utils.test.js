@@ -4,7 +4,6 @@ import {
     updateOptionsButtonText, 
     readFileAsText, 
     copyToClipboard,
-    scrollToOutput,
     getKeyboardShortcutText
 } from '../utils/dom-utils.js';
 
@@ -222,35 +221,6 @@ describe('DOM Utilities', () => {
             navigator.clipboard.writeText.mockRejectedValue(error);
 
             await expect(copyToClipboard('test')).rejects.toThrow('Failed to copy to clipboard: Clipboard write failed');
-        });
-    });
-
-    describe('scrollToOutput', () => {
-        let mockElement;
-        let mockScrollIntoView;
-
-        beforeEach(() => {
-            mockScrollIntoView = vi.fn();
-            mockElement = {
-                scrollIntoView: mockScrollIntoView
-            };
-            // Mock the Element constructor to make our mock pass validation
-            Object.setPrototypeOf(mockElement, Element.prototype);
-        });
-
-        it('should call scrollIntoView with smooth behavior', () => {
-            scrollToOutput(mockElement);
-            
-            expect(mockScrollIntoView).toHaveBeenCalledWith({
-                behavior: 'auto',
-                block: 'start',
-                inline: 'nearest'
-            });
-        });
-
-        it('should throw error for invalid element', () => {
-            expect(() => scrollToOutput(null)).toThrow('outputContainer must be a DOM element');
-            expect(() => scrollToOutput(undefined)).toThrow('outputContainer must be a DOM element');
         });
     });
 

@@ -102,15 +102,6 @@ export async function copyToClipboard(text) {
 }
 
 /**
- * Jumps to the output container without animation
- * @param {HTMLElement} outputContainer - The output container element to scroll to
- */
-export function scrollToOutput(outputContainer) {
-    validateElement(outputContainer, 'outputContainer');
-    outputContainer.scrollIntoView({ behavior: 'auto', block: 'start', inline: 'nearest' });
-}
-
-/**
  * Gets the appropriate keyboard shortcut text for the current platform
  * @returns {string} The keyboard shortcut text with kbd tags (e.g., " (<kbd>CMD</kbd>+<kbd>C</kbd>)" or " (<kbd>CTRL</kbd>+<kbd>C</kbd>)") or empty string for mobile
  */

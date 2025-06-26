@@ -76,7 +76,6 @@ import {
     updateOptionsButtonText, 
     readFileAsText, 
     copyToClipboard,
-    scrollToOutput,
     getKeyboardShortcutText
 } from './utils/dom-utils.js';
 import { 
