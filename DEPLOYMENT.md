@@ -1,6 +1,6 @@
 # Deployment Guide
 
-This guide explains how the 40K Army Cleaner app is deployed to GitHub Pages.
+This guide explains how the W40K Roster Cleaner app is deployed to GitHub Pages.
 
 ## Overview
 

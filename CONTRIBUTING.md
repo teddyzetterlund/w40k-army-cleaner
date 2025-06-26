@@ -1,4 +1,4 @@
-# Contributing to 40K Army Cleaner
+# Contributing to W40K Roster Cleaner
 
 ## Development Philosophy
 

@@ -1,7 +1,7 @@
 {
-  "name": "w40k-army-cleaner",
+  "name": "w40k-roster-cleaner",
   "version": "1.0.0",
-  "description": "Warhammer 40K Army Roster Cleaner",
+  "description": "W40K Roster Cleaner",
   "type": "module",
   "keywords": [
     "warhammer",

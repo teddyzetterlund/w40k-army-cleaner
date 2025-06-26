@@ -1,4 +1,4 @@
-# Warhammer 40K Army Roster Cleaner
+# W40K Roster Cleaner
 
 A web-based tool that helps clean and format Warhammer 40K army rosters for better readability and sharing. This tool takes exported army rosters and removes unnecessary information while maintaining the essential unit and points data.
 

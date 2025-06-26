@@ -2,7 +2,7 @@
 
 ## Overview
 
-The 40K Army Cleaner is a Progressive Web App (PWA) built with vanilla JavaScript that processes Warhammer 40K army rosters. The application follows a modular, test-driven architecture with clear separation of concerns.
+The W40K Roster Cleaner is a Progressive Web App (PWA) built with vanilla JavaScript that processes Warhammer 40K army rosters. The application follows a modular, test-driven architecture with clear separation of concerns.
 
 ## Architecture Principles
 
