@@ -22,7 +22,10 @@
   "author": "Teddy Zetterlund",
   "scripts": {
     "generate-icons": "node generate-icons.js",
-    "start": "npx http-server -p 3000",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "vite preview --port 3000",
     "test": "vitest --run",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage",
@@ -31,11 +34,10 @@
     "test:e2e": "vitest test/e2e",
     "test:ui": "vitest --ui",
     "test:core": "vitest test/unit/roster-cleaner.test.js test/string-utils.test.js test/validation-utils.test.js test/model-counting.test.js --run",
-    "dev": "npx http-server -p 3000 -c-1",
     "dev:https": "npx http-server --ssl --cert ~/.localhost-ssl/localhost.crt --key ~/.localhost-ssl/localhost.key -p 3000 -c-1",
     "lint": "eslint . --ext .js",
     "lint:fix": "eslint . --ext .js --fix",
-    "predeploy": "npm test && npm run lint",
+    "predeploy": "npm run build && npm test && npm run lint",
     "deploy": "echo 'Deployment is handled by GitHub Actions. Push to main branch to deploy.'"
   },
   "dependencies": {
@@ -50,6 +52,8 @@
     "eslint-plugin-jsdoc": "^51.2.3",
     "http-server": "^14.1.1",
     "jsdom": "^26.1.0",
+    "terser": "^5.43.1",
+    "vite": "^7.0.0",
     "vitest": "^3.2.4"
   }
 }

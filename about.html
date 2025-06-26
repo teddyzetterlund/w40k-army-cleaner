@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About - W40K Roster Cleaner</title>
     <meta name="description" content="About the W40K Roster Cleaner application">
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#1a1a1a">
     
-    <link rel="icon" type="image/png" sizes="192x192" href="icons/pwa_icon_192x192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="icons/pwa_icon_512x512.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/icons/pwa_icon_192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/icons/pwa_icon_512x512.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -111,6 +111,14 @@
             border: 1px solid var(--border-color);
         }
     </style>
+    <!-- Apple-specific meta tags for iOS PWA installation -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="40K Cleaner">
+    <link rel="apple-touch-icon" href="/icons/apple_icon_180x180.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/apple_icon_152x152.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="/icons/apple_icon_167x167.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple_icon_180x180.png">
 </head>
 <body class="min-h-screen">
     <!-- Header -->

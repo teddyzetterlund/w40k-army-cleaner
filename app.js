@@ -73,8 +73,8 @@ if ('serviceWorker' in navigator) {
         
         // Handle update button
         document.getElementById('update-now-btn').addEventListener('click', () => {
-            // Force reload with cache busting
-            window.location.href = window.location.href + (window.location.href.includes('?') ? '&' : '?') + 'v=' + Date.now();
+            // Force reload to get the latest version
+            window.location.reload();
         });
         
         // Handle dismiss button

@@ -1,6 +1,61 @@
 # W40K Roster Cleaner
 
-A web-based tool that helps clean and format Warhammer 40K army rosters for better readability and sharing. This tool takes exported army rosters and removes unnecessary information while maintaining the essential unit and points data.
+A vanilla JavaScript Progressive Web App for cleaning and formatting Warhammer 40K army rosters. Now powered by [Vite](https://vitejs.dev/) for fast builds, modern development, and automatic cache-busting.
+
+## Features
+- Cleans and formats Games Workshop and NewRecruit roster exports
+- Smart unit name formatting and enhancement handling
+- PWA: installable, offline-capable, mobile-friendly
+- 100% test-driven, modular, and maintainable
+
+## Development
+
+```bash
+npm install
+npm run dev
+```
+- Opens the app at [http://localhost:3000](http://localhost:3000)
+- Hot reloads on file changes
+
+## Production Build
+
+```bash
+npm run build
+```
+- Outputs production-ready files to the `dist/` directory
+
+## Preview Production Build Locally
+
+```bash
+npm run preview
+```
+- Serves the built `dist/` folder locally
+
+## Deployment
+
+- Deploy the contents of the `dist/` folder to your static host (e.g., GitHub Pages, Netlify, Vercel).
+- For GitHub Pages, configure your workflow to publish `dist/` as the site root.
+
+## PWA & Service Worker
+
+- The service worker is located in `public/sw.js` and is automatically included in the build.
+- All assets are cache-busted by Vite, so users always get the latest version.
+
+## Testing
+
+```bash
+npm test
+```
+- Runs the full test suite with [Vitest](https://vitest.dev/)
+
+## Contributing
+
+- Follow the modular, test-driven, and PWA-friendly architecture described in `CONTRIBUTING.md`.
+- Use Vite for all development and builds.
+
+---
+
+For more details, see the full documentation in `CONTRIBUTING.md` and `ARCHITECTURE.md`.
 
 ## Live Demo
 

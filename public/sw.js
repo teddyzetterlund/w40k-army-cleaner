@@ -1,13 +1,5 @@
 const CACHE_VERSION = '1.1.0';
 const CACHE_NAME = `40k-army-cleaner-v${CACHE_VERSION}`;
-const ASSETS_TO_CACHE = [
-    `./?v=${CACHE_VERSION}`,
-    `./index.html?v=${CACHE_VERSION}`,
-    `./app.js?v=${CACHE_VERSION}`,
-    `./roster-cleaner.js?v=${CACHE_VERSION}`,
-    `./manifest.json?v=${CACHE_VERSION}`,
-    'https://cdn.tailwindcss.com'
-];
 
 // Clean up old caches
 self.addEventListener('activate', (event) => {
@@ -30,7 +22,15 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME)
-            .then((cache) => cache.addAll(ASSETS_TO_CACHE))
+            .then((cache) => {
+                // Cache the main page and critical assets
+                return cache.addAll([
+                    './',
+                    './index.html',
+                    './about.html',
+                    './install.html'
+                ]);
+            })
             .then(() => {
                 // Skip waiting to activate immediately
                 return self.skipWaiting();
@@ -39,7 +39,7 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-    // For all files, try network first to bypass GitHub Pages CDN cache
+    // For all files, try network first to ensure fresh content
     event.respondWith(
         fetch(event.request, { 
             cache: 'no-cache' // Force bypass browser cache
