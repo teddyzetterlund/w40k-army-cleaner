@@ -191,30 +191,57 @@
         </div>
     </header>
 
-    <div class="container mx-auto px-4 py-6 max-w-3xl">
+    <div class="container mx-auto px-4 py-6 max-w-4xl">
         <main>
-            <div class="space-y-6">
-                <div class="bg-secondary border border-subtle rounded-lg p-6">
+            <!-- Phase 1: Input Mode -->
+            <div id="input-phase" class="space-y-6">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold text-primary mb-3">40K Army Cleaner</h1>
+                    <p class="text-lg text-secondary">Clean and format your Warhammer 40K roster</p>
+                </div>
+                
+                <div>
                     <label for="roster-input" class="block text-sm font-medium text-secondary mb-3">
                         Paste or drag and drop your roster here
                     </label>
                     <textarea
                         id="roster-input"
-                        class="w-full h-48 p-4 bg-input rounded-lg focus-ring font-mono text-sm placeholder:text-muted resize-none"
+                        class="w-full h-64 p-6 bg-input rounded-lg focus-ring font-mono text-sm placeholder:text-muted resize-none border border-subtle"
                         placeholder="Paste your roster here..."
                     ></textarea>
                 </div>
+            </div>
 
-                <div id="output-container" class="hidden bg-secondary border border-subtle rounded-lg p-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-lg font-semibold text-primary">Cleaned Roster</h2>
+            <!-- Phase 2: Output Mode (Hidden by default) -->
+            <div id="output-phase" class="hidden space-y-6">
+                <!-- Minimized Input Section -->
+                <div class="bg-tertiary border border-subtle rounded-lg p-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-accent-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <span class="text-sm font-medium text-secondary">Original Roster</span>
+                        </div>
+                        <button id="edit-input" class="text-sm text-accent-primary hover:text-accent-secondary font-medium">
+                            Edit
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Output Section -->
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-xl font-semibold text-primary">Cleaned Roster</h2>
                         <div class="flex items-center space-x-3">
                             <div class="relative inline-block text-left">
-                                <div>
-                                    <button type="button" class="btn-secondary px-3 py-2 rounded-lg text-sm font-medium focus-ring" id="options-menu-button" aria-haspopup="true" aria-expanded="true">
-                                        Options
-                                    </button>
-                                </div>
+                                <button type="button" class="btn-secondary px-4 py-2 rounded-lg text-sm font-medium focus-ring" id="options-menu-button" aria-haspopup="true" aria-expanded="true">
+                                    <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                    Options
+                                </button>
                                 <div id="options-menu" class="origin-top-right absolute right-0 mt-2 w-64 rounded-lg shadow-lg bg-secondary ring-1 ring-black ring-opacity-5 focus:outline-none hidden z-10" role="menu" aria-orientation="vertical" aria-labelledby="options-menu-button">
                                     <div class="py-2" role="none">
                                         <!-- Content Display Options Group -->
@@ -313,13 +340,16 @@
                             </div>
                             <button
                                 id="copy-button"
-                                class="btn-copy px-5 py-2 rounded-lg text-sm font-medium focus-ring"
+                                class="btn-copy px-6 py-2 rounded-lg text-sm font-medium focus-ring"
                             >
+                                <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                </svg>
                                 Copy
                             </button>
                         </div>
                     </div>
-                    <pre id="roster-output" class="whitespace-pre-wrap font-mono text-sm bg-input p-4 rounded-lg border border-subtle text-primary"></pre>
+                    <pre id="roster-output" class="whitespace-pre-wrap font-mono text-sm bg-input p-6 rounded-lg border border-subtle text-primary min-h-64"></pre>
                 </div>
             </div>
         </main>

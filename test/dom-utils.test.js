@@ -28,9 +28,11 @@ describe('DOM Utilities', () => {
         // Mock DOM elements
         mockElements = {
             'roster-input': document.createElement('textarea'),
-            'output-container': document.createElement('div'),
+            'input-phase': document.createElement('div'),
+            'output-phase': document.createElement('div'),
             'roster-output': document.createElement('div'),
             'copy-button': document.createElement('button'),
+            'edit-input': document.createElement('button'),
             'show-points': document.createElement('input'),
             'smart-format': document.createElement('input'),
             'show-models': document.createElement('input'),
@@ -60,9 +62,11 @@ describe('DOM Utilities', () => {
             const elements = getDOMElements();
             
             expect(elements.rosterInput).toBe(mockElements['roster-input']);
-            expect(elements.outputContainer).toBe(mockElements['output-container']);
+            expect(elements.inputPhase).toBe(mockElements['input-phase']);
+            expect(elements.outputPhase).toBe(mockElements['output-phase']);
             expect(elements.rosterOutput).toBe(mockElements['roster-output']);
             expect(elements.copyButton).toBe(mockElements['copy-button']);
+            expect(elements.editButton).toBe(mockElements['edit-input']);
             expect(elements.showPointsCheckbox).toBe(mockElements['show-points']);
             expect(elements.smartFormatCheckbox).toBe(mockElements['smart-format']);
             expect(elements.showModelsCheckbox).toBe(mockElements['show-models']);

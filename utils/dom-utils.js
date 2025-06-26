@@ -9,9 +9,11 @@ import { UI_CONSTANTS } from '../config/ui-constants.js';
 export function getDOMElements() {
     const elements = {
         rosterInput: document.getElementById('roster-input'),
-        outputContainer: document.getElementById('output-container'),
+        inputPhase: document.getElementById('input-phase'),
+        outputPhase: document.getElementById('output-phase'),
         rosterOutput: document.getElementById('roster-output'),
         copyButton: document.getElementById('copy-button'),
+        editButton: document.getElementById('edit-input'),
         showPointsCheckbox: document.getElementById('show-points'),
         smartFormatCheckbox: document.getElementById('smart-format'),
         showModelsCheckbox: document.getElementById('show-models'),
@@ -86,18 +88,12 @@ export async function copyToClipboard(text) {
 }
 
 /**
- * Smoothly scrolls to the output container with a subtle animation
+ * Jumps to the output container without animation
  * @param {HTMLElement} outputContainer - The output container element to scroll to
  */
 export function scrollToOutput(outputContainer) {
     validateElement(outputContainer, 'outputContainer');
-    
-    // Use smooth scrolling with a reasonable duration (not too slow)
-    outputContainer.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start',
-        inline: 'nearest'
-    });
+    outputContainer.scrollIntoView({ behavior: 'auto', block: 'start', inline: 'nearest' });
 }
 
 /**

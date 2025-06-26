@@ -177,7 +177,8 @@ function setupOptionsMenu(optionsMenuButton, optionsMenu, checkboxes, updateRost
  * Creates a function to update roster output based on current input and options
  * @param {object} options - Configuration options
  * @param {HTMLTextAreaElement} options.rosterInput - The input element
- * @param {HTMLElement} options.outputContainer - The output container
+ * @param {HTMLElement} options.inputPhase - The input phase container
+ * @param {HTMLElement} options.outputPhase - The output phase container
  * @param {HTMLElement} options.rosterOutput - The output element
  * @param {HTMLInputElement} options.showPointsCheckbox - Show points checkbox
  * @param {HTMLInputElement} options.smartFormatCheckbox - Smart format checkbox
@@ -192,7 +193,8 @@ function setupOptionsMenu(optionsMenuButton, optionsMenu, checkboxes, updateRost
 function createUpdateRosterOutput(options) {
     const { 
         rosterInput, 
-        outputContainer, 
+        inputPhase, 
+        outputPhase, 
         rosterOutput, 
         showPointsCheckbox, 
         smartFormatCheckbox, 
@@ -205,14 +207,14 @@ function createUpdateRosterOutput(options) {
     } = options;
 
     // Validate all required elements
-    [rosterInput, outputContainer, rosterOutput, showPointsCheckbox, smartFormatCheckbox, showModelsCheckbox, consolidateDuplicatesCheckbox, oneLinerCheckbox, inlineEnhancementsCheckbox, showHeaderCheckbox, noEmptyLinesCheckbox]
+    [rosterInput, inputPhase, outputPhase, rosterOutput, showPointsCheckbox, smartFormatCheckbox, showModelsCheckbox, consolidateDuplicatesCheckbox, oneLinerCheckbox, inlineEnhancementsCheckbox, showHeaderCheckbox, noEmptyLinesCheckbox]
         .forEach((element, index) => {
-            const names = ['rosterInput', 'outputContainer', 'rosterOutput', 'showPointsCheckbox', 'smartFormatCheckbox', 'showModelsCheckbox', 'consolidateDuplicatesCheckbox', 'oneLinerCheckbox', 'inlineEnhancementsCheckbox', 'showHeaderCheckbox', 'noEmptyLinesCheckbox'];
+            const names = ['rosterInput', 'inputPhase', 'outputPhase', 'rosterOutput', 'showPointsCheckbox', 'smartFormatCheckbox', 'showModelsCheckbox', 'consolidateDuplicatesCheckbox', 'oneLinerCheckbox', 'inlineEnhancementsCheckbox', 'showHeaderCheckbox', 'noEmptyLinesCheckbox'];
             validateElement(element, names[index]);
         });
 
     return function updateRosterOutput() {
-        const input = rosterInput.value;
+        const input = rosterInput.value.trim();
         const showPoints = showPointsCheckbox.checked;
         const smartFormat = smartFormatCheckbox.checked;
         const showModels = showModelsCheckbox.checked;
@@ -222,24 +224,31 @@ function createUpdateRosterOutput(options) {
         const showHeader = showHeaderCheckbox.checked;
         const noEmptyLines = noEmptyLinesCheckbox.checked;
         
-        const cleaned = cleanRosterText({ input, showPoints, smartFormat, showModels, consolidateDuplicates, oneLiner, inlineEnhancements, showHeader, noEmptyLines });
-        
-        if (!cleaned) {
-            outputContainer.classList.add(UI_CONSTANTS.HIDDEN_CLASS);
+        if (!input) {
+            // No input - show input phase
+            inputPhase.classList.remove(UI_CONSTANTS.HIDDEN_CLASS);
+            outputPhase.classList.add(UI_CONSTANTS.HIDDEN_CLASS);
             return;
         }
 
-        // Check if output container was previously hidden
-        const wasHidden = outputContainer.classList.contains(UI_CONSTANTS.HIDDEN_CLASS);
+        const cleaned = cleanRosterText({ input, showPoints, smartFormat, showModels, consolidateDuplicates, oneLiner, inlineEnhancements, showHeader, noEmptyLines });
         
-        rosterOutput.textContent = cleaned;
-        outputContainer.classList.remove(UI_CONSTANTS.HIDDEN_CLASS);
-        
-        // Only scroll if the container was previously hidden (new content)
-        if (wasHidden) {
-            scrollToOutput(outputContainer);
+        if (!cleaned) {
+            // Invalid input - show input phase
+            inputPhase.classList.remove(UI_CONSTANTS.HIDDEN_CLASS);
+            outputPhase.classList.add(UI_CONSTANTS.HIDDEN_CLASS);
+            return;
         }
 
+        // Check if we're transitioning from input to output phase
+        const wasInInputPhase = !inputPhase.classList.contains(UI_CONSTANTS.HIDDEN_CLASS);
+        
+        rosterOutput.textContent = cleaned;
+        
+        // Switch to output phase
+        inputPhase.classList.add(UI_CONSTANTS.HIDDEN_CLASS);
+        outputPhase.classList.remove(UI_CONSTANTS.HIDDEN_CLASS);
+        
         // Remove focus from the input field after processing
         rosterInput.blur();
     };
@@ -260,6 +269,32 @@ function applySavedOptions(elements, savedOptions) {
     elements.noEmptyLinesCheckbox.checked = savedOptions.noEmptyLines;
     elements.oneLinerCheckbox.checked = savedOptions.oneLiner;
     elements.discordFormatCheckbox.checked = savedOptions.discordFormat;
+}
+
+/**
+ * Sets up the edit input functionality
+ * @param {HTMLButtonElement} editButton - The edit button element
+ * @param {HTMLElement} inputPhase - The input phase container
+ * @param {HTMLElement} outputPhase - The output phase container
+ * @param {HTMLTextAreaElement} rosterInput - The input element
+ */
+function setupEditInput(editButton, inputPhase, outputPhase, rosterInput) {
+    validateElement(editButton, 'editButton');
+    validateElement(inputPhase, 'inputPhase');
+    validateElement(outputPhase, 'outputPhase');
+    validateElement(rosterInput, 'rosterInput');
+
+    editButton.addEventListener('click', () => {
+        // Switch back to input phase
+        outputPhase.classList.add(UI_CONSTANTS.HIDDEN_CLASS);
+        inputPhase.classList.remove(UI_CONSTANTS.HIDDEN_CLASS);
+        
+        // Focus the input field
+        rosterInput.focus();
+        
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
 }
 
 /**
@@ -300,8 +335,8 @@ function initializeApp() {
 
         // Add global keydown listener for CMD/CTRL+C copy shortcut
         window.addEventListener('keydown', async (e) => {
-            // Only trigger if output is visible
-            if (elements.outputContainer.classList.contains(UI_CONSTANTS.HIDDEN_CLASS)) return;
+            // Only trigger if output phase is visible
+            if (elements.outputPhase.classList.contains(UI_CONSTANTS.HIDDEN_CLASS)) return;
             // Only trigger if nothing is focused or focus is not on input/textarea/button
             const active = document.activeElement;
             if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.tagName === 'BUTTON')) return;
@@ -312,6 +347,8 @@ function initializeApp() {
             e.preventDefault();
             await handleCopyRosterOutput(elements.rosterOutput, elements.copyButton, elements.discordFormatCheckbox, getKeyboardShortcutText());
         });
+
+        setupEditInput(elements.editButton, elements.inputPhase, elements.outputPhase, elements.rosterInput);
     } catch (error) {
         console.error('Failed to initialize app:', error);
         // Could add user feedback here for initialization errors
@@ -327,6 +364,7 @@ export {
     setupOptionsMenu,
     createUpdateRosterOutput,
     applySavedOptions,
+    setupEditInput,
     initializeApp
 };
 

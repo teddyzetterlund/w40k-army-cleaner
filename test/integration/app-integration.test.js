@@ -33,9 +33,11 @@ describe('App Integration Tests', () => {
         // Create mock DOM elements
         mockElements = {
             rosterInput: document.createElement('textarea'),
-            outputContainer: document.createElement('div'),
+            inputPhase: document.createElement('div'),
+            outputPhase: document.createElement('div'),
             rosterOutput: document.createElement('div'),
             copyButton: document.createElement('button'),
+            editButton: document.createElement('button'),
             showPointsCheckbox: document.createElement('input'),
             smartFormatCheckbox: document.createElement('input'),
             showModelsCheckbox: document.createElement('input'),
@@ -128,13 +130,17 @@ describe('App Integration Tests', () => {
             });
 
             // Verify output is displayed
-            expect(mockElements.outputContainer.classList.contains('hidden')).toBe(false);
+            expect(mockElements.outputPhase.classList.contains('hidden')).toBe(false);
+            expect(mockElements.inputPhase.classList.contains('hidden')).toBe(true);
             expect(mockElements.rosterOutput.textContent).toBe('cleaned roster output');
         });
 
         it('should handle checkbox option changes', () => {
             // Initialize app
             initializeApp();
+
+            // Set some input content first so cleanRosterText gets called
+            mockElements.rosterInput.value = 'test input';
 
             // Simulate user changing options
             mockElements.showPointsCheckbox.checked = false;
@@ -150,7 +156,7 @@ describe('App Integration Tests', () => {
 
             // Verify cleanRosterText was called with updated parameters
             expect(cleanRosterText).toHaveBeenCalledWith({
-                input: '',
+                input: 'test input',
                 showPoints: false,
                 smartFormat: false,
                 showModels: false,
@@ -243,7 +249,7 @@ describe('App Integration Tests', () => {
             mockElements.rosterInput.dispatchEvent(new Event('input'));
 
             // Verify output is hidden
-            expect(mockElements.outputContainer.classList.contains('hidden')).toBe(true);
+            expect(mockElements.outputPhase.classList.contains('hidden')).toBe(true);
         });
     });
 

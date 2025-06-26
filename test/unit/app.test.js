@@ -45,9 +45,11 @@ describe('App Unit Tests', () => {
         // Create mock DOM elements
         mockElements = {
             rosterInput: document.createElement('textarea'),
-            outputContainer: document.createElement('div'),
+            inputPhase: document.createElement('div'),
+            outputPhase: document.createElement('div'),
             rosterOutput: document.createElement('div'),
             copyButton: document.createElement('button'),
+            editButton: document.createElement('button'),
             showPointsCheckbox: document.createElement('input'),
             smartFormatCheckbox: document.createElement('input'),
             showModelsCheckbox: document.createElement('input'),
@@ -322,7 +324,8 @@ describe('App Unit Tests', () => {
         it('should create function that calls cleanRosterText with correct parameters', () => {
             const options = {
                 rosterInput: mockElements.rosterInput,
-                outputContainer: mockElements.outputContainer,
+                inputPhase: mockElements.inputPhase,
+                outputPhase: mockElements.outputPhase,
                 rosterOutput: mockElements.rosterOutput,
                 showPointsCheckbox: mockElements.showPointsCheckbox,
                 smartFormatCheckbox: mockElements.smartFormatCheckbox,
@@ -361,10 +364,11 @@ describe('App Unit Tests', () => {
             });
         });
 
-        it('should show output container when cleaned result exists', () => {
+        it('should show output phase when cleaned result exists', () => {
             const options = {
                 rosterInput: mockElements.rosterInput,
-                outputContainer: mockElements.outputContainer,
+                inputPhase: mockElements.inputPhase,
+                outputPhase: mockElements.outputPhase,
                 rosterOutput: mockElements.rosterOutput,
                 showPointsCheckbox: mockElements.showPointsCheckbox,
                 smartFormatCheckbox: mockElements.smartFormatCheckbox,
@@ -382,14 +386,16 @@ describe('App Unit Tests', () => {
             const updateRosterOutput = createUpdateRosterOutput(options);
             updateRosterOutput();
 
-            expect(options.outputContainer.classList.contains('hidden')).toBe(false);
+            expect(options.outputPhase.classList.contains('hidden')).toBe(false);
+            expect(options.inputPhase.classList.contains('hidden')).toBe(true);
             expect(options.rosterOutput.textContent).toBe('cleaned output');
         });
 
-        it('should hide output container when cleaned result is empty', () => {
+        it('should show input phase when cleaned result is empty', () => {
             const options = {
                 rosterInput: mockElements.rosterInput,
-                outputContainer: mockElements.outputContainer,
+                inputPhase: mockElements.inputPhase,
+                outputPhase: mockElements.outputPhase,
                 rosterOutput: mockElements.rosterOutput,
                 showPointsCheckbox: mockElements.showPointsCheckbox,
                 smartFormatCheckbox: mockElements.smartFormatCheckbox,
@@ -407,7 +413,8 @@ describe('App Unit Tests', () => {
             const updateRosterOutput = createUpdateRosterOutput(options);
             updateRosterOutput();
 
-            expect(options.outputContainer.classList.contains('hidden')).toBe(true);
+            expect(options.inputPhase.classList.contains('hidden')).toBe(false);
+            expect(options.outputPhase.classList.contains('hidden')).toBe(true);
         });
     });
 
@@ -467,7 +474,7 @@ describe('App Unit Tests', () => {
             expect(keydownListener).toBeInstanceOf(Function);
 
             // Set up DOM state: output visible, nothing focused
-            mockElements.outputContainer.classList.remove('hidden');
+            mockElements.outputPhase.classList.remove('hidden');
             mockElements.copyButton.textContent = 'Copy';
             mockElements.discordFormatCheckbox.checked = false;
             mockElements.rosterOutput.textContent = 'cleaned output';
