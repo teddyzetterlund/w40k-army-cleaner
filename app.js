@@ -3,6 +3,26 @@ if ('serviceWorker' in navigator) {
     let updateAvailable = false;
     let newWorker = null;
 
+    // Force clear old caches and unregister old service worker
+    const forceUpdate = async () => {
+        try {
+            // Clear all caches
+            const cacheNames = await caches.keys();
+            await Promise.all(cacheNames.map(cacheName => caches.delete(cacheName)));
+            
+            // Unregister all service workers
+            const registrations = await navigator.serviceWorker.getRegistrations();
+            await Promise.all(registrations.map(registration => registration.unregister()));
+            
+            console.warn('Forced cache and service worker cleanup completed');
+        } catch (error) {
+            console.error('Error during forced cleanup:', error);
+        }
+    };
+
+    // Run forced update on page load
+    forceUpdate();
+
     // Register service worker
     navigator.serviceWorker.register('./sw.js')
         .then((registration) => {

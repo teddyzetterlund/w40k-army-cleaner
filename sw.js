@@ -1,11 +1,11 @@
 const CACHE_VERSION = '1.1.0';
 const CACHE_NAME = `40k-army-cleaner-v${CACHE_VERSION}`;
 const ASSETS_TO_CACHE = [
-    './',
-    './index.html',
+    `./?v=${CACHE_VERSION}`,
+    `./index.html?v=${CACHE_VERSION}`,
     `./app.js?v=${CACHE_VERSION}`,
     `./roster-cleaner.js?v=${CACHE_VERSION}`,
-    './manifest.json',
+    `./manifest.json?v=${CACHE_VERSION}`,
     'https://cdn.tailwindcss.com'
 ];
 
@@ -20,6 +20,9 @@ self.addEventListener('activate', (event) => {
                     }
                 })
             );
+        }).then(() => {
+            // Claim all clients immediately
+            return self.clients.claim();
         })
     );
 });
@@ -36,37 +39,24 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-    // For HTML files and JavaScript files, try network first, then cache
-    if (event.request.url.includes('.html') || event.request.url.endsWith('/') || event.request.url.includes('.js')) {
-        event.respondWith(
-            fetch(event.request)
-                .then((response) => {
-                    // Cache the fresh response
-                    const responseClone = response.clone();
-                    caches.open(CACHE_NAME).then((cache) => {
-                        cache.put(event.request, responseClone);
-                    });
-                    return response;
-                })
-                .catch(() => {
-                    // Fallback to cache if network fails
-                    return caches.match(event.request);
-                })
-        );
-    } else {
-        // For other assets, use cache first with network fallback
-        event.respondWith(
-            caches.match(event.request)
-                .then((response) => {
-                    if (response) {
-                        // Return cached version immediately
-                        return response;
-                    }
-                    // Fetch from network if not in cache
-                    return fetch(event.request);
-                })
-        );
-    }
+    // For all files, try network first to bypass GitHub Pages CDN cache
+    event.respondWith(
+        fetch(event.request, { 
+            cache: 'no-cache' // Force bypass browser cache
+        })
+            .then((response) => {
+                // Cache the fresh response
+                const responseClone = response.clone();
+                caches.open(CACHE_NAME).then((cache) => {
+                    cache.put(event.request, responseClone);
+                });
+                return response;
+            })
+            .catch(() => {
+                // Fallback to cache if network fails
+                return caches.match(event.request);
+            })
+    );
 });
 
 // Handle service worker updates
