@@ -117,11 +117,11 @@ const isKnownSectionHeader = (line) => {
 const isPointsLine = (line) => line.match(POINTS_PATTERN);
 
 /**
- * Checks if a line contains NewRecruit points information (format: "1x Unit Name (points pts)")
+ * Checks if a line contains NewRecruit points information (format: "1x Unit Name (points pts)" or "Char1: 1x Unit Name (points pts)")
  * @param {string} line - The line to check
  * @returns {boolean} - True if the line contains NewRecruit points information
  */
-const isNewRecruitPointsLine = (line) => line.match(/^\d+x\s+.+\(\d+\s*pts\)/);
+const isNewRecruitPointsLine = (line) => line.match(/^(?:Char\d+:\s*)?\d+x\s+.+\(\d+\s*pts\)/);
 
 /**
  * Checks if a line contains game format information
@@ -465,7 +465,10 @@ function processUnits(options) {
 
         // Handle NewRecruit format units
         if (isNewRecruit) {
-            const newRecruitMatch = line.match(/^(\d+)x\s+(.+?)\s+\((\d+)\s*pts\)/);
+            // Handle both regular NewRecruit format and WTC format
+            // Regular: "1x Unit Name (points pts)"
+            // WTC: "Char1: 1x Unit Name (points pts)"
+            const newRecruitMatch = line.match(/^(?:Char\d+:\s*)?(\d+)x\s+(.+?)\s+\((\d+)\s*pts\)/);
             if (newRecruitMatch) {
                 // If there is a pending enhancement, apply it to the previous unit
                 if (currentUnit && !currentUnitAdded) {
@@ -492,8 +495,9 @@ function processUnits(options) {
                 currentPoints = newRecruitMatch[3];
                 currentUnitAdded = false;
                 currentUnitStartIndex = i;
-            } else if (line.match(ENHANCEMENT_PATTERN) || isNewRecruitEnhancementLine(line)) {
+            } else if (line.match(ENHANCEMENT_PATTERN) || isNewRecruitEnhancementLine(line) || line.match(/^Enhancement:\s+([^(]+)\s+\(\+\d+\s*pts\)/)) {
                 // For NewRecruit, extract enhancement and store it for the current unit
+                // Handle both regular format and WTC format enhancements
                 let enhancement = '';
                 if (line.match(ENHANCEMENT_PATTERN)) {
                     enhancement = line.split(ENHANCEMENT_PATTERN)[1].trim();
@@ -503,6 +507,15 @@ function processUnits(options) {
                     if (match) {
                         enhancement = match[1].trim();
                     }
+                } else if (line.match(/^Enhancement:\s+([^(]+)\s+\(\+\d+\s*pts\)/)) {
+                    // Extract enhancement name from WTC format
+                    const match = line.match(/^Enhancement:\s+([^(]+)\s+\(\+\d+\s*pts\)/);
+                    if (match) {
+                        enhancement = match[1].trim().replace(/\s*\(\+\d+\s*pts\)/, '');
+                    }
+                }
+                if (enhancement) {
+                    enhancement = enhancement.replace(/\s*\(\+\d+\s*pts\)/, '');
                 }
                 pendingEnhancement = enhancement;
             }

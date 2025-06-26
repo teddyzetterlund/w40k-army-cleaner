@@ -1,0 +1,71 @@
++++++++++++++++++++++++++++++++++++++++++++++++
++ FACTION KEYWORD: Chaos - Chaos Space Marines
++ DETACHMENT: Fellhammer Siege‑host
++ TOTAL ARMY POINTS: 1990pts
++
++ WARLORD: Char1: Chaos Lord in Terminator Armour
++ ENHANCEMENT: Bastion Plate (on Char1: Chaos Lord in Terminator Armour)
+& Warp Tracer (on Char2: Sorcerer in Terminator Armour)
++ NUMBER OF UNITS: 13
++ SECONDARY: - Bring It Down: (5x2) - Assassination: 2 Characters - Cull The Horde: 3x5
++++++++++++++++++++++++++++++++++++++++++++++++
+
+CHARACTER
+
+Char1: 1x Chaos Lord in Terminator Armour (105 pts)
+1 with Combi-bolter, Exalted weapon
+  • Warlord
+Enhancement: Bastion Plate (+10 pts)
+
+Char2: 1x Sorcerer in Terminator Armour (100 pts)
+1 with Force weapon, Infernal Gaze, Combi-bolter
+Enhancement: Warp Tracer (+20 pts)
+
+BATTLELINE
+
+10x Cultist Mob (50 pts)
+• 1x Cultist Champion
+    1 with Brutal assault weapon, Autopistol
+• 9x Cultist
+    9 with Autopistol, Brutal assault weapon
+
+5x Legionaries (90 pts)
+• 1x Aspiring Champion
+    1 with Close combat weapon, Bolt pistol, Boltgun
+• 4x Legionary
+    4 with Bolt pistol, Boltgun, Close combat weapon
+
+5x Legionaries (90 pts)
+• 1x Aspiring Champion
+    1 with Close combat weapon, Bolt pistol, Boltgun
+• 4x Legionary
+    4 with Bolt pistol, Boltgun, Close combat weapon
+
+OTHER DATASHEETS
+
+10x Chaos Terminator Squad (360 pts)
+• 10x Accursed weapon and combi-bolter
+    10 with Accursed weapon, Combi-bolter
+
+10x Possessed (240 pts)
+• 10x Possessed
+    10 with Hideous mutations
+
+10x Possessed (240 pts)
+• 10x Possessed
+    10 with Hideous mutations
+
+1x Chaos Predator Annihilator (135 pts)
+1 with Armoured tracks, Predator twin lascannon
+
+1x Chaos Predator Annihilator (135 pts)
+1 with Armoured tracks, Predator twin lascannon
+
+1x Chaos Vindicator (185 pts)
+1 with Armoured tracks, Demolisher cannon
+
+1x Chaos Vindicator (185 pts)
+1 with Armoured tracks, Demolisher cannon
+
+1x Chaos Rhino (75 pts)
+1 with Armoured tracks, Combi-bolter
