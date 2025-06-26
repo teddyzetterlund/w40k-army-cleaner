@@ -4,17 +4,36 @@ A web-based tool that helps clean and format Warhammer 40K army rosters for bett
 
 ## Features
 
+### Core Functionality
 - Drag and drop support for roster files
 - Clean, modern UI with responsive design
-- One-click copy functionality
+- One-click copy functionality with keyboard shortcuts (CMD/CTRL+C)
 - Progressive Web App (PWA) support
-- Toggle points display on/off
-- Toggle smart formatting on/off (faction-specific unit name formatting)
-- Processes and formats:
-  - Army name and faction information
-  - Unit names and point costs (optional)
-  - Enhancements
-  - Removes redundant section headers and formatting
+- Settings persistence (remembers your formatting preferences)
+
+### Formatting Options
+- **Show/Hide Points** - Toggle point costs display on/off
+- **Smart Formatting** - Faction-specific unit name formatting
+- **Model Counting** - Show model counts (e.g., "10x Cultists", "5x Legionaries")
+- **Consolidate Duplicates** - Combine consecutive duplicate units (e.g., "2 Legionaries")
+- **One-Liner Output** - Convert roster to single line with comma separators
+- **Inline Enhancements** - Move enhancements into square brackets with unit names
+- **Hide Header** - Remove army header information
+- **No Empty Lines** - Remove empty lines between units
+- **Discord Format** - Wrap output in markdown code blocks for Discord sharing
+
+### Supported Factions
+- Chaos Space Marines
+- Space Marines (Dark Angels)
+- T'au Empire
+
+### Processing Capabilities
+- Army name and faction information formatting
+- Unit names and point costs (optional)
+- Enhancement handling and formatting
+- Removal of redundant section headers and formatting
+- Model counting for multi-model units
+- Duplicate unit consolidation
 
 ## Usage
 
@@ -22,11 +41,18 @@ A web-based tool that helps clean and format Warhammer 40K army rosters for bett
 2. Either:
    - Drag and drop your exported roster file onto the input area
    - Or paste your roster text directly into the input field
-3. Use the toggles in the output area to:
-   - Show/hide point costs
-   - Enable/disable smart formatting (faction-specific unit name formatting)
+3. Use the formatting options in the output area to customize your roster:
+   - **Show/Hide Points** - Toggle point costs display
+   - **Smart Formatting** - Enable faction-specific unit name formatting
+   - **Model Counting** - Show model counts for units
+   - **Consolidate Duplicates** - Combine consecutive duplicate units
+   - **One-Liner Output** - Convert to single line format
+   - **Inline Enhancements** - Move enhancements into unit names
+   - **Hide Header** - Remove army header information
+   - **No Empty Lines** - Remove empty lines between units
+   - **Discord Format** - Wrap output in markdown for Discord
 4. The cleaned roster will appear in the output area
-5. Click the "Copy" button to copy the cleaned roster to your clipboard
+5. Click the "Copy" button or use CMD/CTRL+C to copy the cleaned roster to your clipboard
 
 ### Smart Formatting
 
