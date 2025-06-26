@@ -666,4 +666,33 @@ describe('Roster Cleaner', () => {
             expect(result).toBe('');
         });
     });
+
+    // Test NewRecruit format roster
+    describe('NewRecruit Format Roster', () => {
+        const input = readFixture('sample-roster-nr-csm.txt');
+        
+        test('cleans NewRecruit roster with points and smart format', () => {
+            const expected = readFixture('sample-cleaned-nr-csm.txt');
+            const result = cleanRosterText({ input, showPoints: true, smartFormat: true });
+            expect(result).toBe(expected);
+        });
+
+        test('cleans NewRecruit roster without points', () => {
+            const expected = readFixture('sample-cleaned-nr-csm-no-points.txt');
+            const result = cleanRosterText({ input, showPoints: false, smartFormat: true });
+            expect(result).toBe(expected);
+        });
+
+        test('cleans NewRecruit roster without smart format', () => {
+            const expected = readFixture('sample-cleaned-nr-csm-no-smart.txt');
+            const result = cleanRosterText({ input, showPoints: true, smartFormat: false });
+            expect(result).toBe(expected);
+        });
+
+        test('cleans NewRecruit roster without points and smart format', () => {
+            const expected = readFixture('sample-cleaned-nr-csm-no-points-no-smart.txt');
+            const result = cleanRosterText({ input, showPoints: false, smartFormat: false });
+            expect(result).toBe(expected);
+        });
+    });
 }); 
