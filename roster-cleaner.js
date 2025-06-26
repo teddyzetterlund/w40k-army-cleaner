@@ -296,9 +296,20 @@ function formatTauUnitName(unitName) {
  * @returns {number} - Number of models in the unit
  */
 function countModelsInNewRecruitUnit(lines, startIndex) {
+    // Check for WTC/NR format: '10x ...' (not 'Char1: 1x ...')
+    const currentLine = lines[startIndex];
+    // If it's a character line, always return 1
+    if (/^Char\d+:\s*1x\s+/.test(currentLine)) {
+        return 1;
+    }
+    // If it's a regular unit line with model count
+    const wtcMatch = currentLine.match(/^(\d+)x\s+/);
+    if (wtcMatch) {
+        return parseInt(wtcMatch[1], 10);
+    }
+    // For regular NewRecruit format, count from bullet points
     let modelCount = 0;
     let i = startIndex + 1;
-
     while (i < lines.length) {
         const line = lines[i];
         if (!line.trim() || isKnownSectionHeader(line)) break;
@@ -306,7 +317,6 @@ function countModelsInNewRecruitUnit(lines, startIndex) {
             i++;
             continue;
         }
-
         // Look for bullet points that indicate models
         const bulletMatch = line.match(/^\s*•\s*(\d+)x\s+([^•]+)/);
         if (bulletMatch) {
@@ -318,8 +328,6 @@ function countModelsInNewRecruitUnit(lines, startIndex) {
                 const nextLine = lines[j];
                 if (!nextLine.trim() || isKnownSectionHeader(nextLine)) break;
                 if (isNewRecruitPointsLine(nextLine) || nextLine.match(ENHANCEMENT_PATTERN)) break;
-                
-                // Check if next line has more indentation (more spaces before bullet)
                 const currentIndent = line.search(/•/);
                 const nextIndent = nextLine.search(/•/);
                 if (nextIndent <= currentIndent) break;
@@ -332,6 +340,33 @@ function countModelsInNewRecruitUnit(lines, startIndex) {
             if (hasWargear) {
                 modelCount += count;
             }
+        }
+        i++;
+    }
+    // If no models were counted, assume this is a single-model unit
+    return modelCount || 1;
+}
+
+/**
+ * Counts the number of models in a NewRecruit NR format unit
+ * @param {string[]} lines - Array of roster lines
+ * @param {number} startIndex - Starting index of the unit
+ * @returns {number} - Number of models in the unit
+ */
+function countModelsInNewRecruitNRUnit(lines, startIndex) {
+    // For NR-NR format, we need to look at the bullet points under the unit
+    let modelCount = 0;
+    let i = startIndex + 1;
+
+    while (i < lines.length) {
+        const line = lines[i];
+        if (!line.trim() || line.startsWith('##') || line.match(/^[\w\s\-]+ \[\d+ pts\]:/)) break;
+        
+        // Look for bullet points that indicate models
+        const bulletMatch = line.match(/^\s*•\s*(\d+)x\s+([^:]+)/);
+        if (bulletMatch) {
+            const count = parseInt(bulletMatch[1], 10);
+            modelCount += count;
         }
         i++;
     }
@@ -356,6 +391,11 @@ function countModelsInUnit(lines, startIndex) {
     // Check if this is NewRecruit format
     if (isNewRecruitFormat(lines)) {
         return countModelsInNewRecruitUnit(lines, startIndex);
+    }
+    
+    // Check if this is NewRecruit NR format
+    if (isNewRecruitNRFormat(lines)) {
+        return countModelsInNewRecruitNRUnit(lines, startIndex);
     }
     
     let modelCount = 0;
@@ -904,10 +944,12 @@ function processNewRecruitNRHeader(lines) {
     };
 }
 
-function processNewRecruitNRUnits(lines, startIndex, showPoints, smartFormat, isTauEmpire, isChaosSpaceMarines) {
+function processNewRecruitNRUnits(lines, startIndex, showPoints, smartFormat, isTauEmpire, isChaosSpaceMarines, showModels = false) {
     // Parse units from NR-NR format
     const cleanedLines = [];
     let lastUnit = '';
+    let currentUnitStartIndex = startIndex;
+    
     for (let i = startIndex; i < lines.length; i++) {
         const line = lines[i].trim();
         if (!line || line.startsWith('#') || line.startsWith('•')) continue;
@@ -918,7 +960,12 @@ function processNewRecruitNRUnits(lines, startIndex, showPoints, smartFormat, is
             let points = unitMatch[2];
             let details = unitMatch[3] || '';
             unitName = formatUnitName(unitName, isTauEmpire, smartFormat, isChaosSpaceMarines);
-            const unitLine = showPoints ? `${unitName} (${points})` : unitName;
+            
+            // Calculate model count if needed
+            const modelCount = showModels ? countModelsInNewRecruitNRUnit(lines, i) : 0;
+            const modelText = modelCount > 1 ? `${modelCount}x ` : '';
+            const unitLine = showPoints ? `${modelText}${unitName} (${points})` : `${modelText}${unitName}`;
+            
             if (lastUnit && lastUnit !== unitName) {
                 cleanedLines.push('');
             }
@@ -929,6 +976,7 @@ function processNewRecruitNRUnits(lines, startIndex, showPoints, smartFormat, is
                 cleanedLines.push(`  • Enhancement: ${enhancement}`);
             }
             lastUnit = unitName;
+            currentUnitStartIndex = i;
         }
     }
     return cleanedLines;
@@ -960,14 +1008,19 @@ function cleanRosterText(options) {
     if (isNewRecruitNRFormat(lines)) {
         // Handle NR-NR format
         const { armyInfo, points, headerEndIndex } = processNewRecruitNRHeader(lines);
-        let headerLine = armyInfo.join(' - ');
-        if (showPoints && points) {
-            headerLine += ` (${points} Points)`;
-        }
         const isTauEmpire = armyInfo.some(line => normalizeFactionName(line).includes('tauempire'));
         const isChaosSpaceMarines = armyInfo.some(line => normalizeFactionName(line).includes('chaosspacemarines'));
-        const cleanedLines = [headerLine, ''];
-        cleanedLines.push(...processNewRecruitNRUnits(lines, headerEndIndex, showPoints, smartFormat, isTauEmpire, isChaosSpaceMarines));
+        
+        const cleanedLines = [];
+        if (showHeader) {
+            let headerLine = armyInfo.join(' - ');
+            if (showPoints && points) {
+                headerLine += ` (${points} Points)`;
+            }
+            cleanedLines.push(headerLine);
+            cleanedLines.push('');
+        }
+        cleanedLines.push(...processNewRecruitNRUnits(lines, headerEndIndex, showPoints, smartFormat, isTauEmpire, isChaosSpaceMarines, showModels));
         result = normalizeApostrophes(cleanedLines.join('\n'));
     } else if (isNewRecruitFormat(lines)) {
         result = cleanNewRecruitRosterText({ input, showPoints, smartFormat, showModels, showHeader });
