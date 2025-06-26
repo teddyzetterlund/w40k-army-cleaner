@@ -242,7 +242,7 @@ describe('DOM Utilities', () => {
             scrollToOutput(mockElement);
             
             expect(mockScrollIntoView).toHaveBeenCalledWith({
-                behavior: 'smooth',
+                behavior: 'auto',
                 block: 'start',
                 inline: 'nearest'
             });

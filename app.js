@@ -1,3 +1,73 @@
+// Service Worker Registration and Update Handling
+if ('serviceWorker' in navigator) {
+    let updateAvailable = false;
+    let newWorker = null;
+
+    // Register service worker
+    navigator.serviceWorker.register('./sw.js')
+        .then((registration) => {
+            console.log('Service Worker registered successfully:', registration.scope);
+            
+            // Check for updates
+            registration.addEventListener('updatefound', () => {
+                newWorker = registration.installing;
+                newWorker.addEventListener('statechange', () => {
+                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                        updateAvailable = true;
+                        showUpdateNotification();
+                    }
+                });
+            });
+        })
+        .catch((error) => {
+            console.error('Service Worker registration failed:', error);
+        });
+
+    // Handle service worker updates
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (updateAvailable) {
+            // Reload the page to use the new service worker
+            window.location.reload();
+        }
+    });
+
+    // Show update notification
+    function showUpdateNotification() {
+        // Create update notification
+        const notification = document.createElement('div');
+        notification.id = 'update-notification';
+        notification.innerHTML = `
+            <div class="fixed top-4 right-4 bg-blue-600 text-white px-6 py-4 rounded-lg shadow-lg z-50 max-w-sm">
+                <div class="flex items-center justify-between">
+                    <div class="flex-1">
+                        <h3 class="font-semibold mb-1">Update Available</h3>
+                        <p class="text-sm opacity-90">New features are available! Click to update.</p>
+                    </div>
+                    <button id="update-button" class="ml-4 bg-white text-blue-600 px-3 py-1 rounded text-sm font-medium hover:bg-gray-100 transition-colors">
+                        Update
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Handle update button click
+        document.getElementById('update-button').addEventListener('click', () => {
+            if (newWorker) {
+                newWorker.postMessage({ type: 'SKIP_WAITING' });
+            }
+        });
+        
+        // Auto-hide after 10 seconds
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 10000);
+    }
+}
+
 import { cleanRosterText } from './roster-cleaner.js';
 import { validateElement, validateFunction } from './utils/validation-utils.js';
 import { UI_CONSTANTS } from './config/ui-constants.js';
