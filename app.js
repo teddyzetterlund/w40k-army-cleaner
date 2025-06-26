@@ -23,6 +23,73 @@ if ('serviceWorker' in navigator) {
     // Run forced update on page load
     forceUpdate();
 
+    // Check if user needs to see update banner
+    const checkForUpdateBanner = () => {
+        const CURRENT_VERSION = '1.1.0';
+        const storedVersion = localStorage.getItem('app-version');
+        
+        // Show banner if no version stored (first time user) or version is older
+        if (!storedVersion || storedVersion !== CURRENT_VERSION) {
+            showUpdateBanner();
+        }
+        
+        // Store current version
+        localStorage.setItem('app-version', CURRENT_VERSION);
+    };
+
+    // Show update banner for users with old version
+    const showUpdateBanner = () => {
+        // Don't show if already shown
+        if (document.getElementById('update-banner')) return;
+        
+        const CURRENT_VERSION = '1.1.0';
+        const storedVersion = localStorage.getItem('app-version') || 'unknown';
+        
+        const banner = document.createElement('div');
+        banner.id = 'update-banner';
+        banner.innerHTML = `
+            <div class="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-96 bg-blue-600 text-white p-4 rounded-lg shadow-lg z-50">
+                <div class="flex items-start justify-between">
+                    <div class="flex-1 mr-4">
+                        <h3 class="font-semibold mb-2">Update Available!</h3>
+                        <p class="text-sm opacity-90 mb-2">
+                            You're currently on version ${storedVersion}. 
+                            Update to version ${CURRENT_VERSION} to get NewRecruit roster format support.
+                        </p>
+                        <button id="update-now-btn" class="bg-white text-blue-600 px-4 py-2 rounded text-sm font-medium hover:bg-gray-100 transition-colors">
+                            Update Now
+                        </button>
+                    </div>
+                    <button id="dismiss-update" class="text-white opacity-70 hover:opacity-100 transition-opacity">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(banner);
+        
+        // Handle update button
+        document.getElementById('update-now-btn').addEventListener('click', () => {
+            // Force reload with cache busting
+            window.location.href = window.location.href + (window.location.href.includes('?') ? '&' : '?') + 'v=' + Date.now();
+        });
+        
+        // Handle dismiss button
+        document.getElementById('dismiss-update').addEventListener('click', () => {
+            banner.remove();
+            // Remember dismissal for this session
+            sessionStorage.setItem('update-banner-dismissed', 'true');
+        });
+        
+        // No auto-hide - banner stays until user updates or dismisses
+    };
+
+    // Check for update banner after a short delay
+    setTimeout(checkForUpdateBanner, 1000);
+
     // Register service worker
     navigator.serviceWorker.register('./sw.js')
         .then((registration) => {
