@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Install - 40K Army Cleaner</title>
+    <meta name="description" content="Install 40K Army Cleaner as a Progressive Web App">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1a1a1a">
+    <link rel="icon" href="favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom CSS Variables for Theme */
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --accent-primary: #3b82f6;
+            --accent-secondary: #1d4ed8;
+            --accent-copy: #059669;
+            --accent-copy-hover: #047857;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --accent-primary: #60a5fa;
+            --accent-secondary: #3b82f6;
+            --accent-copy: #10b981;
+            --accent-copy-hover: #059669;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+        }
+
+        /* Apply CSS Variables */
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .bg-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .text-primary {
+            color: var(--text-primary);
+        }
+
+        .text-secondary {
+            color: var(--text-secondary);
+        }
+
+        .text-muted {
+            color: var(--text-muted);
+        }
+
+        .border-subtle {
+            border-color: var(--border-color);
+        }
+
+        .btn-primary {
+            background-color: var(--accent-primary);
+            color: white;
+            border: none;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-secondary);
+        }
+
+        .shadow-card {
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Step number styling */
+        .step-number {
+            background: linear-gradient(145deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Focus states */
+        .focus-ring:focus {
+            outline: 2px solid var(--accent-primary);
+            outline-offset: 2px;
+        }
+
+        /* Smooth transitions */
+        * {
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+        }
+
+        /* Easter egg styling */
+        .easter-egg {
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+
+        .easter-egg:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="bg-card border-b border-subtle shadow-sm">
+        <div class="container mx-auto px-6 py-4 max-w-6xl">
+            <nav class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <a href="/" class="text-xl font-semibold text-primary hover:text-secondary transition-colors">
+                        40K Army Cleaner
+                    </a>
+                    <div class="hidden md:flex items-center space-x-6">
+                        <a href="/install.html" class="text-primary font-medium">
+                            Install
+                        </a>
+                        <a href="https://github.com/teddyzetterlund/w40k-army-cleaner/issues" target="_blank" rel="noopener noreferrer" class="text-secondary hover:text-primary transition-colors font-medium">
+                            Feedback
+                        </a>
+                        <a href="/about.html" class="text-secondary hover:text-primary transition-colors font-medium">
+                            About
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Mobile menu button -->
+                <button id="mobile-menu-button" class="md:hidden text-secondary hover:text-primary">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </nav>
+            
+            <!-- Mobile menu -->
+            <div id="mobile-menu" class="md:hidden hidden mt-4 pb-4 border-t border-subtle pt-4">
+                <div class="flex flex-col space-y-3">
+                    <a href="/install.html" class="text-primary font-medium">
+                        Install
+                    </a>
+                    <a href="https://github.com/teddyzetterlund/w40k-army-cleaner/issues" target="_blank" rel="noopener noreferrer" class="text-secondary hover:text-primary transition-colors font-medium">
+                        Feedback
+                    </a>
+                    <a href="/about.html" class="text-secondary hover:text-primary transition-colors font-medium">
+                        About
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-6 py-12 max-w-4xl">
+        <main>
+            <div class="space-y-8">
+                <!-- Hero Section -->
+                <div class="bg-secondary border border-subtle rounded-lg p-8 text-center">
+                    <h1 class="text-4xl font-bold text-primary mb-4">Install 40K Army Cleaner</h1>
+                    <p class="text-xl text-secondary mb-6">
+                        Install this app on your device for quick access and offline use
+                    </p>
+                    <div class="inline-flex items-center px-4 py-2 bg-tertiary border border-subtle rounded-lg">
+                        <svg class="w-5 h-5 text-accent-primary mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span class="text-secondary font-medium">Progressive Web App</span>
+                    </div>
+                </div>
+
+                <!-- Benefits -->
+                <div class="bg-secondary border border-subtle rounded-lg p-8">
+                    <h2 class="text-2xl font-bold text-primary mb-6">Why Install?</h2>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-tertiary rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg class="w-6 h-6 text-accent-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-semibold text-primary mb-2">Quick Access</h3>
+                            <p class="text-secondary text-sm">Access the app directly from your home screen</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-tertiary rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg class="w-6 h-6 text-accent-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M12 2.25a9.75 9.75 0 100 19.5 9.75 9.75 0 000-19.5z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-semibold text-primary mb-2">Works Offline</h3>
+                            <p class="text-secondary text-sm">Use the app even without an internet connection</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-tertiary rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg class="w-6 h-6 text-accent-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-semibold text-primary mb-2">Faster Loading</h3>
+                            <p class="text-secondary text-sm">App loads instantly like a native application</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- iOS Instructions -->
+                <div class="bg-secondary border border-subtle rounded-lg p-8">
+                    <div class="flex items-center mb-6">
+                        <svg class="w-8 h-8 text-accent-primary mr-3" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                        </svg>
+                        <h2 class="text-2xl font-bold text-primary">Install on iOS (iPhone/iPad)</h2>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start space-x-4">
+                            <div class="step-number w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0 mt-1">1</div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-primary mb-2">Open Safari</h3>
+                                <p class="text-secondary">Make sure you're using Safari browser (not Chrome or other browsers)</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <div class="step-number w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0 mt-1">2</div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-primary mb-2">Navigate to the App</h3>
+                                <p class="text-secondary">Go to the 40K Army Cleaner website</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <div class="step-number w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0 mt-1">3</div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-primary mb-2">Tap the Share Button</h3>
+                                <p class="text-secondary">Tap the share button (square with arrow pointing up) at the bottom of the screen</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <div class="step-number w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0 mt-1">4</div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-primary mb-2">Add to Home Screen</h3>
+                                <p class="text-secondary">Scroll down and tap "Add to Home Screen"</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <div class="step-number w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0 mt-1">5</div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-primary mb-2">Confirm Installation</h3>
+                                <p class="text-secondary">Tap "Add" to confirm. The app will now appear on your home screen</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Android Instructions -->
+                <div class="bg-secondary border border-subtle rounded-lg p-8">
+                    <div class="flex items-center mb-6">
+                        <svg class="w-8 h-8 text-accent-primary mr-3" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0001.5511-.4482.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.5036C15.5902 8.2432 13.8533 7.4287 11.9797 7.4287c-1.8736 0-3.6105.8145-4.8055 2.1768L5.1519 6.1019a.416.416 0 00-.5676-.1521.416.416 0 00-.1521.5676L6.4189 9.3214C4.6889 10.7933 3.5 12.8118 3.5 15.0735c0 .5511.4482.9993.9993.9993s.9993-.4482.9993-.9993c0-1.9917 1.019-3.7485 2.5697-4.8015.3684-.2277.8748-.1733 1.1953.1235 1.2579 1.4609 3.1316 2.3682 5.2256 2.3682 2.094 0 3.9677-.9073 5.2256-2.3682.3205-.2968.8269-.3512 1.1953-.1235 1.5507 1.053 2.5697 2.8098 2.5697 4.8015 0 .5511.4482.9993.9993.9993s.9993-.4482.9993-.9993c0-2.2617-1.1889-4.2802-2.9189-5.7521"/>
+                        </svg>
+                        <h2 class="text-2xl font-bold text-primary">Install on Android</h2>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start space-x-4">
+                            <div class="step-number w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0 mt-1">1</div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-primary mb-2">Open Chrome</h3>
+                                <p class="text-secondary">Use Chrome browser (or any Chromium-based browser like Edge)</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <div class="step-number w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0 mt-1">2</div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-primary mb-2">Navigate to the App</h3>
+                                <p class="text-secondary">Go to the 40K Army Cleaner website</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <div class="step-number w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0 mt-1">3</div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-primary mb-2">Open Menu</h3>
+                                <p class="text-secondary">Tap the three-dot menu button in the top-right corner</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <div class="step-number w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0 mt-1">4</div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-primary mb-2">Install App</h3>
+                                <p class="text-secondary">Tap "Install app" or "Add to Home screen"</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <div class="step-number w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0 mt-1">5</div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-primary mb-2">Confirm Installation</h3>
+                                <p class="text-secondary">Tap "Install" to confirm. The app will be added to your home screen</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Troubleshooting -->
+                <div class="bg-secondary border border-subtle rounded-lg p-8">
+                    <h2 class="text-2xl font-bold text-primary mb-6">Troubleshooting</h2>
+                    <div class="space-y-4">
+                        <div class="border-l-4 border-accent-primary pl-4">
+                            <h3 class="text-lg font-semibold text-primary mb-2">Install option not showing?</h3>
+                            <p class="text-secondary">Make sure you're using the correct browser (Safari on iOS, Chrome on Android) and that you've visited the website at least once.</p>
+                        </div>
+                        <div class="border-l-4 border-accent-primary pl-4">
+                            <h3 class="text-lg font-semibold text-primary mb-2">App not working offline?</h3>
+                            <p class="text-secondary">Try visiting the website again while online to ensure the app is properly cached for offline use.</p>
+                        </div>
+                        <div class="border-l-4 border-accent-primary pl-4">
+                            <h3 class="text-lg font-semibold text-primary mb-2">Can't find the app after installation?</h3>
+                            <p class="text-secondary">Check your home screen or app drawer. On some devices, you may need to swipe through multiple home screen pages.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Easter Egg -->
+                <div class="text-center easter-egg">
+                    <p class="text-xs text-muted italic">
+                        "The Emperor protects, but a clean roster protects better."
+                    </p>
+                </div>
+
+                <!-- Back to App -->
+                <div class="text-center">
+                    <a href="/" class="inline-flex items-center px-6 py-3 btn-primary rounded-lg focus-ring font-medium">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                        Back to App
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Auto dark/light mode
+        function setTheme() {
+            const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+        }
+
+        // Set initial theme
+        setTheme();
+
+        // Listen for theme changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setTheme);
+    </script>
+</body>
+</html> 

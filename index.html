@@ -8,6 +8,9 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1a1a1a">
     <link rel="icon" href="favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Prevent iOS automatic zoom on input focus while preserving user zoom */
@@ -20,129 +23,289 @@
         kbd {
             font-size: 0.875rem !important;
         }
+
+        /* Custom CSS Variables for Theme */
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --accent-primary: #3b82f6;
+            --accent-secondary: #1d4ed8;
+            --accent-copy: #059669;
+            --accent-copy-hover: #047857;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --accent-primary: #60a5fa;
+            --accent-secondary: #3b82f6;
+            --accent-copy: #10b981;
+            --accent-copy-hover: #059669;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+        }
+
+        /* Apply CSS Variables */
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .bg-input {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .text-primary {
+            color: var(--text-primary);
+        }
+
+        .text-secondary {
+            color: var(--text-secondary);
+        }
+
+        .text-muted {
+            color: var(--text-muted);
+        }
+
+        .border-subtle {
+            border-color: var(--border-color);
+        }
+
+        .btn-primary {
+            background-color: var(--accent-primary);
+            color: white;
+            border: none;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-secondary);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--border-color);
+        }
+
+        .btn-copy {
+            background-color: var(--accent-copy);
+            color: white;
+            border: none;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-copy:hover {
+            background-color: var(--accent-copy-hover);
+        }
+
+        /* Monospace font for output */
+        .font-mono {
+            font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+        }
+
+        /* Focus states */
+        .focus-ring:focus {
+            outline: 2px solid var(--accent-primary);
+            outline-offset: 2px;
+        }
+
+        /* Smooth transitions */
+        * {
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+        }
+
+        .bg-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+        }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
-    <div class="container mx-auto px-4 py-8 max-w-2xl">
-        <header class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">40K Army Cleaner</h1>
-            <p class="text-gray-600">Clean your Warhammer 40K army rosters</p>
-        </header>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="bg-card border-b border-subtle shadow-sm">
+        <div class="container mx-auto px-6 py-4 max-w-6xl">
+            <nav class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <a href="/" class="text-xl font-semibold text-primary hover:text-secondary transition-colors">
+                        40K Army Cleaner
+                    </a>
+                    <div class="hidden md:flex items-center space-x-6">
+                        <a href="/install.html" class="text-secondary hover:text-primary transition-colors font-medium">
+                            Install
+                        </a>
+                        <a href="https://github.com/teddyzetterlund/w40k-army-cleaner/issues" target="_blank" rel="noopener noreferrer" class="text-secondary hover:text-primary transition-colors font-medium">
+                            Feedback
+                        </a>
+                        <a href="/about.html" class="text-secondary hover:text-primary transition-colors font-medium">
+                            About
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Mobile menu button -->
+                <button id="mobile-menu-button" class="md:hidden text-secondary hover:text-primary">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </nav>
+            
+            <!-- Mobile menu -->
+            <div id="mobile-menu" class="md:hidden hidden mt-4 pb-4 border-t border-subtle pt-4">
+                <div class="flex flex-col space-y-3">
+                    <a href="/install.html" class="text-secondary hover:text-primary transition-colors font-medium">
+                        Install
+                    </a>
+                    <a href="https://github.com/teddyzetterlund/w40k-army-cleaner/issues" target="_blank" rel="noopener noreferrer" class="text-secondary hover:text-primary transition-colors font-medium">
+                        Feedback
+                    </a>
+                    <a href="/about.html" class="text-secondary hover:text-primary transition-colors font-medium">
+                        About
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
 
+    <div class="container mx-auto px-4 py-6 max-w-3xl">
         <main>
             <div class="space-y-6">
-                <div class="bg-white rounded-lg shadow-sm p-4">
-                    <label for="roster-input" class="block text-sm font-medium text-gray-700 mb-2">
+                <div class="bg-secondary border border-subtle rounded-lg p-6">
+                    <label for="roster-input" class="block text-sm font-medium text-secondary mb-3">
                         Paste or drag and drop your roster here
                     </label>
                     <textarea
                         id="roster-input"
-                        class="w-full h-48 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-mono text-sm"
+                        class="w-full h-48 p-4 bg-input rounded-lg focus-ring font-mono text-sm placeholder:text-muted resize-none"
                         placeholder="Paste your roster here..."
                     ></textarea>
                 </div>
 
-                <div id="output-container" class="hidden bg-white rounded-lg shadow-sm p-4">
-                    <div class="flex justify-between items-center mb-2">
-                        <h2 class="text-lg font-medium text-gray-800">Cleaned Roster</h2>
-                        <div class="flex items-center space-x-4">
+                <div id="output-container" class="hidden bg-secondary border border-subtle rounded-lg p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-semibold text-primary">Cleaned Roster</h2>
+                        <div class="flex items-center space-x-3">
                             <div class="relative inline-block text-left">
                                 <div>
-                                    <button type="button" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500" id="options-menu-button" aria-haspopup="true" aria-expanded="true">
+                                    <button type="button" class="btn-secondary px-3 py-2 rounded-lg text-sm font-medium focus-ring" id="options-menu-button" aria-haspopup="true" aria-expanded="true">
                                         Options
                                     </button>
                                 </div>
-                                <div id="options-menu" class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none hidden" role="menu" aria-orientation="vertical" aria-labelledby="options-menu-button">
-                                    <div class="py-1" role="none">
+                                <div id="options-menu" class="origin-top-right absolute right-0 mt-2 w-64 rounded-lg shadow-lg bg-secondary ring-1 ring-black ring-opacity-5 focus:outline-none hidden z-10" role="menu" aria-orientation="vertical" aria-labelledby="options-menu-button">
+                                    <div class="py-2" role="none">
                                         <!-- Content Display Options Group -->
-                                        <div class="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                                        <div class="px-4 py-2 text-xs font-semibold text-muted uppercase tracking-wide">
                                             Content Display
                                         </div>
-                                        <label class="flex items-center px-4 py-2 text-sm text-gray-700 whitespace-nowrap">
+                                        <label class="flex items-center px-4 py-2 text-sm text-secondary whitespace-nowrap hover:bg-tertiary cursor-pointer">
                                             <input
                                                 type="checkbox"
                                                 id="show-header"
-                                                class="form-checkbox h-4 w-4 text-blue-500"
+                                                class="h-4 w-4 text-accent-primary bg-input border-subtle rounded focus-ring"
                                                 checked
                                             >
-                                            <span class="ml-2 truncate">Show roster header</span>
+                                            <span class="ml-3 truncate">Show roster header</span>
                                         </label>
-                                        <label class="flex items-center px-4 py-2 text-sm text-gray-700 whitespace-nowrap">
+                                        <label class="flex items-center px-4 py-2 text-sm text-secondary whitespace-nowrap hover:bg-tertiary cursor-pointer">
                                             <input
                                                 type="checkbox"
                                                 id="show-points"
-                                                class="form-checkbox h-4 w-4 text-blue-500"
+                                                class="h-4 w-4 text-accent-primary bg-input border-subtle rounded focus-ring"
                                                 checked
                                             >
-                                            <span class="ml-2 truncate">Show unit points</span>
+                                            <span class="ml-3 truncate">Show unit points</span>
                                         </label>
-                                        <label class="flex items-center px-4 py-2 text-sm text-gray-700 whitespace-nowrap">
+                                        <label class="flex items-center px-4 py-2 text-sm text-secondary whitespace-nowrap hover:bg-tertiary cursor-pointer">
                                             <input
                                                 type="checkbox"
                                                 id="show-models"
-                                                class="form-checkbox h-4 w-4 text-blue-500"
+                                                class="h-4 w-4 text-accent-primary bg-input border-subtle rounded focus-ring"
                                             >
-                                            <span class="ml-2 truncate">Show model counts</span>
+                                            <span class="ml-3 truncate">Show model counts</span>
                                         </label>
                                         
                                         <!-- Visual Separator -->
-                                        <div class="border-t border-gray-200 my-1"></div>
+                                        <div class="border-t border-subtle my-2"></div>
                                         
                                         <!-- Formatting & Layout Options Group -->
-                                        <div class="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                                        <div class="px-4 py-2 text-xs font-semibold text-muted uppercase tracking-wide">
                                             Formatting & Layout
                                         </div>
-                                        <label class="flex items-center px-4 py-2 text-sm text-gray-700 whitespace-nowrap">
+                                        <label class="flex items-center px-4 py-2 text-sm text-secondary whitespace-nowrap hover:bg-tertiary cursor-pointer">
                                             <input
                                                 type="checkbox"
                                                 id="inline-enhancements"
-                                                class="form-checkbox h-4 w-4 text-blue-500"
+                                                class="h-4 w-4 text-accent-primary bg-input border-subtle rounded focus-ring"
                                                 checked
                                             >
-                                            <span class="ml-2 truncate">Inline enhancements</span>
+                                            <span class="ml-3 truncate">Inline enhancements</span>
                                         </label>
-                                        <label class="flex items-center px-4 py-2 text-sm text-gray-700 whitespace-nowrap">
+                                        <label class="flex items-center px-4 py-2 text-sm text-secondary whitespace-nowrap hover:bg-tertiary cursor-pointer">
                                             <input
                                                 type="checkbox"
                                                 id="smart-format"
-                                                class="form-checkbox h-4 w-4 text-blue-500"
+                                                class="h-4 w-4 text-accent-primary bg-input border-subtle rounded focus-ring"
                                                 checked
                                             >
-                                            <span class="ml-2 truncate">Smart unit formatting</span>
+                                            <span class="ml-3 truncate">Smart unit formatting</span>
                                         </label>
-                                        <label class="flex items-center px-4 py-2 text-sm text-gray-700 whitespace-nowrap">
+                                        <label class="flex items-center px-4 py-2 text-sm text-secondary whitespace-nowrap hover:bg-tertiary cursor-pointer">
                                             <input
                                                 type="checkbox"
                                                 id="consolidate-duplicates"
-                                                class="form-checkbox h-4 w-4 text-blue-500"
+                                                class="h-4 w-4 text-accent-primary bg-input border-subtle rounded focus-ring"
                                             >
-                                            <span class="ml-2 truncate">Merge duplicate units</span>
+                                            <span class="ml-3 truncate">Merge duplicate units</span>
                                         </label>
-                                        <label class="flex items-center px-4 py-2 text-sm text-gray-700 whitespace-nowrap">
+                                        <label class="flex items-center px-4 py-2 text-sm text-secondary whitespace-nowrap hover:bg-tertiary cursor-pointer">
                                             <input
                                                 type="checkbox"
                                                 id="no-empty-lines"
-                                                class="form-checkbox h-4 w-4 text-blue-500"
+                                                class="h-4 w-4 text-accent-primary bg-input border-subtle rounded focus-ring"
                                             >
-                                            <span class="ml-2 truncate">Remove empty lines</span>
+                                            <span class="ml-3 truncate">Remove empty lines</span>
                                         </label>
-                                        <label class="flex items-center px-4 py-2 text-sm text-gray-700 whitespace-nowrap">
+                                        <label class="flex items-center px-4 py-2 text-sm text-secondary whitespace-nowrap hover:bg-tertiary cursor-pointer">
                                             <input
                                                 type="checkbox"
                                                 id="one-liner"
-                                                class="form-checkbox h-4 w-4 text-blue-500"
+                                                class="h-4 w-4 text-accent-primary bg-input border-subtle rounded focus-ring"
                                             >
-                                            <span class="ml-2 truncate">Everything as one line</span>
+                                            <span class="ml-3 truncate">Everything as one line</span>
                                         </label>
-                                        <label class="flex items-center px-4 py-2 text-sm text-gray-700 whitespace-nowrap">
+                                        <label class="flex items-center px-4 py-2 text-sm text-secondary whitespace-nowrap hover:bg-tertiary cursor-pointer">
                                             <input
                                                 type="checkbox"
                                                 id="discord-format"
-                                                class="form-checkbox h-4 w-4 text-blue-500"
+                                                class="h-4 w-4 text-accent-primary bg-input border-subtle rounded focus-ring"
                                             >
-                                            <span class="ml-2 truncate">Discord-friendly format</span>
+                                            <span class="ml-3 truncate">Discord-friendly format</span>
                                         </label>
-                                        <div class="px-10 -mt-3 py-1 text-xs text-gray-500">
+                                        <div class="px-7 -mt-1 py-1 text-xs text-muted">
                                             Shows in copied text only
                                         </div>
                                     </div>
@@ -150,13 +313,13 @@
                             </div>
                             <button
                                 id="copy-button"
-                                class="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+                                class="btn-copy px-5 py-2 rounded-lg text-sm font-medium focus-ring"
                             >
                                 Copy
                             </button>
                         </div>
                     </div>
-                    <pre id="roster-output" class="whitespace-pre-wrap font-mono text-sm bg-gray-50 p-3 rounded"></pre>
+                    <pre id="roster-output" class="whitespace-pre-wrap font-mono text-sm bg-input p-4 rounded-lg border border-subtle text-primary"></pre>
                 </div>
             </div>
         </main>
@@ -169,6 +332,24 @@
                 navigator.serviceWorker.register('/sw.js');
             });
         }
+        
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Auto dark/light mode
+        function setTheme() {
+            const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+        }
+
+        // Set initial theme
+        setTheme();
+
+        // Listen for theme changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setTheme);
     </script>
 </body>
 </html> 
