@@ -1,5 +1,11 @@
 import fs from 'fs';
-import { cleanRosterText } from '../../roster-cleaner.js';
+import {
+  cleanRosterText,
+  consolidateDuplicateLines,
+  inlineEnhancementLines,
+  convertToOneLiner,
+  countModelsInNewRecruitUnit
+} from '../../roster-cleaner.js';
 import '@testing-library/jest-dom';
 import { fireEvent, screen } from '@testing-library/dom';
 
@@ -750,6 +756,50 @@ describe('Roster Cleaner', () => {
             expect(result).toContain('Ophydian Destroyers (80)');
             expect(result).toContain('Lokhust Heavy Destroyers (55)');
             expect(result).toContain('Canoptek Reanimator (75)');
+        });
+    });
+});
+
+// Test model counting functions specifically
+describe('Model Counting Functions', () => {
+    describe('countModelsInNewRecruitUnit', () => {
+        test('counts character units correctly', () => {
+            const lines = [
+                'Char1: 3x The Silent King (420 pts): Warlord',
+                '• 1x Szarekh: Sceptre of Eternal Glory, Staff of Stars, Weapons of the Final Triarch',
+                '• 2x Triarchal Menhir: 2 with Annihilator beam, Armoured bulk'
+            ];
+            const result = countModelsInNewRecruitUnit(lines, 0);
+            expect(result).toBe(3);
+        });
+
+        test('counts regular unit lines correctly', () => {
+            const lines = [
+                '2x Cryptothralls (60 pts): 2 with Scouring eye, Scythed limbs'
+            ];
+            const result = countModelsInNewRecruitUnit(lines, 0);
+            expect(result).toBe(2);
+        });
+
+        test('counts bullet point models correctly', () => {
+            const lines = [
+                '10x Cultist Mob (50 pts)',
+                '• 1x Cultist Champion',
+                '    1 with Brutal assault weapon, Autopistol',
+                '• 9x Cultist',
+                '    9 with Autopistol, Brutal assault weapon'
+            ];
+            const result = countModelsInNewRecruitUnit(lines, 0);
+            expect(result).toBe(10);
+        });
+
+        test('returns 1 for single model units', () => {
+            const lines = [
+                '1x Chaos Lord in Terminator Armour (105 pts)',
+                '1 with Combi-bolter, Exalted weapon'
+            ];
+            const result = countModelsInNewRecruitUnit(lines, 0);
+            expect(result).toBe(1);
         });
     });
 }); 

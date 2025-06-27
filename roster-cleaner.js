@@ -290,25 +290,32 @@ function formatTauUnitName(unitName) {
 }
 
 /**
- * Counts the number of models in a NewRecruit format unit by analyzing bullet point structure
- * @param {string[]} lines - Array of roster lines
- * @param {number} startIndex - Starting index of the unit
- * @returns {number} - Number of models in the unit
+ * Helper: Extract model count from a character line (e.g., 'Char1: 3x ...')
+ * @param {string} line
+ * @returns {number|null}
  */
-function countModelsInNewRecruitUnit(lines, startIndex) {
-    // Check for WTC/NR format: '10x ...' (not 'Char1: 1x ...')
-    const currentLine = lines[startIndex];
-    // If it's a character line, extract the model count
-    const charMatch = currentLine.match(/^Char\d+:\s*(\d+)x\s+/);
-    if (charMatch) {
-        return parseInt(charMatch[1], 10);
-    }
-    // If it's a regular unit line with model count
-    const wtcMatch = currentLine.match(/^(\d+)x\s+/);
-    if (wtcMatch) {
-        return parseInt(wtcMatch[1], 10);
-    }
-    // For regular NewRecruit format, count from bullet points
+function getCharacterLineModelCount(line) {
+    const charMatch = line.match(/^Char\d+:\s*(\d+)x\s+/);
+    return charMatch ? parseInt(charMatch[1], 10) : null;
+}
+
+/**
+ * Helper: Extract model count from a regular unit line (e.g., '2x Cryptothralls ...')
+ * @param {string} line
+ * @returns {number|null}
+ */
+function getRegularUnitLineModelCount(line) {
+    const wtcMatch = line.match(/^(\d+)x\s+/);
+    return wtcMatch ? parseInt(wtcMatch[1], 10) : null;
+}
+
+/**
+ * Helper: Count models from bullet points under a unit
+ * @param {string[]} lines
+ * @param {number} startIndex
+ * @returns {number}
+ */
+function getBulletPointModelCount(lines, startIndex) {
     let modelCount = 0;
     let i = startIndex + 1;
     while (i < lines.length) {
@@ -318,7 +325,6 @@ function countModelsInNewRecruitUnit(lines, startIndex) {
             i++;
             continue;
         }
-        // Look for bullet points that indicate models
         const bulletMatch = line.match(/^\s*•\s*(\d+)x\s+([^•]+)/);
         if (bulletMatch) {
             const count = parseInt(bulletMatch[1], 10);
@@ -344,26 +350,40 @@ function countModelsInNewRecruitUnit(lines, startIndex) {
         }
         i++;
     }
-    // If no models were counted, assume this is a single-model unit
-    return modelCount || 1;
+    return modelCount;
 }
 
 /**
- * Counts the number of models in a NewRecruit NR format unit
- * @param {string[]} lines - Array of roster lines
- * @param {number} startIndex - Starting index of the unit
- * @returns {number} - Number of models in the unit
+ * Counts the number of models in a NewRecruit format unit
+ * @param {string[]} lines
+ * @param {number} startIndex
+ * @returns {number}
  */
-function countModelsInNewRecruitNRUnit(lines, startIndex) {
-    // For NR-NR format, we need to look at the bullet points under the unit
+function countModelsInNewRecruitUnit(lines, startIndex) {
+    const currentLine = lines[startIndex];
+    // 1. Character line
+    const charCount = getCharacterLineModelCount(currentLine);
+    if (charCount !== null) return charCount;
+    // 2. Regular unit line
+    const unitCount = getRegularUnitLineModelCount(currentLine);
+    if (unitCount !== null) return unitCount;
+    // 3. Bullet points
+    const bulletCount = getBulletPointModelCount(lines, startIndex);
+    return bulletCount || 1;
+}
+
+/**
+ * Helper: Count models from NR-NR bullet points under a unit
+ * @param {string[]} lines
+ * @param {number} startIndex
+ * @returns {number}
+ */
+function getNRBulletPointModelCount(lines, startIndex) {
     let modelCount = 0;
     let i = startIndex + 1;
-
     while (i < lines.length) {
         const line = lines[i];
         if (!line.trim() || line.startsWith('##') || line.match(/^[\w\s\-]+ \[\d+ pts\]:/)) break;
-        
-        // Look for bullet points that indicate models
         const bulletMatch = line.match(/^\s*•\s*(\d+)x\s+([^:]+)/);
         if (bulletMatch) {
             const count = parseInt(bulletMatch[1], 10);
@@ -371,39 +391,30 @@ function countModelsInNewRecruitNRUnit(lines, startIndex) {
         }
         i++;
     }
-    // If no models were counted, assume this is a single-model unit
-    return modelCount || 1;
+    return modelCount;
 }
 
 /**
- * Counts the number of models in a unit by analyzing the structure of indented lines.
- * Models are identified as lines with '• Nx [Name]' at the first indentation level under the unit,
- * and are only counted if followed by more-indented wargear lines. Equipment is not counted as a model.
- *
- * @param {string[]} lines - Array of roster lines
- * @param {number} startIndex - Starting index of the unit
- * @returns {number} - Number of models in the unit
- *
- * @example
- * // Returns 10 for a Strike Team with 1 Shas'ui and 9 Fire Warriors
- * countModelsInUnit(lines, startIndex)
+ * Counts the number of models in a NewRecruit NR format unit
+ * @param {string[]} lines
+ * @param {number} startIndex
+ * @returns {number}
  */
-function countModelsInUnit(lines, startIndex) {
-    // Check if this is NewRecruit format
-    if (isNewRecruitFormat(lines)) {
-        return countModelsInNewRecruitUnit(lines, startIndex);
-    }
-    
-    // Check if this is NewRecruit NR format
-    if (isNewRecruitNRFormat(lines)) {
-        return countModelsInNewRecruitNRUnit(lines, startIndex);
-    }
-    
+function countModelsInNewRecruitNRUnit(lines, startIndex) {
+    const bulletCount = getNRBulletPointModelCount(lines, startIndex);
+    return bulletCount || 1;
+}
+
+/**
+ * Helper: Count models by indentation for non-NewRecruit formats
+ * @param {string[]} lines
+ * @param {number} startIndex
+ * @returns {number}
+ */
+function getIndentedModelCount(lines, startIndex) {
     let modelCount = 0;
     const baseIndent = lines[startIndex].search(/\S|$/);
     let i = startIndex + 1;
-
-    // Find the first indentation level within this unit
     let firstLevelIndent = null;
     while (i < lines.length) {
         const line = lines[i];
@@ -412,16 +423,11 @@ function countModelsInUnit(lines, startIndex) {
             i++;
             continue;
         }
-
         const indent = line.search(/\S|$/);
         if (indent <= baseIndent) break;
-
-        // Find the first indentation level (models are at this level)
         if (firstLevelIndent === null) {
             firstLevelIndent = indent;
         }
-
-        // Only look for models at the first indentation level
         if (indent === firstLevelIndent) {
             const modelMatch = line.match(/^\s*•\s*(\d+)x\s+([^•]+)/);
             if (modelMatch) {
@@ -448,8 +454,25 @@ function countModelsInUnit(lines, startIndex) {
         }
         i++;
     }
-    // If no models were counted, assume this is a single-model unit
-    return modelCount || 1;
+    return modelCount;
+}
+
+/**
+ * Counts the number of models in a unit by analyzing the structure of indented lines.
+ * Delegates to NewRecruit helpers if format matches.
+ * @param {string[]} lines
+ * @param {number} startIndex
+ * @returns {number}
+ */
+function countModelsInUnit(lines, startIndex) {
+    if (isNewRecruitFormat(lines)) {
+        return countModelsInNewRecruitUnit(lines, startIndex);
+    }
+    if (isNewRecruitNRFormat(lines)) {
+        return countModelsInNewRecruitNRUnit(lines, startIndex);
+    }
+    const indentedCount = getIndentedModelCount(lines, startIndex);
+    return indentedCount || 1;
 }
 
 /**
@@ -1060,6 +1083,7 @@ export {
     formatUnitName,
     formatTauUnitName,
     processUnits,
+    countModelsInNewRecruitUnit,
     consolidateDuplicateLines,
     convertToOneLiner,
     inlineEnhancementLines,
