@@ -119,22 +119,59 @@ This is a **vanilla JavaScript Progressive Web App** that processes Warhammer 40
 
 ## AI Assistance Guidelines
 
-### When Implementing New Features
-1. **Show understanding of the assignment** first
+#### For Complex Tasks and Feature Requests
+- **Always decompose large tasks** into smaller, manageable steps
+- **Reason out loud** about the approach before implementing
+- **Self-criticize** your initial approach at least once before proceeding
+- **Validate against existing patterns** in the codebase before suggesting changes
+- **Consider edge cases** and potential failure points
 
-### When Suggesting Code Changes
+#### When Implementing New Features
+1. **Show understanding** of the assignment first
+2. **Break down the task** into logical sub-problems
+3. **Reason through the approach** step by step
+4. **Self-criticize** the proposed solution
+5. **Provide context** from relevant existing code
+6. **Include real-world examples** from fixtures
+7. **Start with the simplest working solution**
+
+#### When Suggesting Code Changes
 1. **Follow existing patterns** in the codebase
 2. **Maintain test coverage** - add tests for new functionality
 3. **Use pure functions** with clear inputs/outputs
 4. **Add JSDoc documentation** for new functions
 5. **Consider PWA implications** for any changes
+6. **Provide before/after examples** for formatting changes
+7. **Validate the approach** against similar existing code
 
-### When Reviewing Code
+#### When Reviewing Code
 1. **Check for test coverage** of new functionality
 2. **Verify input validation** is present
 3. **Ensure error handling** is appropriate
 4. **Confirm naming conventions** are followed
 5. **Validate PWA compatibility** for UI changes
+6. **Look for edge cases** that might break the solution
+7. **Self-criticize** the review for completeness
+
+#### Reasoning and Self-Criticism Process
+- **Before starting**: "Let me think through this step by step..."
+- **After initial approach**: "Let me critique this approach..."
+- **Before implementation**: "Let me validate this against existing patterns..."
+- **For complex logic**: "Let me break this down into smaller pieces..."
+
+#### Decomposition Guidelines
+- **Break features into logical components** (parsing, formatting, validation, etc.)
+- **Implement one component at a time** with tests
+- **Validate each component** before moving to the next
+- **Consider dependencies** between components
+- **Start with the core logic** before adding edge cases
+
+#### Context and Examples Usage
+- **Always reference existing code** when suggesting changes
+- **Use real fixtures** as examples, not hypothetical data
+- **Show before/after examples** for formatting changes
+- **Reference similar functions** in the codebase
+- **Explain why** a particular approach was chosen
 
 ### Common Patterns to Follow
 - **Faction-specific logic**: Add to `formatUnitName` function in `roster-cleaner.js`
