@@ -476,6 +476,70 @@ function countModelsInUnit(lines, startIndex) {
 }
 
 /**
+ * Extracts enhancement name from a line (handles all supported formats)
+ * @param {string} line
+ * @returns {string|null}
+ */
+function extractEnhancement(line) {
+    if (line.match(ENHANCEMENT_PATTERN)) {
+        // e.g. "Enhancement: Dread Majesty (+30 pts)"
+        let enhancement = line.split(ENHANCEMENT_PATTERN)[1].trim();
+        return enhancement.replace(/\s*\([^)]*\)/, '') || null;
+    }
+    if (isNewRecruitEnhancementLine(line)) {
+        // e.g. "• Dread Majesty (+30 pts)"
+        const match = line.match(/^\s*•\s+([^(]+)\s+\(\+\d+\s*pts\)/);
+        return match ? match[1].trim() : null;
+    }
+    if (line.match(/^Enhancement:\s+([^(]+)\s+\(\+\d+\s*pts\)/)) {
+        // e.g. "Enhancement: Dread Majesty (+30 pts)"
+        const match = line.match(/^Enhancement:\s+([^(]+)\s+\(\+\d+\s*pts\)/);
+        return match ? match[1].trim().replace(/\s*\(\+\d+\s*pts\)/, '') : null;
+    }
+    return null;
+}
+
+/**
+ * Parses a NewRecruit unit line (e.g., "Char1: 3x The Silent King (420 pts): ...")
+ * @param {string} line
+ * @returns {{ unitName: string, points: string, rawMatch: RegExpMatchArray } | null}
+ */
+function parseNewRecruitUnitLine(line) {
+    const match = line.match(/^(?:Char\d+:\s*)?(\d+)x\s+(.+?)\s+\((\d+)\s*pts\)/);
+    if (!match) return null;
+    return {
+        unitName: match[2].trim(),
+        points: match[3],
+        rawMatch: match
+    };
+}
+
+/**
+ * Parses a GW unit line (e.g., "Lord in Terminator Armour (105 Points)")
+ * @param {string} line
+ * @returns {{ unitName: string, points: string, rawMatch: RegExpMatchArray } | null}
+ */
+function parseGWUnitLine(line) {
+    const match = line.match(/^(.+?)\s*\((\d+)\s*Points?\)/i);
+    if (!match) return null;
+    return {
+        unitName: match[1].trim(),
+        points: match[2],
+        rawMatch: match
+    };
+}
+
+/**
+ * Formats the model count prefix for a unit line.
+ * Returns "3x " for 3 models, "" for 0 or 1.
+ * @param {number} modelCount
+ * @returns {string}
+ */
+function formatModelCountPrefix(modelCount) {
+    return modelCount > 1 ? `${modelCount}x ` : '';
+}
+
+/**
  * Options for processing units
  * @typedef {object} ProcessUnitsOptions
  * @property {string[]} lines - Array of roster lines
@@ -535,18 +599,15 @@ function processUnits(options) {
 
         // Handle NewRecruit format units
         if (isNewRecruit) {
-            // Handle both regular NewRecruit format and WTC format
-            // Regular: "1x Unit Name (points pts)"
-            // WTC: "Char1: 1x Unit Name (points pts)"
-            const newRecruitMatch = line.match(/^(?:Char\d+:\s*)?(\d+)x\s+(.+?)\s+\((\d+)\s*pts\)/);
-            if (newRecruitMatch) {
+            const parsedUnit = parseNewRecruitUnitLine(line);
+            if (parsedUnit) {
                 // If there is a pending enhancement, apply it to the previous unit
                 if (currentUnit && !currentUnitAdded) {
                     if (lastUnit && lastUnit !== currentUnit) {
                         cleanedLines.push('');
                     }
                     const modelCount = showModels ? countModelsInUnit(lines, currentUnitStartIndex) : 0;
-                    const modelText = modelCount > 1 ? `${modelCount}x ` : '';
+                    const modelText = formatModelCountPrefix(modelCount);
                     const unitLine = showPoints ? `${modelText}${currentUnit} (${currentPoints})` : `${modelText}${currentUnit}`;
                     cleanedLines.push(unitLine);
                     if (pendingEnhancement) {
@@ -558,68 +619,51 @@ function processUnits(options) {
                     currentPoints = '';
                 }
 
-                let unitName = newRecruitMatch[2].trim();
+                let unitName = parsedUnit.unitName;
                 // Smart format for NewRecruit units
                 unitName = formatUnitName(unitName, isTauEmpire, smartFormat, isChaosSpaceMarines);
                 currentUnit = unitName;
-                currentPoints = newRecruitMatch[3];
+                currentPoints = parsedUnit.points;
                 currentUnitAdded = false;
                 currentUnitStartIndex = i;
             } else if (line.match(ENHANCEMENT_PATTERN) || isNewRecruitEnhancementLine(line) || line.match(/^Enhancement:\s+([^(]+)\s+\(\+\d+\s*pts\)/)) {
                 // For NewRecruit, extract enhancement and store it for the current unit
-                // Handle both regular format and WTC format enhancements
-                let enhancement = '';
-                if (line.match(ENHANCEMENT_PATTERN)) {
-                    enhancement = line.split(ENHANCEMENT_PATTERN)[1].trim();
-                    // Clean up parenthetical information for WTC-compact format
-                    enhancement = enhancement.replace(/\s*\([^)]*\)/, '');
-                } else if (isNewRecruitEnhancementLine(line)) {
-                    // Extract enhancement name from NewRecruit format
-                    const match = line.match(/^\s*•\s+([^(]+)\s+\(\+\d+\s*pts\)/);
-                    if (match) {
-                        enhancement = match[1].trim();
-                    }
-                } else if (line.match(/^Enhancement:\s+([^(]+)\s+\(\+\d+\s*pts\)/)) {
-                    // Extract enhancement name from WTC format
-                    const match = line.match(/^Enhancement:\s+([^(]+)\s+\(\+\d+\s*pts\)/);
-                    if (match) {
-                        enhancement = match[1].trim().replace(/\s*\(\+\d+\s*pts\)/, '');
-                    }
-                }
+                const enhancement = extractEnhancement(line);
                 if (enhancement) {
-                    enhancement = enhancement.replace(/\s*\(\+\d+\s*pts\)/, '');
+                    pendingEnhancement = enhancement;
                 }
-                pendingEnhancement = enhancement;
             }
         } else {
             // Handle GW format units (existing logic)
-            const pointsMatch = line.match(POINTS_PATTERN);
-            if (pointsMatch) {
+            const parsedGWUnit = parseGWUnitLine(line);
+            if (parsedGWUnit) {
                 if (currentUnit && !currentUnitAdded) {
                     if (lastUnit && lastUnit !== currentUnit) {
                         cleanedLines.push('');
                     }
                     const modelCount = showModels ? countModelsInUnit(lines, currentUnitStartIndex) : 0;
-                    const modelText = modelCount > 1 ? `${modelCount}x ` : '';
+                    const modelText = formatModelCountPrefix(modelCount);
                     cleanedLines.push(showPoints ? `${modelText}${currentUnit} (${currentPoints})` : `${modelText}${currentUnit}`);
                     lastUnit = currentUnit;
                 }
 
-                const unitName = line.split('(')[0].trim();
-                currentUnit = formatUnitName(unitName, isTauEmpire, smartFormat, isChaosSpaceMarines);
-                currentPoints = pointsMatch[1];
+                const unitName = formatUnitName(parsedGWUnit.unitName, isTauEmpire, smartFormat, isChaosSpaceMarines);
+                currentUnit = unitName;
+                currentPoints = parsedGWUnit.points;
                 currentUnitAdded = false;
                 currentUnitStartIndex = i;
             } else if (line.match(ENHANCEMENT_PATTERN)) {
-                const enhancement = line.split(ENHANCEMENT_PATTERN)[1].trim();
+                const enhancement = extractEnhancement(line);
                 if (currentUnit && !currentUnitAdded) {
                     if (lastUnit && lastUnit !== currentUnit) {
                         cleanedLines.push('');
                     }
                     const modelCount = showModels ? countModelsInUnit(lines, currentUnitStartIndex) : 0;
-                    const modelText = modelCount > 1 ? `${modelCount}x ` : '';
+                    const modelText = formatModelCountPrefix(modelCount);
                     cleanedLines.push(showPoints ? `${modelText}${currentUnit} (${currentPoints})` : `${modelText}${currentUnit}`);
-                    cleanedLines.push(`  • Enhancement: ${enhancement}`);
+                    if (enhancement) {
+                        cleanedLines.push(`  • Enhancement: ${enhancement}`);
+                    }
                     lastUnit = currentUnit;
                     currentUnitAdded = true;
                 }
@@ -633,7 +677,7 @@ function processUnits(options) {
             cleanedLines.push('');
         }
         const modelCount = showModels ? countModelsInUnit(lines, currentUnitStartIndex) : 0;
-        const modelText = modelCount > 1 ? `${modelCount}x ` : '';
+        const modelText = formatModelCountPrefix(modelCount);
         const unitLine = showPoints ? `${modelText}${currentUnit} (${currentPoints})` : `${modelText}${currentUnit}`;
         cleanedLines.push(unitLine);
         if (pendingEnhancement) {
@@ -989,7 +1033,7 @@ function processNewRecruitNRUnits(lines, startIndex, showPoints, smartFormat, is
             
             // Calculate model count if needed
             const modelCount = showModels ? countModelsInNewRecruitNRUnit(lines, i) : 0;
-            const modelText = modelCount > 1 ? `${modelCount}x ` : '';
+            const modelText = formatModelCountPrefix(modelCount);
             const unitLine = showPoints ? `${modelText}${unitName} (${points})` : `${modelText}${unitName}`;
             
             if (lastUnit && lastUnit !== unitName) {

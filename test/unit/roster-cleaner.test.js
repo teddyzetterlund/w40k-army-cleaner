@@ -4,7 +4,8 @@ import {
   consolidateDuplicateLines,
   inlineEnhancementLines,
   convertToOneLiner,
-  countModelsInNewRecruitUnit
+  countModelsInNewRecruitUnit,
+  processUnits
 } from '../../roster-cleaner.js';
 import '@testing-library/jest-dom';
 import { fireEvent, screen } from '@testing-library/dom';
@@ -801,5 +802,82 @@ describe('Model Counting Functions', () => {
             const result = countModelsInNewRecruitUnit(lines, 0);
             expect(result).toBe(1);
         });
+    });
+});
+
+// Test processUnits function specifically
+describe('processUnits Function', () => {
+    test('processes NewRecruit units correctly', () => {
+        const lines = [
+            '+++++++++++++++++++++++++++++++++++++++++++++++',
+            '+ FACTION KEYWORD: Xenos - Necrons',
+            '+ DETACHMENT: Starshatter Arsenal',
+            '+ TOTAL ARMY POINTS: 2000pts',
+            '+++++++++++++++++++++++++++++++++++++++++++++++',
+            'Char1: 3x The Silent King (420 pts): Warlord',
+            'Enhancement: Dread Majesty (+30 pts)',
+            '2x Cryptothralls (60 pts): 2 with Scouring eye, Scythed limbs'
+        ];
+        const result = processUnits({
+            lines,
+            startIndex: 0,
+            showPoints: true,
+            smartFormat: true,
+            isTauEmpire: false,
+            isChaosSpaceMarines: false,
+            showModels: false
+        });
+        
+        expect(result).toContain('The Silent King (420)');
+        expect(result).toContain('  • Enhancement: Dread Majesty');
+        expect(result).toContain('Cryptothralls (60)');
+    });
+
+    test('processes GW units correctly', () => {
+        const lines = [
+            'The Goal is to Survive the Shooting Phase (1990 Points)',
+            'Chaos Space Marines - Fellhammer Siege-host',
+            '',
+            'Lord in Terminator Armour (105 Points)',
+            '  • Enhancement: Bastion Plate',
+            'Cultists (50 Points)'
+        ];
+        const result = processUnits({
+            lines,
+            startIndex: 0,
+            showPoints: true,
+            smartFormat: true,
+            isTauEmpire: false,
+            isChaosSpaceMarines: true,
+            showModels: false
+        });
+        
+        expect(result).toContain('Lord in Terminator Armour (105)');
+        expect(result).toContain('  • Enhancement: Bastion Plate');
+        expect(result).toContain('Cultists (50)');
+    });
+
+    test('handles model counts correctly', () => {
+        const lines = [
+            '+++++++++++++++++++++++++++++++++++++++++++++++',
+            '+ FACTION KEYWORD: Xenos - Necrons',
+            '+ DETACHMENT: Starshatter Arsenal',
+            '+ TOTAL ARMY POINTS: 2000pts',
+            '+++++++++++++++++++++++++++++++++++++++++++++++',
+            'Char1: 3x The Silent King (420 pts): Warlord',
+            '2x Cryptothralls (60 pts): 2 with Scouring eye, Scythed limbs'
+        ];
+        const result = processUnits({
+            lines,
+            startIndex: 0,
+            showPoints: true,
+            smartFormat: true,
+            isTauEmpire: false,
+            isChaosSpaceMarines: false,
+            showModels: true
+        });
+        
+        expect(result).toContain('3x The Silent King (420)');
+        expect(result).toContain('2x Cryptothralls (60)');
     });
 }); 
