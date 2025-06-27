@@ -483,7 +483,7 @@ function countModelsInUnit(lines, startIndex) {
 function extractEnhancement(line) {
     if (line.match(ENHANCEMENT_PATTERN)) {
         // e.g. "Enhancement: Dread Majesty (+30 pts)"
-        let enhancement = line.split(ENHANCEMENT_PATTERN)[1].trim();
+        const enhancement = line.split(ENHANCEMENT_PATTERN)[1].trim();
         return enhancement.replace(/\s*\([^)]*\)/, '') || null;
     }
     if (isNewRecruitEnhancementLine(line)) {
@@ -625,7 +625,7 @@ function processUnits(options) {
             const parsedUnit = parseNewRecruitUnitLine(line);
             if (parsedUnit) {
                 flushUnit();
-                let unitName = formatUnitName(parsedUnit.unitName, isTauEmpire, smartFormat, isChaosSpaceMarines);
+                const unitName = formatUnitName(parsedUnit.unitName, isTauEmpire, smartFormat, isChaosSpaceMarines);
                 currentUnit = unitName;
                 currentPoints = parsedUnit.points;
                 currentUnitStartIndex = i;
@@ -639,7 +639,7 @@ function processUnits(options) {
             const parsedGWUnit = parseGWUnitLine(line);
             if (parsedGWUnit) {
                 flushUnit();
-                let unitName = formatUnitName(parsedGWUnit.unitName, isTauEmpire, smartFormat, isChaosSpaceMarines);
+                const unitName = formatUnitName(parsedGWUnit.unitName, isTauEmpire, smartFormat, isChaosSpaceMarines);
                 currentUnit = unitName;
                 currentPoints = parsedGWUnit.points;
                 currentUnitStartIndex = i;
@@ -997,8 +997,8 @@ function processNewRecruitNRUnits(lines, startIndex, showPoints, smartFormat, is
         const unitMatch = line.match(/^([\w\s\-]+) \[(\d+) pts\]:\s*(.*)$/);
         if (unitMatch) {
             let unitName = unitMatch[1].trim();
-            let points = unitMatch[2];
-            let details = unitMatch[3] || '';
+            const points = unitMatch[2];
+            const details = unitMatch[3] || '';
             unitName = formatUnitName(unitName, isTauEmpire, smartFormat, isChaosSpaceMarines);
             
             // Calculate model count if needed
