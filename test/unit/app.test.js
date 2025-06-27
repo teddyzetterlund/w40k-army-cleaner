@@ -6,6 +6,7 @@ import {
     setupCheckboxHandlers, 
     setupOptionsMenu, 
     createUpdateRosterOutput,
+    setupSampleRoster,
     initializeApp 
 } from '../../app.js';
 import { cleanRosterText } from '../../roster-cleaner.js';
@@ -50,6 +51,7 @@ describe('App Unit Tests', () => {
             rosterOutput: document.createElement('div'),
             copyButton: document.createElement('button'),
             editButton: document.createElement('button'),
+            trySampleRosterButton: document.createElement('button'),
             showPointsCheckbox: document.createElement('input'),
             smartFormatCheckbox: document.createElement('input'),
             showModelsCheckbox: document.createElement('input'),
@@ -494,6 +496,95 @@ describe('App Unit Tests', () => {
             // Assert: copy logic called, feedback shown
             expect(copyToClipboard).toHaveBeenCalledWith('cleaned output');
             expect(mockElements.copyButton.textContent).toBe('Copied!');
+        });
+    });
+
+    describe('Sample Roster Functionality', () => {
+        let elements;
+        let updateRosterOutput;
+
+        beforeEach(() => {
+            // Setup DOM elements
+            document.body.innerHTML = `
+                <textarea id="roster-input"></textarea>
+                <div id="input-phase"></div>
+                <div id="output-phase" class="hidden"></div>
+                <pre id="roster-output"></pre>
+                <button id="try-sample-roster">Try Sample Roster</button>
+                <input type="checkbox" id="show-points" checked>
+                <input type="checkbox" id="smart-format" checked>
+                <input type="checkbox" id="show-models">
+                <input type="checkbox" id="consolidate-duplicates">
+                <input type="checkbox" id="one-liner">
+                <input type="checkbox" id="inline-enhancements" checked>
+                <input type="checkbox" id="show-header" checked>
+                <input type="checkbox" id="no-empty-lines">
+                <input type="checkbox" id="discord-format">
+                <button id="copy-button">Copy</button>
+                <button id="edit-input">Edit</button>
+                <button id="options-menu-button">Options</button>
+                <div id="options-menu" class="hidden"></div>
+            `;
+
+            elements = getDOMElements();
+            updateRosterOutput = createUpdateRosterOutput(elements);
+            
+            // Mock cleanRosterText to return processed content for sample roster
+            cleanRosterText.mockImplementation((options) => {
+                if (options.input && options.input.includes('The Hunt Never Ended')) {
+                    return 'Azrael (115 Points)\nDeathwing Knights (250 Points)\nDeathwing Terminator Squad (180 Points)';
+                }
+                return '';
+            });
+        });
+
+        afterEach(() => {
+            document.body.innerHTML = '';
+        });
+
+        test('should load sample roster when try sample roster button is clicked', () => {
+            // Arrange
+            const trySampleButton = document.getElementById('try-sample-roster');
+            const rosterInput = document.getElementById('roster-input');
+            
+            // Act
+            setupSampleRoster(trySampleButton, rosterInput, updateRosterOutput);
+            trySampleButton.click();
+            
+            // Assert
+            expect(rosterInput.value).toContain('The Hunt Never Ended (2000 Points)');
+            expect(rosterInput.value).toContain('Space Marines');
+            expect(rosterInput.value).toContain('Dark Angels');
+            expect(rosterInput.value).toContain('Azrael (115 Points)');
+        });
+
+        test('should trigger roster output update when sample roster is loaded', () => {
+            // Arrange
+            const trySampleButton = document.getElementById('try-sample-roster');
+            const rosterInput = document.getElementById('roster-input');
+            
+            // Act
+            setupSampleRoster(trySampleButton, rosterInput, updateRosterOutput);
+            trySampleButton.click();
+            
+            // Assert - just verify the content is loaded into the textarea
+            expect(rosterInput.value).toContain('The Hunt Never Ended (2000 Points)');
+            expect(rosterInput.value).toContain('Space Marines');
+            expect(rosterInput.value).toContain('Dark Angels');
+            expect(rosterInput.value).toContain('Azrael (115 Points)');
+        });
+
+        test('should focus the input field after loading sample roster', () => {
+            // Arrange
+            const trySampleButton = document.getElementById('try-sample-roster');
+            const rosterInput = document.getElementById('roster-input');
+            
+            // Act
+            setupSampleRoster(trySampleButton, rosterInput, updateRosterOutput);
+            trySampleButton.click();
+            
+            // Assert
+            expect(document.activeElement).toBe(rosterInput);
         });
     });
 }); 

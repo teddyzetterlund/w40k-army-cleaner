@@ -1,3 +1,146 @@
+import { cleanRosterText } from './roster-cleaner.js';
+import { validateElement, validateFunction } from './utils/validation-utils.js';
+import { UI_CONSTANTS } from './config/ui-constants.js';
+import { 
+    getDOMElements, 
+    updateOptionsButtonText, 
+    readFileAsText, 
+    copyToClipboard,
+    getKeyboardShortcutText
+} from './utils/dom-utils.js';
+import { 
+    saveFormattingOptions, 
+    loadFormattingOptions 
+} from './utils/storage-utils.js';
+
+/**
+ * Sample roster content for demonstration purposes
+ * This is a Dark Angels roster exported from the Games Workshop app
+ */
+const SAMPLE_ROSTER_CONTENT = `The Hunt Never Ended (2000 Points)
+
+Space Marines
+Dark Angels
+Unforgiven Task Force
+Strike Force (2000 Points)
+
+CHARACTERS
+
+Azrael (115 Points)
+  • Warlord
+  • 1x Lion's Wrath
+  • 1x The Lion Helm
+  • 1x The Sword of Secrets
+
+Captain in Terminator Armour (110 Points)
+  • 1x Relic weapon
+  • 1x Storm bolter
+  • Enhancements: Stubborn Tenacity
+
+Chaplain in Terminator Armour (75 Points)
+  • 1x Crozius arcanum
+  • 1x Storm bolter
+
+Lieutenant with Combi-weapon (70 Points)
+  • 1x Combi-weapon
+  • 1x Paired combat blades
+
+BATTLELINE
+
+Assault Intercessor Squad (75 Points)
+  • 1x Assault Intercessor Sergeant
+     ◦ 1x Plasma pistol
+     ◦ 1x Power weapon
+  • 4x Assault Intercessor
+     ◦ 4x Astartes chainsword
+     ◦ 4x Heavy bolt pistol
+
+Assault Intercessor Squad (75 Points)
+  • 1x Assault Intercessor Sergeant
+     ◦ 1x Plasma pistol
+     ◦ 1x Power weapon
+  • 4x Assault Intercessor
+     ◦ 4x Astartes chainsword
+     ◦ 4x Heavy bolt pistol
+
+Intercessor Squad (80 Points)
+  • 1x Intercessor Sergeant
+     ◦ 1x Astartes grenade launcher
+     ◦ 1x Bolt pistol
+     ◦ 1x Bolt rifle
+     ◦ 1x Thunder hammer
+  • 4x Intercessor
+     ◦ 4x Bolt pistol
+     ◦ 4x Bolt rifle
+     ◦ 4x Close combat weapon
+
+OTHER DATASHEETS
+
+Deathwing Knights (250 Points)
+  • 1x Watcher in the Dark
+  • 1x Knight Master
+     ◦ 1x Great weapon of the Unforgiven
+  • 4x Deathwing Knight
+     ◦ 4x Mace of absolution
+
+Deathwing Knights (250 Points)
+  • 1x Watcher in the Dark
+  • 1x Knight Master
+     ◦ 1x Great weapon of the Unforgiven
+  • 4x Deathwing Knight
+     ◦ 4x Mace of absolution
+
+Deathwing Terminator Squad (180 Points)
+  • 1x Watcher in the Dark
+  • 1x Deathwing Sergeant
+     ◦ 1x Power weapon
+     ◦ 1x Storm bolter
+  • 4x Deathwing Terminator
+     ◦ 1x Cyclone missile launcher
+     ◦ 4x Power fist
+     ◦ 4x Storm bolter
+
+Deathwing Terminator Squad (180 Points)
+  • 1x Watcher in the Dark
+  • 1x Deathwing Sergeant
+     ◦ 1x Power weapon
+     ◦ 1x Storm bolter
+  • 4x Deathwing Terminator
+     ◦ 1x Cyclone missile launcher
+     ◦ 4x Power fist
+     ◦ 4x Storm bolter
+
+Hellblaster Squad (230 Points)
+  • 1x Hellblaster Sergeant
+     ◦ 1x Close combat weapon
+     ◦ 1x Plasma incinerator
+     ◦ 1x Plasma pistol
+  • 9x Hellblaster
+     ◦ 9x Bolt pistol
+     ◦ 9x Close combat weapon
+     ◦ 9x Plasma incinerator
+
+Land Raider (240 Points)
+  • 1x Armoured tracks
+  • 2x Godhammer lascannon
+  • 1x Hunter-killer missile
+  • 1x Multi-melta
+  • 1x Storm bolter
+  • 1x Twin heavy bolter
+
+Scout Squad (70 Points)
+  • 1x Scout Sergeant
+     ◦ 1x Astartes chainsword
+     ◦ 1x Bolt pistol
+     ◦ 1x Close combat weapon
+  • 4x Scout
+     ◦ 4x Bolt pistol
+     ◦ 3x Boltgun
+     ◦ 4x Close combat weapon
+     ◦ 1x Missile launcher
+
+Exported with App Version: v1.34.0 (1), Data Version: v620`;
+
 // Service Worker Registration and Update Handling
 if ('serviceWorker' in navigator) {
     let updateAvailable = false;
@@ -152,21 +295,6 @@ if ('serviceWorker' in navigator) {
         }, 10000);
     }
 }
-
-import { cleanRosterText } from './roster-cleaner.js';
-import { validateElement, validateFunction } from './utils/validation-utils.js';
-import { UI_CONSTANTS } from './config/ui-constants.js';
-import { 
-    getDOMElements, 
-    updateOptionsButtonText, 
-    readFileAsText, 
-    copyToClipboard,
-    getKeyboardShortcutText
-} from './utils/dom-utils.js';
-import { 
-    saveFormattingOptions, 
-    loadFormattingOptions 
-} from './utils/storage-utils.js';
 
 /**
  * Sets up drag and drop functionality for roster input
@@ -453,6 +581,29 @@ function setupEditInput(editButton, inputPhase, outputPhase, rosterInput) {
 }
 
 /**
+ * Sets up the sample roster functionality
+ * @param {HTMLButtonElement} trySampleButton - The try sample roster button element
+ * @param {HTMLTextAreaElement} rosterInput - The input element
+ * @param {Function} updateRosterOutput - Callback to update roster output
+ */
+function setupSampleRoster(trySampleButton, rosterInput, updateRosterOutput) {
+    validateElement(trySampleButton, 'trySampleButton');
+    validateElement(rosterInput, 'rosterInput');
+    validateFunction(updateRosterOutput, 'updateRosterOutput');
+
+    trySampleButton.addEventListener('click', () => {
+        // Load the sample roster content
+        rosterInput.value = SAMPLE_ROSTER_CONTENT;
+        
+        // Trigger the input event to let the normal flow handle the rest
+        rosterInput.dispatchEvent(new Event('input', { bubbles: true }));
+        
+        // Focus the input field
+        rosterInput.focus();
+    });
+}
+
+/**
  * Initializes the application by setting up all DOM elements and event listeners
  */
 function initializeApp() {
@@ -505,6 +656,11 @@ function initializeApp() {
 
         setupEditInput(elements.editButton, elements.inputPhase, elements.outputPhase, elements.rosterInput);
         
+        // Set up sample roster functionality if the button exists
+        if (elements.trySampleRosterButton) {
+            setupSampleRoster(elements.trySampleRosterButton, elements.rosterInput, updateRosterOutput);
+        }
+        
         // Focus the roster input on page load
         elements.rosterInput.focus();
     } catch (error) {
@@ -523,6 +679,7 @@ export {
     createUpdateRosterOutput,
     applySavedOptions,
     setupEditInput,
+    setupSampleRoster,
     initializeApp
 };
 

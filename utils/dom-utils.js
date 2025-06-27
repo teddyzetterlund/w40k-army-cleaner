@@ -14,6 +14,7 @@ export function getDOMElements() {
         rosterOutput: document.getElementById('roster-output'),
         copyButton: document.getElementById('copy-button'),
         editButton: document.getElementById('edit-input'),
+        trySampleRosterButton: document.getElementById('try-sample-roster'),
         showPointsCheckbox: document.getElementById('show-points'),
         smartFormatCheckbox: document.getElementById('smart-format'),
         showModelsCheckbox: document.getElementById('show-models'),
@@ -27,8 +28,28 @@ export function getDOMElements() {
         noEmptyLinesCheckbox: document.getElementById('no-empty-lines'),
     };
 
-    // Validate all elements exist
-    Object.entries(elements).forEach(([name, element]) => {
+    // Validate all required elements exist (excluding optional ones)
+    const requiredElements = {
+        rosterInput: elements.rosterInput,
+        inputPhase: elements.inputPhase,
+        outputPhase: elements.outputPhase,
+        rosterOutput: elements.rosterOutput,
+        copyButton: elements.copyButton,
+        editButton: elements.editButton,
+        showPointsCheckbox: elements.showPointsCheckbox,
+        smartFormatCheckbox: elements.smartFormatCheckbox,
+        showModelsCheckbox: elements.showModelsCheckbox,
+        consolidateDuplicatesCheckbox: elements.consolidateDuplicatesCheckbox,
+        oneLinerCheckbox: elements.oneLinerCheckbox,
+        inlineEnhancementsCheckbox: elements.inlineEnhancementsCheckbox,
+        discordFormatCheckbox: elements.discordFormatCheckbox,
+        showHeaderCheckbox: elements.showHeaderCheckbox,
+        optionsMenuButton: elements.optionsMenuButton,
+        optionsMenu: elements.optionsMenu,
+        noEmptyLinesCheckbox: elements.noEmptyLinesCheckbox,
+    };
+
+    Object.entries(requiredElements).forEach(([name, element]) => {
         if (!element) {
             throw new Error(`Required DOM element '${name}' not found`);
         }
