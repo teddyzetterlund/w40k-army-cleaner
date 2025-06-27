@@ -298,9 +298,10 @@ function formatTauUnitName(unitName) {
 function countModelsInNewRecruitUnit(lines, startIndex) {
     // Check for WTC/NR format: '10x ...' (not 'Char1: 1x ...')
     const currentLine = lines[startIndex];
-    // If it's a character line, always return 1
-    if (/^Char\d+:\s*1x\s+/.test(currentLine)) {
-        return 1;
+    // If it's a character line, extract the model count
+    const charMatch = currentLine.match(/^Char\d+:\s*(\d+)x\s+/);
+    if (charMatch) {
+        return parseInt(charMatch[1], 10);
     }
     // If it's a regular unit line with model count
     const wtcMatch = currentLine.match(/^(\d+)x\s+/);
@@ -547,6 +548,8 @@ function processUnits(options) {
                 let enhancement = '';
                 if (line.match(ENHANCEMENT_PATTERN)) {
                     enhancement = line.split(ENHANCEMENT_PATTERN)[1].trim();
+                    // Clean up parenthetical information for WTC-compact format
+                    enhancement = enhancement.replace(/\s*\([^)]*\)/, '');
                 } else if (isNewRecruitEnhancementLine(line)) {
                     // Extract enhancement name from NewRecruit format
                     const match = line.match(/^\s*•\s+([^(]+)\s+\(\+\d+\s*pts\)/);

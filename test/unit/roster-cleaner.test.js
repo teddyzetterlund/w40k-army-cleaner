@@ -695,4 +695,61 @@ describe('Roster Cleaner', () => {
             expect(result).toBe(expected);
         });
     });
+
+    // Test NewRecruit WTC-compact format roster
+    describe('NewRecruit WTC-Compact Format Roster', () => {
+        const input = readFixture('sample-roster-nr-necrons-wtc-compact.txt');
+        
+        test('cleans NewRecruit WTC-compact roster with points and smart format', () => {
+            const expected = readFixture('sample-cleaned-nr-necrons-wtc-compact.txt');
+            const result = cleanRosterText({ input, showPoints: true, smartFormat: true });
+            expect(result).toBe(expected);
+        });
+
+        test('cleans NewRecruit WTC-compact roster without points', () => {
+            const expected = readFixture('sample-cleaned-nr-necrons-wtc-compact-no-points.txt');
+            const result = cleanRosterText({ input, showPoints: false, smartFormat: true });
+            expect(result).toBe(expected);
+        });
+
+        test('cleans NewRecruit WTC-compact roster without smart format', () => {
+            const result = cleanRosterText({ input, showPoints: true, smartFormat: false });
+            
+            // Should contain full unit names (no smart formatting)
+            expect(result).toContain('The Silent King');
+            expect(result).toContain('Catacomb Command Barge');
+            expect(result).toContain('Hexmark Destroyer');
+            expect(result).toContain('Technomancer');
+            expect(result).toContain('Cryptothralls');
+            expect(result).toContain('Ophydian Destroyers');
+            expect(result).toContain('Lokhust Heavy Destroyers');
+            expect(result).toContain('Canoptek Wraiths');
+            expect(result).toContain('Canoptek Reanimator');
+            expect(result).toContain('Doomsday Ark');
+        });
+
+        test('cleans NewRecruit WTC-compact roster with model counts', () => {
+            const expected = readFixture('sample-cleaned-nr-necrons-wtc-compact-with-models.txt');
+            const result = cleanRosterText({ input, showPoints: true, smartFormat: true, showModels: true });
+            expect(result).toBe(expected);
+        });
+
+        test('cleans NewRecruit WTC-compact roster with consolidate duplicates', () => {
+            const result = cleanRosterText({ input, showPoints: true, smartFormat: true, consolidateDuplicates: true });
+            
+            // Should consolidate duplicate units
+            expect(result).toContain('2 Technomancer (80)');
+            expect(result).toContain('2 Cryptothralls (60)');
+            expect(result).toContain('2 Canoptek Wraiths (220)');
+            expect(result).toContain('2 Doomsday Ark (200)');
+            
+            // Should not consolidate unique units
+            expect(result).toContain('The Silent King (420)');
+            expect(result).toContain('Catacomb Command Barge (150)');
+            expect(result).toContain('Hexmark Destroyer (100)');
+            expect(result).toContain('Ophydian Destroyers (80)');
+            expect(result).toContain('Lokhust Heavy Destroyers (55)');
+            expect(result).toContain('Canoptek Reanimator (75)');
+        });
+    });
 }); 

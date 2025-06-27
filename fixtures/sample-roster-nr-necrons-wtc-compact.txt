@@ -1,0 +1,31 @@
++++++++++++++++++++++++++++++++++++++++++++++++
++ FACTION KEYWORD: Xenos - Necrons
++ DETACHMENT: Starshatter Arsenal
++ TOTAL ARMY POINTS: 2000pts
++
++ WARLORD: Char1: The Silent King
++ ENHANCEMENT: Dread Majesty (on Char1: Catacomb Command Barge)
+& Chrono-impedance Fields (on Char2: Hexmark Destroyer)
++ NUMBER OF UNITS: 14
++ SECONDARY: - Bring It Down: (4x2) + (1x6) - Assassination: 5 Characters
++++++++++++++++++++++++++++++++++++++++++++++++
+
+Char1: 3x The Silent King (420 pts): Warlord
+• 1x Szarekh: Sceptre of Eternal Glory, Staff of Stars, Weapons of the Final Triarch
+• 2x Triarchal Menhir: 2 with Annihilator beam, Armoured bulk
+Char2: 1x Catacomb Command Barge (150 pts): Resurrection orb, Gauss cannon, Overlord's blade
+Enhancement: Dread Majesty (+30 pts)
+Char3: 1x Hexmark Destroyer (100 pts): Close combat weapon, Enmitic disintegrator pistols
+Enhancement: Chrono-impedance Fields (+25 pts)
+Char4: 1x Technomancer (80 pts): Staff of light
+Char5: 1x Technomancer (80 pts): Staff of light
+
+2x Cryptothralls (60 pts): 2 with Scouring eye, Scythed limbs
+2x Cryptothralls (60 pts): 2 with Scouring eye, Scythed limbs
+3x Ophydian Destroyers (80 pts): Plasmacyte, 3 with Ophydian hyperphase weapons
+1x Lokhust Heavy Destroyers (55 pts): Close combat weapon, Enmitic exterminator
+6x Canoptek Wraiths (220 pts): 6 with Particle caster, Vicious claws
+6x Canoptek Wraiths (220 pts): 6 with Particle caster, Vicious claws
+1x Canoptek Reanimator (75 pts): 2x Atomiser beam, Reanimator's claws
+1x Doomsday Ark (200 pts): Armoured bulk, Doomsday cannon, 2x Gauss flayer array
+1x Doomsday Ark (200 pts): Armoured bulk, Doomsday cannon, 2x Gauss flayer array 
