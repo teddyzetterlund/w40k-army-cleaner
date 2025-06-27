@@ -5,8 +5,14 @@ import {
   inlineEnhancementLines,
   convertToOneLiner,
   countModelsInNewRecruitUnit,
-  processUnits
+  processUnits,
+  extractEnhancement,
+  parseNewRecruitUnitLine,
+  parseGWUnitLine,
+  formatModelCountPrefix,
+  isNewRecruitEnhancementLine
 } from '../../roster-cleaner.js';
+import { ENHANCEMENT_PATTERN } from '../../utils/regex-patterns.js';
 import '@testing-library/jest-dom';
 import { fireEvent, screen } from '@testing-library/dom';
 
@@ -759,6 +765,21 @@ describe('Roster Cleaner', () => {
             expect(result).toContain('Canoptek Reanimator (75)');
         });
     });
+
+    describe('WTC-Compact Enhancement Detection', () => {
+        test('detects WTC-compact enhancement line format', () => {
+            const line = 'Enhancement: Dread Majesty (+30 pts)';
+            
+            // Test our enhancement patterns
+            expect(line.match(ENHANCEMENT_PATTERN)).toBeTruthy();
+            expect(line.match(/^Enhancement:\s+([^(]+)\s+\(\+\d+\s*pts\)/)).toBeTruthy();
+            expect(isNewRecruitEnhancementLine(line)).toBeFalsy(); // Should not match bullet point pattern
+            
+            // Test extraction
+            const enhancement = extractEnhancement(line);
+            expect(enhancement).toBe('Dread Majesty');
+        });
+    });
 });
 
 // Test model counting functions specifically
@@ -879,5 +900,92 @@ describe('processUnits Function', () => {
         
         expect(result).toContain('3x The Silent King (420)');
         expect(result).toContain('2x Cryptothralls (60)');
+    });
+});
+
+// Test helper functions
+describe('Helper Functions', () => {
+    describe('extractEnhancement', () => {
+        test('extracts enhancement from ENHANCEMENT_PATTERN format', () => {
+            const result = extractEnhancement('Enhancement: Dread Majesty (+30 pts)');
+            expect(result).toBe('Dread Majesty');
+        });
+
+        test('extracts enhancement from NewRecruit format', () => {
+            const result = extractEnhancement('  • Dread Majesty (+30 pts)');
+            expect(result).toBe('Dread Majesty');
+        });
+
+        test('extracts enhancement from WTC format', () => {
+            const result = extractEnhancement('Enhancement: Dread Majesty (+30 pts)');
+            expect(result).toBe('Dread Majesty');
+        });
+
+        test('returns null for non-enhancement lines', () => {
+            const result = extractEnhancement('Some other line');
+            expect(result).toBeNull();
+        });
+    });
+
+    describe('parseNewRecruitUnitLine', () => {
+        test('parses character unit line', () => {
+            const result = parseNewRecruitUnitLine('Char1: 3x The Silent King (420 pts): Warlord');
+            expect(result).toEqual({
+                unitName: 'The Silent King',
+                points: '420',
+                rawMatch: expect.any(Array)
+            });
+        });
+
+        test('parses regular unit line', () => {
+            const result = parseNewRecruitUnitLine('2x Cryptothralls (60 pts): 2 with Scouring eye, Scythed limbs');
+            expect(result).toEqual({
+                unitName: 'Cryptothralls',
+                points: '60',
+                rawMatch: expect.any(Array)
+            });
+        });
+
+        test('returns null for non-unit lines', () => {
+            const result = parseNewRecruitUnitLine('Some other line');
+            expect(result).toBeNull();
+        });
+    });
+
+    describe('parseGWUnitLine', () => {
+        test('parses GW unit line', () => {
+            const result = parseGWUnitLine('Lord in Terminator Armour (105 Points)');
+            expect(result).toEqual({
+                unitName: 'Lord in Terminator Armour',
+                points: '105',
+                rawMatch: expect.any(Array)
+            });
+        });
+
+        test('parses GW unit line with "Point" (singular)', () => {
+            const result = parseGWUnitLine('Cultists (50 Point)');
+            expect(result).toEqual({
+                unitName: 'Cultists',
+                points: '50',
+                rawMatch: expect.any(Array)
+            });
+        });
+
+        test('returns null for non-unit lines', () => {
+            const result = parseGWUnitLine('Some other line');
+            expect(result).toBeNull();
+        });
+    });
+
+    describe('formatModelCountPrefix', () => {
+        test('returns empty string for 0 or 1 models', () => {
+            expect(formatModelCountPrefix(0)).toBe('');
+            expect(formatModelCountPrefix(1)).toBe('');
+        });
+
+        test('returns formatted prefix for multiple models', () => {
+            expect(formatModelCountPrefix(2)).toBe('2x ');
+            expect(formatModelCountPrefix(10)).toBe('10x ');
+        });
     });
 }); 

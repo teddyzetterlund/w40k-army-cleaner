@@ -552,7 +552,16 @@ function formatModelCountPrefix(modelCount) {
  */
 
 /**
- * Processes units in the roster according to specified options
+ * Processes units in the roster according to specified options.
+ *
+ * Output rules:
+ * - Blank line only between groups of different units (not between consecutive identical units)
+ * - No blank line after the last unit
+ * - Enhancements always follow the unit they belong to
+ * - Ignore enhancements in headers or before the first unit
+ * - Only consecutive identical units are consolidated
+ * - Never more than one blank line in a row
+ *
  * @param {ProcessUnitsOptions} options - The options for processing units
  * @returns {string[]} - Array of processed unit lines
  */
@@ -568,23 +577,38 @@ function processUnits(options) {
     } = options;
 
     validateProcessUnitsInput(lines, startIndex, showPoints, smartFormat, isTauEmpire, isChaosSpaceMarines);
-    
-    // Check if this is NewRecruit format
     const isNewRecruit = isNewRecruitFormat(lines);
-    
     const cleanedLines = [];
-    let currentUnit = '';
-    let currentPoints = '';
-    let lastUnit = '';
-    let currentUnitAdded = false;
+    let prevUnitName = null;
+    let currentUnit = null;
+    let currentPoints = null;
+    let currentEnhancement = null;
+    let currentUnitStartIndex = null;
     let headerProcessed = false;
-    let currentUnitStartIndex = startIndex;
-    let pendingEnhancement = '';
+
+    const flushUnit = () => {
+        if (!currentUnit) return;
+        // Insert blank line if previous unit is different
+        if (prevUnitName !== null && prevUnitName !== currentUnit) {
+            cleanedLines.push('');
+        }
+        const modelCount = showModels ? countModelsInUnit(lines, currentUnitStartIndex) : 0;
+        const modelText = formatModelCountPrefix(modelCount);
+        const unitLine = showPoints ? `${modelText}${currentUnit} (${currentPoints})` : `${modelText}${currentUnit}`;
+        cleanedLines.push(unitLine);
+        if (currentEnhancement) {
+            cleanedLines.push(`  • Enhancement: ${currentEnhancement}`);
+        }
+        prevUnitName = currentUnit;
+        currentUnit = null;
+        currentPoints = null;
+        currentEnhancement = null;
+        currentUnitStartIndex = null;
+    };
 
     for (let i = startIndex; i < lines.length; i++) {
         const line = normalizeApostrophes(lines[i].trim());
         if (!line) continue;
-
         if (isKnownSectionHeader(line)) continue;
 
         if (!headerProcessed) {
@@ -597,98 +621,44 @@ function processUnits(options) {
             }
         }
 
-        // Handle NewRecruit format units
         if (isNewRecruit) {
             const parsedUnit = parseNewRecruitUnitLine(line);
             if (parsedUnit) {
-                // If there is a pending enhancement, apply it to the previous unit
-                if (currentUnit && !currentUnitAdded) {
-                    if (lastUnit && lastUnit !== currentUnit) {
-                        cleanedLines.push('');
-                    }
-                    const modelCount = showModels ? countModelsInUnit(lines, currentUnitStartIndex) : 0;
-                    const modelText = formatModelCountPrefix(modelCount);
-                    const unitLine = showPoints ? `${modelText}${currentUnit} (${currentPoints})` : `${modelText}${currentUnit}`;
-                    cleanedLines.push(unitLine);
-                    if (pendingEnhancement) {
-                        cleanedLines.push(`  • Enhancement: ${pendingEnhancement}`);
-                    }
-                    lastUnit = currentUnit;
-                    pendingEnhancement = '';
-                    currentUnit = '';
-                    currentPoints = '';
-                }
-
-                let unitName = parsedUnit.unitName;
-                // Smart format for NewRecruit units
-                unitName = formatUnitName(unitName, isTauEmpire, smartFormat, isChaosSpaceMarines);
+                flushUnit();
+                let unitName = formatUnitName(parsedUnit.unitName, isTauEmpire, smartFormat, isChaosSpaceMarines);
                 currentUnit = unitName;
                 currentPoints = parsedUnit.points;
-                currentUnitAdded = false;
                 currentUnitStartIndex = i;
             } else if (line.match(ENHANCEMENT_PATTERN) || isNewRecruitEnhancementLine(line) || line.match(/^Enhancement:\s+([^(]+)\s+\(\+\d+\s*pts\)/)) {
-                // For NewRecruit, extract enhancement and store it for the current unit
-                const enhancement = extractEnhancement(line);
-                if (enhancement) {
-                    pendingEnhancement = enhancement;
+                // Only attach enhancement if a unit is being processed
+                if (currentUnit) {
+                    currentEnhancement = extractEnhancement(line);
                 }
             }
         } else {
-            // Handle GW format units (existing logic)
             const parsedGWUnit = parseGWUnitLine(line);
             if (parsedGWUnit) {
-                if (currentUnit && !currentUnitAdded) {
-                    if (lastUnit && lastUnit !== currentUnit) {
-                        cleanedLines.push('');
-                    }
-                    const modelCount = showModels ? countModelsInUnit(lines, currentUnitStartIndex) : 0;
-                    const modelText = formatModelCountPrefix(modelCount);
-                    cleanedLines.push(showPoints ? `${modelText}${currentUnit} (${currentPoints})` : `${modelText}${currentUnit}`);
-                    lastUnit = currentUnit;
-                }
-
-                const unitName = formatUnitName(parsedGWUnit.unitName, isTauEmpire, smartFormat, isChaosSpaceMarines);
+                flushUnit();
+                let unitName = formatUnitName(parsedGWUnit.unitName, isTauEmpire, smartFormat, isChaosSpaceMarines);
                 currentUnit = unitName;
                 currentPoints = parsedGWUnit.points;
-                currentUnitAdded = false;
                 currentUnitStartIndex = i;
             } else if (line.match(ENHANCEMENT_PATTERN)) {
-                const enhancement = extractEnhancement(line);
-                if (currentUnit && !currentUnitAdded) {
-                    if (lastUnit && lastUnit !== currentUnit) {
-                        cleanedLines.push('');
-                    }
-                    const modelCount = showModels ? countModelsInUnit(lines, currentUnitStartIndex) : 0;
-                    const modelText = formatModelCountPrefix(modelCount);
-                    cleanedLines.push(showPoints ? `${modelText}${currentUnit} (${currentPoints})` : `${modelText}${currentUnit}`);
-                    if (enhancement) {
-                        cleanedLines.push(`  • Enhancement: ${enhancement}`);
-                    }
-                    lastUnit = currentUnit;
-                    currentUnitAdded = true;
+                if (currentUnit) {
+                    currentEnhancement = extractEnhancement(line);
                 }
             }
         }
     }
-
-    // Handle the last unit (with any pending enhancement)
-    if (currentUnit && !currentUnitAdded) {
-        if (lastUnit && lastUnit !== currentUnit) {
-            cleanedLines.push('');
-        }
-        const modelCount = showModels ? countModelsInUnit(lines, currentUnitStartIndex) : 0;
-        const modelText = formatModelCountPrefix(modelCount);
-        const unitLine = showPoints ? `${modelText}${currentUnit} (${currentPoints})` : `${modelText}${currentUnit}`;
-        cleanedLines.push(unitLine);
-        if (pendingEnhancement) {
-            cleanedLines.push(`  • Enhancement: ${pendingEnhancement}`);
-        }
+    // Flush the last unit (if any)
+    flushUnit();
+    // Remove any trailing blank lines
+    while (cleanedLines.length > 0 && cleanedLines[cleanedLines.length - 1].trim() === '') {
+        cleanedLines.pop();
     }
-
-    // Remove extra blank lines
+    // Remove extra blank lines (never more than one in a row)
     return cleanedLines.filter((line, idx, arr) => {
         if (line.trim() !== '') return true;
-        // Only keep a single blank line between blocks
         return idx > 0 && arr[idx - 1].trim() !== '';
     });
 }
@@ -1111,6 +1081,10 @@ function cleanRosterText(options) {
     if (noEmptyLines) {
         result = removeEmptyLines(result);
     }
+    
+    // Normalize all whitespace to regular spaces for consistent output
+    result = result.replace(/\u00A0/g, ' '); // Replace non-breaking spaces with regular spaces
+    
     return result;
 }
 
@@ -1131,5 +1105,10 @@ export {
     consolidateDuplicateLines,
     convertToOneLiner,
     inlineEnhancementLines,
-    removeEmptyLines
+    removeEmptyLines,
+    extractEnhancement,
+    parseNewRecruitUnitLine,
+    parseGWUnitLine,
+    formatModelCountPrefix,
+    isNewRecruitEnhancementLine
 }; 
