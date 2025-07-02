@@ -127,6 +127,48 @@ describe('Roster Cleaner', () => {
         });
     });
 
+    // Test Squad handling with embedded Squad names
+    describe('Squad Handling with Embedded Squad Names', () => {
+        test('handles Squad embedded in middle of unit name', () => {
+            const input = readFixture('sample-roster-gw-da.txt');
+            const expected = readFixture('sample-cleaned-gw-da.txt');
+            const result = cleanRosterText({ input, showPoints: true, smartFormat: true });
+            expect(result).toBe(expected);
+        });
+
+        test('formats Vanguard Veteran Squad with Jump Packs correctly', () => {
+            const input = readFixture('sample-roster-gw-da.txt');
+            const result = cleanRosterText({ input, showPoints: true, smartFormat: true });
+            
+            // Should convert "Vanguard Veteran Squad with Jump Packs" to "Vanguard Veterans with Jump Packs"
+            expect(result).toContain('Vanguard Veterans with Jump Packs (190)');
+            expect(result).not.toContain('Vanguard Veteran Squad with Jump Packs');
+        });
+
+        test('still handles Squad at end of unit name', () => {
+            const input = readFixture('sample-roster-gw-da.txt');
+            const result = cleanRosterText({ input, showPoints: true, smartFormat: true });
+            
+            // Should convert "Assault Intercessor Squad" to "Assault Intercessors"
+            expect(result).toContain('Assault Intercessors (75)');
+            expect(result).not.toContain('Assault Intercessor Squad');
+            
+            // Should convert "Intercessor Squad" to "Intercessors"
+            expect(result).toContain('Intercessors (80)');
+            expect(result).not.toContain('Intercessor Squad');
+        });
+
+        test('does not apply Squad formatting when smart format is disabled', () => {
+            const input = readFixture('sample-roster-gw-da.txt');
+            const result = cleanRosterText({ input, showPoints: true, smartFormat: false });
+            
+            // Should keep original names when smart format is disabled
+            expect(result).toContain('Vanguard Veteran Squad with Jump Packs (190)');
+            expect(result).toContain('Assault Intercessor Squad (75)');
+            expect(result).toContain('Intercessor Squad (80)');
+        });
+    });
+
     // Test consolidate duplicates feature
     describe('Consolidate Duplicates', () => {
         test('consolidates consecutive duplicate lines in cleaned output', () => {
@@ -197,7 +239,6 @@ describe('Roster Cleaner', () => {
             // Should consolidate consecutive duplicates
             expect(result).toContain('2 Assault Intercessors (75)');
             expect(result).toContain('2 Deathwing Knights (250)');
-            expect(result).toContain('2 Deathwing Terminators (180)');
             
             // Should not consolidate non-consecutive duplicates (if any)
             const lines = result.split('\n');

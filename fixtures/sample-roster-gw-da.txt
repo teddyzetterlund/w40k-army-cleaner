@@ -71,26 +71,6 @@ Deathwing Knights (250 Points)
   • 4x Deathwing Knight
      ◦ 4x Mace of absolution
 
-Deathwing Terminator Squad (180 Points)
-  • 1x Watcher in the Dark
-  • 1x Deathwing Sergeant
-     ◦ 1x Power weapon
-     ◦ 1x Storm bolter
-  • 4x Deathwing Terminator
-     ◦ 1x Cyclone missile launcher
-     ◦ 4x Power fist
-     ◦ 4x Storm bolter
-
-Deathwing Terminator Squad (180 Points)
-  • 1x Watcher in the Dark
-  • 1x Deathwing Sergeant
-     ◦ 1x Power weapon
-     ◦ 1x Storm bolter
-  • 4x Deathwing Terminator
-     ◦ 1x Cyclone missile launcher
-     ◦ 4x Power fist
-     ◦ 4x Storm bolter
-
 Hellblaster Squad (230 Points)
   • 1x Hellblaster Sergeant
      ◦ 1x Close combat weapon
@@ -119,5 +99,21 @@ Scout Squad (70 Points)
      ◦ 3x Boltgun
      ◦ 4x Close combat weapon
      ◦ 1x Missile launcher
+
+Vanguard Veteran Squad with Jump Packs (190 Points)
+   • 1x Vanguard Veteran Sergeant with Jump Pack
+     ◦ 1x Vanguard Veteran Weapon
+     ◦ 1x Bolt Pistol
+     ◦ Vanguard Veteran Sergeant with Jump Pack
+   • 9x Vanguard Veterans with Jump Packs
+     ◦ 9x Vanguard Veteran Weapon
+     ◦ 9x Bolt Pistol
+     ◦ 9x Vanguard Veterans with Jump Packs
+
+Storm Speeder Thunderstrike (150 Points)
+• 1x Close Combat Weapon
+• 1x Stormfury Missiles
+• 1x Thunderstrike Las-talon
+• 1x Twin Icarus Rocket Pod
 
 Exported with App Version: v1.34.0 (1), Data Version: v620

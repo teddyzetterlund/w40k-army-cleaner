@@ -18,11 +18,12 @@ Lieutenant with Combi-weapon (70)
 5x Deathwing Knights (250)
 5x Deathwing Knights (250)
 
-5x Deathwing Terminators (180)
-5x Deathwing Terminators (180)
-
 10x Hellblasters (230)
 
 Land Raider (240)
 
-5x Scouts (70) 
+5x Scouts (70)
+
+10x Vanguard Veterans with Jump Packs (190)
+
+Storm Speeder Thunderstrike (150)

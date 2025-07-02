@@ -117,7 +117,6 @@ describe('Model Counting', () => {
                 '5x Assault Intercessors (75)',
                 '5x Intercessors (80)',
                 '5x Deathwing Knights (250)',
-                '5x Deathwing Terminators (180)',
                 '10x Hellblasters (230)',
                 '5x Scouts (70)'
             ];
