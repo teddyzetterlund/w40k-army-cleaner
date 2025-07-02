@@ -219,18 +219,11 @@ function formatUnitName(unitName, isTauEmpire, smartFormat, isChaosSpaceMarines)
         formattedName = formattedName.slice(6);
     }
 
-    // Space Marines specific formatting
-    // Handle Squad at the end of unit name
-    if (formattedName.endsWith(' Squad')) {
-        const baseName = formattedName.slice(0, -6);
-        formattedName = baseName.endsWith('s') ? baseName : baseName + 's';
-    }
-    
-    // Handle Squad embedded in the middle of unit name
-    if (formattedName.includes(' Squad ')) {
-        formattedName = formattedName.replace(/\b(\w+)\s+Squad\s+/g, (match, wordBeforeSquad) => {
+    // Space Marines specific formatting - unified Squad handling
+    if (formattedName.includes(' Squad')) {
+        formattedName = formattedName.replace(/\b(\w+)\s+Squad\b/g, (match, wordBeforeSquad) => {
             const pluralizedWord = wordBeforeSquad.endsWith('s') ? wordBeforeSquad : wordBeforeSquad + 's';
-            return pluralizedWord + ' ';
+            return pluralizedWord;
         });
     }
 
