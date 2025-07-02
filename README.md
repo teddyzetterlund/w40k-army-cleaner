@@ -127,10 +127,38 @@ When disabled, unit names are kept in their original format from the roster.
 
 ### Prerequisites
 
-- Node.js (v14 or higher)
+- Node.js (v22.17.0 or higher)
 - npm (comes with Node.js)
 
-### Setup
+### Setup with Mise (Recommended)
+
+This project uses [mise](https://mise.jdx.dev/) for tool management, ensuring consistent Node.js and npm versions across all developers.
+
+#### Quick Setup
+
+1. Install mise: https://mise.jdx.dev/getting-started.html
+2. Clone the repository
+3. Install tools:
+   ```bash
+   mise install
+   ```
+4. Install dependencies:
+   ```bash
+   mise run npm install
+   ```
+
+#### Using Mise Commands
+
+Once set up, you can use mise to run project commands:
+
+```bash
+mise run dev      # Start development server
+mise run test     # Run tests
+mise run build    # Build for production
+mise run lint     # Run ESLint
+```
+
+### Setup (Traditional)
 
 1. Clone the repository
 2. Install dependencies:

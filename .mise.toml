@@ -1,0 +1,15 @@
+[tools]
+node = "22.17.0"
+npm = "10.2.4"
+
+[env]
+NODE_ENV = "development"
+
+[tasks]
+# These will be available as `mise run <task-name>`
+dev = "npm run dev"
+build = "npm run build"
+test = "npm run test"
+test-watch = "npm run test:watch"
+lint = "npm run lint"
+lint-fix = "npm run lint:fix" 
